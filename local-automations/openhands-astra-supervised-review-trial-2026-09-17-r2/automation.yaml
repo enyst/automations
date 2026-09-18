@@ -1,0 +1,23 @@
+enabled: false
+entrypoint: uv run --offline --no-project --with openhands-sdk==1.46.0 python main.py
+keep_alive: false
+model: astra-review-auditor-eval
+name: 'OpenHands-Astra: supervised review trial 2026-09-17 r2'
+preset_metadata: null
+prompt: null
+setup_script_path: null
+tarball_source:
+  type: internal
+  url: null
+timeout: 1800
+trigger:
+  destination: dispatch_run
+  filter: '`false`'
+  'on':
+  - pull_request_review.dismissed
+  - issue_comment.created
+  source: github
+  subject_key_expr: null
+  turn_text_expr: null
+  type: event
+  wake_agent: true

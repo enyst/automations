@@ -1,0 +1,16 @@
+{
+  "name": "OpenHands-Astra: supervised review trial 2026-09-17 r2",
+  "model": "astra-review-auditor-eval",
+  "trigger": {
+    "type": "event",
+    "source": "github",
+    "on": [
+      "pull_request_review.dismissed",
+      "issue_comment.created"
+    ],
+    "filter": "`false`"
+  },
+  "entrypoint": "uv run --offline --no-project --with openhands-sdk==1.46.0 python main.py",
+  "timeout": 1800,
+  "keep_alive": false
+}

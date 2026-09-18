@@ -1,0 +1,55 @@
+enabled: true
+entrypoint: .venv/bin/python main.py
+keep_alive: null
+model: gpt-5-6
+name: Weekly test sweep + simplify (odie)
+preset_metadata: null
+prompt: "You are running as a scheduled weekly automation on the repository that was\n\
+  cloned into your working directory. Work only in this repo. Your job is a\ntest-quality\
+  \ sweep followed by a source-code simplification, ending in ONE\nnon-draft pull\
+  \ request.\n\nThe directive (from Engel):\n\n  Do a sweep for tests that do nothing\
+  \ more than re-assert the source, are low\n  value, duplicative, etc. Remove them,\
+  \ and then see whether the prod code can\n  be simplified now that the tests no\
+  \ longer demand seams to exist.\n\n  Tests must justify their presence. Tests that\
+  \ require changes whenever the\n  underlying source changes are not good tests,\
+  \ since they assert\n  implementation, not behavior.\n\n  Based on what you learn,\
+  \ update AGENTS.md if necessary.\n\nHow to work:\n\n1. Orient first. Read AGENTS.md\
+  \ and any repo/user skills. Learn how tests are\n   run in this repo and run the\
+  \ suite once to get a green baseline before you\n   change anything.\n2. Identify\
+  \ low-value tests: tests that only re-assert what the source literally\n   says\
+  \ (mirror tests), tautologies, duplicated coverage, tests that assert\n   private\
+  \ implementation detail / mock wiring rather than observable behavior,\n   and tests\
+  \ that would have to change on any refactor even when behavior is\n   unchanged.\
+  \ Be conservative: if a test guards real behavior or a real edge\n   case, keep\
+  \ it. When unsure, keep it and note it in the PR description instead\n   of deleting\
+  \ it.\n3. Remove the low-value tests you found.\n4. Now that those tests no longer\
+  \ demand seams to exist, look at the production\n   code they were pinning. Simplify\
+  \ it where the only reason for a seam,\n   indirection, injection point, or extra\
+  \ abstraction was to satisfy a test you\n   just removed. Make minimal, focused\
+  \ changes; do not rewrite working code for\n   taste.\n5. Re-run the full test suite.\
+  \ It must be green. If anything you removed was\n   actually load-bearing, restore\
+  \ it. Never leave the repo red.\n6. If what you learned changes the testing guidance\
+  \ the repo should give\n   future contributors/agents, update AGENTS.md accordingly\
+  \ (concise, in the\n   repo's existing voice). Only if warranted.\n\nDeliver the\
+  \ result as a pull request:\n\n- Create a new branch (e.g. chore/test-sweep-YYYY-MM-DD).\n\
+  - Commit the changes with a clear message. Keep test removals and prod\n  simplifications\
+  \ as separate, well-described commits when practical.\n- Open a NON-DRAFT pull request\
+  \ with `gh pr create` (do not pass --draft).\n- In the PR body, explain: which tests\
+  \ were removed and why (grouped by\n  reason), which production code was simplified\
+  \ as a consequence, how you\n  verified green, any AGENTS.md change, and an explicit\
+  \ list of anything you\n  deliberately left alone because you were unsure.\n- Title\
+  \ it clearly, e.g. \"Weekly test sweep: remove low-value tests + simplify\".\n\n\
+  If, after a genuine sweep, you find nothing worth removing, do NOT open an empty\n\
+  PR. Instead, finish with a short note stating the repo's tests already justify\n\
+  their presence and no change was warranted.\n"
+setup_script_path: setup.sh
+tarball_executables:
+- setup.sh
+tarball_source:
+  type: internal
+  url: null
+timeout: 1800
+trigger:
+  schedule: 0 5 * * 1
+  timezone: Europe/Amsterdam
+  type: cron

@@ -1,0 +1,72 @@
+{
+  "mode": "manual-trial",
+  "openai_secret": "OPENAI_API_KEY",
+  "reader_secret": "REMOTE_GH",
+  "publisher_secret": "REMOTE_GH",
+  "publisher_login": "enyst",
+  "retired_prs": [
+    {
+      "repository": "OpenHands/OpenHands",
+      "number": 17346
+    },
+    {
+      "repository": "OpenHands/OpenHands",
+      "number": 17369
+    },
+    {
+      "repository": "OpenHands/OpenHands",
+      "number": 17347
+    },
+    {
+      "repository": "OpenHands/OpenHands",
+      "number": 17237
+    },
+    {
+      "repository": "OpenHands/OpenHands",
+      "number": 17341
+    },
+    {
+      "repository": "OpenHands/software-agent-sdk",
+      "number": 5054
+    },
+    {
+      "repository": "OpenHands/software-agent-sdk",
+      "number": 4999
+    },
+    {
+      "repository": "OpenHands/automation",
+      "number": 458
+    }
+  ],
+  "state_backend": "persistent_host_file",
+  "secret_backend": "macos_keychain",
+  "model_route": "eval_openrouter",
+  "model_profile": "astra-review-auditor-eval",
+  "state_directory": "/Users/enyst/.codex/visualizations/2026/09/15/01a0a6a4-73ea-73a1-8632-43c170eaec35/review-auditor/automation-trial-2026-09-17/execution",
+  "targets": [
+    {
+      "repository": "openhands/software-agent-sdk",
+      "number": 4864,
+      "head": "c212367c6baa7c22cfa142e0d236508a78a459fc",
+      "base": "57f5cc9f4a671fe290783551ba00d57efe2017c9"
+    },
+    {
+      "repository": "openhands/automation",
+      "number": 438,
+      "head": "e8599274cb11726d528dbeaa350efe73b8ceb094",
+      "base": "baae0a8032470ceba014814210bd4b5c2e616d04"
+    },
+    {
+      "repository": "openhands/software-agent-sdk",
+      "number": 5003,
+      "head": "c08583be5e7d7a39a034334c434b8891810ef66e",
+      "base": "e3ec61163ec0d503ef6550ff0ec99cfabbfa2980"
+    },
+    {
+      "repository": "openhands/software-agent-sdk",
+      "number": 4862,
+      "head": "62aad97603d4231d1485248c5d0321f45bb852ab",
+      "base": "f47083cc370a85160f0348f32e531ee3514399e5"
+    }
+  ]
+}

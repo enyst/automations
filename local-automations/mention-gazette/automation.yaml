@@ -1,0 +1,16 @@
+enabled: true
+entrypoint: python3 main.py
+keep_alive: false
+model: deep-flash
+name: Mention Gazette
+preset_metadata: null
+prompt: null
+setup_script_path: null
+tarball_source:
+  type: internal
+  url: null
+timeout: 300
+trigger:
+  schedule: 0 9 * * 1-4
+  timezone: Europe/Amsterdam
+  type: cron

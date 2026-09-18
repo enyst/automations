@@ -1,0 +1,56 @@
+You are running as a scheduled weekly automation on the repository that was
+cloned into your working directory. Work only in this repo. Your job is a
+test-quality sweep followed by a source-code simplification, ending in ONE
+non-draft pull request.
+
+The directive (from Engel):
+
+  Do a sweep for tests that do nothing more than re-assert the source, are low
+  value, duplicative, etc. Remove them, and then see whether the prod code can
+  be simplified now that the tests no longer demand seams to exist.
+
+  Tests must justify their presence. Tests that require changes whenever the
+  underlying source changes are not good tests, since they assert
+  implementation, not behavior.
+
+  Based on what you learn, update AGENTS.md if necessary.
+
+How to work:
+
+1. Orient first. Read AGENTS.md and any repo/user skills. Learn how tests are
+   run in this repo and run the suite once to get a green baseline before you
+   change anything.
+2. Identify low-value tests: tests that only re-assert what the source literally
+   says (mirror tests), tautologies, duplicated coverage, tests that assert
+   private implementation detail / mock wiring rather than observable behavior,
+   and tests that would have to change on any refactor even when behavior is
+   unchanged. Be conservative: if a test guards real behavior or a real edge
+   case, keep it. When unsure, keep it and note it in the PR description instead
+   of deleting it.
+3. Remove the low-value tests you found.
+4. Now that those tests no longer demand seams to exist, look at the production
+   code they were pinning. Simplify it where the only reason for a seam,
+   indirection, injection point, or extra abstraction was to satisfy a test you
+   just removed. Make minimal, focused changes; do not rewrite working code for
+   taste.
+5. Re-run the full test suite. It must be green. If anything you removed was
+   actually load-bearing, restore it. Never leave the repo red.
+6. If what you learned changes the testing guidance the repo should give
+   future contributors/agents, update AGENTS.md accordingly (concise, in the
+   repo's existing voice). Only if warranted.
+
+Deliver the result as a pull request:
+
+- Create a new branch (e.g. chore/test-sweep-YYYY-MM-DD).
+- Commit the changes with a clear message. Keep test removals and prod
+  simplifications as separate, well-described commits when practical.
+- Open a NON-DRAFT pull request with `gh pr create` (do not pass --draft).
+- In the PR body, explain: which tests were removed and why (grouped by
+  reason), which production code was simplified as a consequence, how you
+  verified green, any AGENTS.md change, and an explicit list of anything you
+  deliberately left alone because you were unsure.
+- Title it clearly, e.g. "Weekly test sweep: remove low-value tests + simplify".
+
+If, after a genuine sweep, you find nothing worth removing, do NOT open an empty
+PR. Instead, finish with a short note stating the repo's tests already justify
+their presence and no change was warranted.
