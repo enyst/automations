@@ -104,6 +104,15 @@ and runs, then refresh the Cloud export. **Pushing this repository does not appl
 Cloud changes.** Exported files remain observations and backups; local native
 Git Sync continues to use only `local-automations/`.
 
+## Planned automations
+
+- [Jev release security triage](plans/jev-release-security.md) — planned September
+  19, 2026, starting with SDK release PRs. Move the current scan into OpenHands
+  Cloud, retain exact integrity/dependency checks, and add Jev judgments for
+  suspicious content. Publish a concise ✅/❌ comment requiring human inspection
+  whenever evidence is concerning, incomplete, or stale. **Not deployed**; the
+  existing release scan remains active.
+
 ## Local Git Sync
 
 **Configuration verified September 18, 2026:** SSH remote
