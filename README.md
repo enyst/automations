@@ -9,19 +9,22 @@ Repository: `enyst/automations`, branch `main`.
 | --- | --- | --- |
 | `local-automations/` | Local backend definitions: one directory per automation, containing `automation.yaml` and extracted code in `tarball/`. | Native OpenHands Git Sync, manually triggered and bidirectional. |
 | `cloud-automations/` | Dated exports of the `enyst` OpenHands Cloud account's definitions and available execution sources. | Cloud to Git only during this initial export phase. |
-| `scripts/` | Tools for collecting and validating exports. | Read each tool's contract before running it. |
+| `sources/` | Editable source and runtime configuration for automations maintained here. | Deploy deliberately with the corresponding helper. |
+| `definitions/` | Deployment definitions for maintained automations. | Explicit apply; Git pushes alone do not deploy. |
+| `scripts/` | Export, validation, and dedicated deployment tools. | Read each tool's contract before running it. |
 
 Keep these directories separate. A Cloud export is evidence of observed configuration;
-editing or pushing it does not apply changes to Cloud. No Cloud import/apply workflow
-is enabled by this setup.
+editing or pushing it does not apply changes to Cloud. No general Cloud import
+or native Cloud Git Sync workflow is enabled. Jev Fast Audit has its own explicit
+deployment helper, described below.
 
-## Snapshot index · September 18, 2026
+## Snapshot index · September 19, 2026
 
-**13 definitions: 9 enabled and 4 disabled.** Local sync exported all five with
-source. The [Cloud manifest](cloud-automations/manifest.json), recorded at
-21:55:53 UTC, contains **eight definitions with complete source**, downloaded
-directly from Cloud (60 bundled files). Enabled means eligible for triggers, not
-currently running.
+**14 definitions: 10 enabled and 4 disabled — nine Cloud and five local.**
+Local sync exported all five with source. The
+[Cloud manifest](cloud-automations/manifest.json) records the latest export's
+timestamps, completeness, and bundle hashes. Enabled means eligible for triggers,
+not currently running.
 
 | Where | Automation | State | Purpose | Export |
 | --- | --- | --- | --- | --- |
@@ -36,6 +39,7 @@ currently running.
 | Cloud | [Attention router - weekly SDK PRs and @enyst mentions](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/) | Enabled | Scores SDK PRs and recent @enyst mentions weekly, then updates Review Notebook notes. | [Source complete](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/export-status.json) |
 | Cloud | [Issue Duplicate Checker - auto-close sweep](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/) | Enabled | Revisits marked duplicate issues for possible closure; deployed safeguards remain unverified. | [Source complete](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/export-status.json) |
 | Cloud | [Issue Duplicate Checker - detect](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/) | Enabled | Checks newly opened issues for duplicates and marks candidates for later closure. | [Source complete](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/export-status.json) |
+| Cloud | [Jev Fast Audit](sources/jev-fast-audit/) | Enabled | Polls four OpenHands repositories every five minutes and replaces its scorecard in eligible PR descriptions. | [Deployment definition](definitions/jev-fast-audit.json); [export manifest](cloud-automations/manifest.json) |
 | Cloud | [Roasted Code Review - OpenHands PRs (on behalf of @enyst)](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/) | Disabled | Historical PR reviewer posting COMMENT reviews and updating the public review log. | [Source complete](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/export-status.json) |
 | Cloud | [Daily external PR security screen and review for OpenHands repos](cloud-automations/automation-e2ca316e-2896-4189-b1fc-fef6100d85f1/) | Disabled | Screens external contributors’ PR diffs for security concerns and reports findings. | [Source complete](cloud-automations/automation-e2ca316e-2896-4189-b1fc-fef6100d85f1/export-status.json) |
 
@@ -48,7 +52,57 @@ The initial partial export and Attention archive-recovery receipt remain in Git
 history; the current snapshot uses direct Cloud downloads throughout.
 
 The deleted TypeScript-client release maintainer is retired history and is not
-included in these thirteen definitions.
+included in these fourteen definitions.
+
+## Jev Fast Audit
+
+Cloud automation **`5aee9a93-51e5-4843-ad13-301a31e1397e`** runs the source in
+[`sources/jev-fast-audit/`](sources/jev-fast-audit/). Deployment read-back verified
+**enabled, every five minutes** (`*/5 * * * *`, UTC) on September 19, 2026, polling:
+
+- `OpenHands/OpenHands`
+- `OpenHands/software-agent-sdk`
+- `OpenHands/automation`
+- `OpenHands/extensions`
+
+Polling considers PRs updated from **2026-09-18 22:41:32 UTC** onward.
+The deployed configuration has no manual target, force re-auditing is off,
+the run timeout is 240 seconds, and sandbox keep-alive is off.
+
+The runner calls TypeSafe's **`jev-1.13.0`** classifier and writes as **@enyst**.
+It maintains one `## Jev-Fast-Audit` section in each selected PR description:
+a compact signal, evidence link, coverage, and timing, with all estimates in a
+collapsed table. Repeat runs replace that section; unchanged inputs with a valid
+signed receipt skip another classifier call. Polling skips drafts and closed PRs,
+uses the configured activation-time floor, and processes at most six changed PRs
+per run by default. These are estimated signals, not review approvals.
+
+The manual trial verified replacement on repeat runs and classifier calls below
+0.5 seconds. That timing measures the classifier call, not the entire automation.
+See the [implementation notes](sources/jev-fast-audit/README.md) for coverage
+limits, polling behavior, credential references, and the PR-description editing
+race limitation.
+
+The maintained deployment definition is
+[`definitions/jev-fast-audit.json`](definitions/jev-fast-audit.json).
+Apply source or configuration changes explicitly using
+[`scripts/deploy_jev.py`](scripts/deploy_jev.py), after checking the definition's
+schedule and bundled configuration:
+
+```sh
+python3 -B scripts/deploy_jev.py preflight
+python3 -B scripts/deploy_jev.py deploy \
+  --definition definitions/jev-fast-audit.json \
+  --automation-id 5aee9a93-51e5-4843-ad13-301a31e1397e
+python3 -B scripts/deploy_jev.py status \
+  --automation-id 5aee9a93-51e5-4843-ad13-301a31e1397e
+```
+
+The helper uploads the bundle and applies the definition through the Cloud API;
+updates preserve enabled state unless explicitly paused. Verify live settings
+and runs, then refresh the Cloud export. **Pushing this repository does not apply
+Cloud changes.** Exported files remain observations and backups; local native
+Git Sync continues to use only `local-automations/`.
 
 ## Local Git Sync
 
@@ -94,9 +148,10 @@ python3 scripts/export_cloud.py \
 ```
 
 Exit codes: **0** complete export; **2** partial export with incomplete entries
-recorded; **1** failed identity, safety, credential or export check. The latest
-Cloud export returned **0** with all eight complete; the initial partial export
-returned **2** before the naming workaround.
+recorded; **1** failed identity, safety, credential or export check. Consult the latest
+[Cloud manifest](cloud-automations/manifest.json) for current completeness. The
+September 18 refresh returned **0** with its eight definitions complete; the
+initial partial export returned **2** before the naming workaround.
 An optional `--recovery-manifest` accepts an approved private recovery record for
 an exact saved archive; do not substitute an arbitrary source checkout. A refresh
 without that recovery can report a bundle unavailable while preserving its

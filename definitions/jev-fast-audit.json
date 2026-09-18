@@ -1,0 +1,11 @@
+{
+  "name": "Jev Fast Audit",
+  "trigger": {
+    "type": "cron",
+    "schedule": "*/5 * * * *",
+    "timezone": "UTC"
+  },
+  "entrypoint": "python3 main.py",
+  "timeout": 240,
+  "keep_alive": false
+}
