@@ -1,11 +1,25 @@
 {
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "ee3acaf3bb91040f306f18a1cc946eee73b675b976753feac30f98c1cf4bf5f6"
+  },
+  "definition_sha256": "b01723450854ff5c9512167689d61f7ee096815ece13d0c60e19845cf5389993",
   "directory": "automation-7b7ca607-3052-476e-b9f9-63d98ed98971",
   "enabled": true,
-  "error": "http_500",
+  "files": {
+    "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._auto_close_duplicate_issues.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._main.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "auto_close_duplicate_issues.py": "d44c3a469974fa34d890890d0f72f5c891f7f12f8e75883dd67ff492804e32de",
+    "main.py": "b19d049458592a75e61f2733b96140b37811eb81ca416e3e7b4d8fb5569cb061"
+  },
   "id": "7b7ca607-3052-476e-b9f9-63d98ed98971",
-  "name": "Issue Duplicate Checker — auto-close sweep",
+  "name": "Issue Duplicate Checker - auto-close sweep",
   "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
   "preserved_existing": false,
-  "status": "incomplete",
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/88a0d229-cb07-4fbe-b887-9e4c261f1a02",
+  "updated_at": "2026-09-18T21:55:13.540802Z",
+  "updated_at_after_download": "2026-09-18T21:55:13.540802Z",
   "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
 }

@@ -1,11 +1,24 @@
 {
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "dd9c73a698f2ad6c634ee52e71e0769d0b59aac9f40e041eb8c35966a351dace"
+  },
+  "definition_sha256": "3858cf10b8a00cdeb7766ea675edfe969bae34d94a3e3f505c40b4e6edcd6aa0",
   "directory": "automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee",
   "enabled": true,
-  "error": "http_500",
+  "files": {
+    "finish_tool_hook.py": "76e7352a75b4461a78155a5e2f6cd8d61006f350a915a61da40a1e067e2d5986",
+    "main.py": "88ac81e57b773eee3a05e3a4c4434bff5699eb8041c77e84aa1d638a9a5e801a",
+    "repos_config.json": "dd5ece9eb1ed60233a2acbdc9dc417679c59dd647b63a3b3cefc33c898ff540a",
+    "setup.sh": "e6e91faccbb8b5beb2cfd404c9260504eb4069ec50be2121b43c80476a1b1118"
+  },
   "id": "1dd76c1d-5c79-4598-b19e-018ad893c6ee",
-  "name": "QA Changes — Auto-Test PR description (software-agent-sdk)",
+  "name": "QA Changes - Auto-Test PR description (software-agent-sdk)",
   "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
   "preserved_existing": false,
-  "status": "incomplete",
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/813f9d00-d73a-40b6-baf0-1fcf2dbf8280",
+  "updated_at": "2026-09-18T21:55:13.540802Z",
+  "updated_at_after_download": "2026-09-18T21:55:13.540802Z",
   "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
 }

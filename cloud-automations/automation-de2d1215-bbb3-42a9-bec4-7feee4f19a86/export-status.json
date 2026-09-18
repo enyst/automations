@@ -1,11 +1,24 @@
 {
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "18b25921683a7014bfba4a0cdaaefe8aa8e11007618e8de75779e52156ef1dd8"
+  },
+  "definition_sha256": "d5141de393d76d17b41b9f0d30866ba39a6c98305749632c9a1b538cc1578b37",
   "directory": "automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86",
   "enabled": false,
-  "error": "http_500",
+  "files": {
+    "main.py": "546b29a8a212443fad4219ba18c30b9e37e68459367a0a88e8045ba251df4223",
+    "plugins_config.json": "962de7e3b44a7aa4b471f4dc903f9f4f9474b9971b90aa5e26d99a2f0aa07506",
+    "prompt.txt": "bbaf4eae97ca90a412ddd36fcca364e9f0caf1dd5ce28bb2a3bace91c21d73a4",
+    "setup.sh": "15a3f67d56ae4648b28c2fa2677b8b1983249c8b2b190f09ec41ed7cfbf3c426"
+  },
   "id": "de2d1215-bbb3-42a9-bec4-7feee4f19a86",
-  "name": "Roasted Code Review — OpenHands PRs (on behalf of @enyst)",
+  "name": "Roasted Code Review - OpenHands PRs (on behalf of @enyst)",
   "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
   "preserved_existing": false,
-  "status": "incomplete",
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/163eb016-3e05-4b90-95b7-85cac0e6795d",
+  "updated_at": "2026-09-18T21:42:10.061762Z",
+  "updated_at_after_download": "2026-09-18T21:42:10.061762Z",
   "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
 }

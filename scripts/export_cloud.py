@@ -183,7 +183,7 @@ def public_definition(raw: dict, identity: dict) -> tuple[dict, dict]:
     else:
         raise ExportError("unsupported_bundle_pointer")
     scan_fields(fields)
-    # Runtime counters are excluded; the update timestamp detects intervening edits.
+    # Keep the observed timestamp as provenance; scheduler polling also updates it.
     binding.update({"tarball_path": path, "updated_at": raw.get("updated_at")})
     if raw.get("agent_profile_id") is not None:
         profile_id = raw["agent_profile_id"]
@@ -290,8 +290,20 @@ def write_atomic(path: Path, content: bytes) -> None:
             os.unlink(temporary)
 
 
+def definition_signature(raw: dict) -> str:
+    """Compare exported behavior and origin bindings, excluding runtime bookkeeping."""
+    if not isinstance(raw, dict):
+        raise ExportError("invalid_definition")
+    semantic = {key: raw.get(key) for key in FIELDS}
+    for key in ("id", "user_id", "org_id"):
+        semantic[key] = identifier(raw.get(key))
+    semantic["tarball_path"] = raw.get("tarball_path")
+    semantic["agent_profile_id"] = raw.get("agent_profile_id")
+    return digest(encoded(semantic))
+
+
 def listing_signature(rows):
-    return sorted((identifier(row.get("id")), row.get("updated_at")) for row in rows)
+    return sorted((identifier(row.get("id")), definition_signature(row)) for row in rows)
 
 
 def export(client, output: Path, org_id: str, user_id: str | None = None,
@@ -309,9 +321,12 @@ def export(client, output: Path, org_id: str, user_id: str | None = None,
         directory = "automation-" + automation_id
         fields = binding = None
         try:
-            fields, binding = public_definition(client.json(API + "/" + automation_id), identity)
+            before_raw = client.json(API + "/" + automation_id)
+            fields, binding = public_definition(before_raw, identity)
             if binding["id"] != automation_id:
                 raise ExportError("definition_id_changed")
+            if definition_signature(listed) != definition_signature(before_raw):
+                raise ExportError("definition_changed_during_export")
             archive, provenance, files, executable = None, None, {}, []
             if fields["tarball_source"]["type"] == "internal":
                 try:
@@ -325,9 +340,9 @@ def export(client, output: Path, org_id: str, user_id: str | None = None,
                         raise
                     archive, provenance = recovered
                 files, executable = unpack(archive, credential)
-            after_fields, after_binding = public_definition(
-                client.json(API + "/" + automation_id), identity)
-            if (fields, binding) != (after_fields, after_binding):
+            after_raw = client.json(API + "/" + automation_id)
+            _, after_binding = public_definition(after_raw, identity)
+            if definition_signature(before_raw) != definition_signature(after_raw):
                 raise ExportError("definition_changed_during_export")
             if executable:
                 fields["tarball_executables"] = executable
@@ -335,6 +350,7 @@ def export(client, output: Path, org_id: str, user_id: str | None = None,
             scan(metadata, credential)
             receipt = {**binding, "directory": directory, "status": "complete",
                        "definition_sha256": digest(metadata),
+                       "updated_at_after_download": after_binding["updated_at"],
                        "bundle": provenance or {"kind": "external_reference"},
                        "files": {name: digest(data) for name, data in sorted(files.items())}}
             scan_fields(receipt)

@@ -1,0 +1,38 @@
+{
+  "enabled": true,
+  "entrypoint": ".venv/bin/python main.py",
+  "keep_alive": null,
+  "model": "deep-pro",
+  "name": "QA Changes - Auto-Test PR description (software-agent-sdk)",
+  "preset_metadata": {
+    "preset_type": "prompt",
+    "prompt": "A pull request was opened or marked ready for review in OpenHands/software-agent-sdk. The pre-QA gates (PR not a draft, no existing \"Auto-Test\" section, author has more than 3 commits merged to main) are enforced in the automation script before a conversation starts; when any gate fails, no conversation is created and no changes are made. This prompt is reached only when all gates have passed, and the PR number + metadata are injected into the conversation's task by the script.\n\nPerform QA validation of the target PR using the /qa-changes skill methodology:\n\n- Phase 1: Understand the change. Read the PR diff, title, and description. Identify the goal of the PR. Classify every changed file. Form a hypothesis about what the PR should achieve.\n- Phase 2: Set up the environment. Read the repo's bootstrap instructions, install dependencies, and build if needed. Note CI status but do not re-run tests.\n- Phase 3: Exercise the changed behavior. Actually run the software the way a real user would — start servers, run CLI commands, make HTTP requests, open browsers. Do NOT run the test suite, linters, or code analysis. For bug fixes, reproduce the bug before and after the fix. Show before/after evidence.\n- Phase 4: Report results.\n\nIMPORTANT — how to post your report:\nDo NOT post a new comment, review, or inline review comment. Instead, EDIT the PR description (the pull request body) to append your QA report at the very end, after a horizontal rule (---), under a new section titled Auto-Test. Use the GitHub API (PATCH /repos/{owner}/{repo}/pulls/{pr_number} with a body field) to update the PR description. Append the following structure to the existing PR body:\n\n---\n\n## Auto-Test\n\n{Your full QA report following the /qa-changes skill report format: verdict, summary, \"Does this PR achieve its stated goal?\" section, status table, collapsible evidence in details blocks, and issues found.}\n\nDo not make any other changes to the PR description — only append the Auto-Test section at the end. Do not post any comments or reviews.\n",
+    "repos": [
+      {
+        "provider": "github",
+        "ref": "main",
+        "url": "https://github.com/OpenHands/software-agent-sdk"
+      }
+    ]
+  },
+  "prompt": "A pull request was opened or marked ready for review in OpenHands/software-agent-sdk. The pre-QA gates (PR not a draft, no existing \"Auto-Test\" section, author has more than 3 commits merged to main) are enforced in the automation script before a conversation starts; when any gate fails, no conversation is created and no changes are made. This prompt is reached only when all gates have passed, and the PR number + metadata are injected into the conversation's task by the script.\n\nPerform QA validation of the target PR using the /qa-changes skill methodology:\n\n- Phase 1: Understand the change. Read the PR diff, title, and description. Identify the goal of the PR. Classify every changed file. Form a hypothesis about what the PR should achieve.\n- Phase 2: Set up the environment. Read the repo's bootstrap instructions, install dependencies, and build if needed. Note CI status but do not re-run tests.\n- Phase 3: Exercise the changed behavior. Actually run the software the way a real user would — start servers, run CLI commands, make HTTP requests, open browsers. Do NOT run the test suite, linters, or code analysis. For bug fixes, reproduce the bug before and after the fix. Show before/after evidence.\n- Phase 4: Report results.\n\nIMPORTANT — how to post your report:\nDo NOT post a new comment, review, or inline review comment. Instead, EDIT the PR description (the pull request body) to append your QA report at the very end, after a horizontal rule (---), under a new section titled Auto-Test. Use the GitHub API (PATCH /repos/{owner}/{repo}/pulls/{pr_number} with a body field) to update the PR description. Append the following structure to the existing PR body:\n\n---\n\n## Auto-Test\n\n{Your full QA report following the /qa-changes skill report format: verdict, summary, \"Does this PR achieve its stated goal?\" section, status table, collapsible evidence in details blocks, and issues found.}\n\nDo not make any other changes to the PR description — only append the Auto-Test section at the end. Do not post any comments or reviews.\n",
+  "setup_script_path": "setup.sh",
+  "tarball_source": {
+    "type": "internal",
+    "url": null
+  },
+  "timeout": 1800,
+  "trigger": {
+    "destination": "dispatch_run",
+    "filter": "!pull_request.draft && !icontains(pull_request.body, 'Auto-Test') && glob(repository.full_name, 'OpenHands/software-agent-sdk')",
+    "on": [
+      "pull_request.opened",
+      "pull_request.ready_for_review"
+    ],
+    "source": "github",
+    "subject_key_expr": null,
+    "turn_text_expr": null,
+    "type": "event",
+    "wake_agent": true
+  }
+}

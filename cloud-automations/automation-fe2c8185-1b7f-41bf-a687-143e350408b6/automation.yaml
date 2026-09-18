@@ -3,7 +3,7 @@
   "entrypoint": ".venv/bin/python run.py",
   "keep_alive": false,
   "model": "deep-pro",
-  "name": "Attention router — weekly SDK PRs and @enyst mentions",
+  "name": "Attention router - weekly SDK PRs and @enyst mentions",
   "preset_metadata": null,
   "prompt": null,
   "setup_script_path": "setup.sh",

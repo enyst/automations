@@ -1,11 +1,25 @@
 {
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "af46f105e1ded303c088cb4d27236faa4a436cc96ef1bbe832ad2c091f1d1e4f"
+  },
+  "definition_sha256": "3011aec024cbffd710086cff73abb292a0aa0d5d5d6ffa8dc4171e6e01677bfb",
   "directory": "automation-d0f69df6-4757-4403-8106-2013ae5e0db5",
   "enabled": true,
-  "error": "http_500",
+  "files": {
+    "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._main.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._setup.sh": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "main.py": "f6e19fe0a2d9243e336592f3fb4565dd6fd07142ef049c01c7fa2d1cefcf5de6",
+    "setup.sh": "15a3f67d56ae4648b28c2fa2677b8b1983249c8b2b190f09ec41ed7cfbf3c426"
+  },
   "id": "d0f69df6-4757-4403-8106-2013ae5e0db5",
-  "name": "Issue Duplicate Checker — detect",
+  "name": "Issue Duplicate Checker - detect",
   "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
   "preserved_existing": false,
-  "status": "incomplete",
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/aeb2c3bc-f4c2-4c4f-9c68-16bb61cf4325",
+  "updated_at": "2026-09-18T21:54:43.510343Z",
+  "updated_at_after_download": "2026-09-18T21:54:43.510343Z",
   "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
 }

@@ -34,7 +34,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/fa7b9525-f48d-4d2c-b3df-8983ea1ae1d6",
-      "updated_at": "2026-09-18T01:53:39.593712Z",
+      "updated_at": "2026-09-18T21:54:13.960828Z",
+      "updated_at_after_download": "2026-09-18T21:55:14.011230Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -71,27 +72,40 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/d25717ff-c045-40ee-b831-c9b2e582fe74",
-      "updated_at": "2026-09-18T01:53:37.626464Z",
-      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
-    },
-    {
-      "directory": "automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee",
-      "enabled": true,
-      "error": "http_500",
-      "id": "1dd76c1d-5c79-4598-b19e-018ad893c6ee",
-      "name": "QA Changes — Auto-Test PR description (software-agent-sdk)",
-      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
-      "preserved_existing": false,
-      "status": "incomplete",
+      "updated_at": "2026-09-18T21:55:14.011230Z",
+      "updated_at_after_download": "2026-09-18T21:55:14.011230Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
       "bundle": {
-        "kind": "verified_local_archive",
-        "receipt": "Recovered exact archive: SHA-256 and all three member hashes match the saved 2026-09-15 deployment receipt for upload cdf3d5ec-995c-49e9-ba0a-7077139eeb06. That receipt records independent verification of all three files in the Cloud validation sandbox. A read-only Cloud check on 2026-09-18 confirmed the automation still references this upload and its upload record is COMPLETED with size 11830 bytes. This is the original uploaded archive, not a rebuild from current source.",
+        "kind": "cloud_download",
+        "sha256": "dd9c73a698f2ad6c634ee52e71e0769d0b59aac9f40e041eb8c35966a351dace"
+      },
+      "definition_sha256": "3858cf10b8a00cdeb7766ea675edfe969bae34d94a3e3f505c40b4e6edcd6aa0",
+      "directory": "automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee",
+      "enabled": true,
+      "files": {
+        "finish_tool_hook.py": "76e7352a75b4461a78155a5e2f6cd8d61006f350a915a61da40a1e067e2d5986",
+        "main.py": "88ac81e57b773eee3a05e3a4c4434bff5699eb8041c77e84aa1d638a9a5e801a",
+        "repos_config.json": "dd5ece9eb1ed60233a2acbdc9dc417679c59dd647b63a3b3cefc33c898ff540a",
+        "setup.sh": "e6e91faccbb8b5beb2cfd404c9260504eb4069ec50be2121b43c80476a1b1118"
+      },
+      "id": "1dd76c1d-5c79-4598-b19e-018ad893c6ee",
+      "name": "QA Changes - Auto-Test PR description (software-agent-sdk)",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/813f9d00-d73a-40b6-baf0-1fcf2dbf8280",
+      "updated_at": "2026-09-18T21:55:13.540802Z",
+      "updated_at_after_download": "2026-09-18T21:55:13.540802Z",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "bundle": {
+        "kind": "cloud_download",
         "sha256": "2dba9a92b3e6c33ecb562257a2840d428a6833d1edc451286da1febfa6c1e607"
       },
-      "definition_sha256": "db1664c44f673bd8f8a944d6c53270f13f434121d15c0a3ebe0d07cab3dfde6d",
+      "definition_sha256": "3dc1c22535d2074747b2160af702eee7e93b30c3a5fcb980e298b3b3666e8705",
       "directory": "automation-fe2c8185-1b7f-41bf-a687-143e350408b6",
       "enabled": true,
       "files": {
@@ -100,45 +114,87 @@
         "setup.sh": "c4c6cd02f43395279bce3373155d8bf4b6424344094fb7f3e95dbb46bd9a0252"
       },
       "id": "fe2c8185-1b7f-41bf-a687-143e350408b6",
-      "name": "Attention router — weekly SDK PRs and @enyst mentions",
+      "name": "Attention router - weekly SDK PRs and @enyst mentions",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/cdf3d5ec-995c-49e9-ba0a-7077139eeb06",
-      "updated_at": "2026-09-18T01:53:10.951373Z",
+      "updated_at": "2026-09-18T21:54:43.984190Z",
+      "updated_at_after_download": "2026-09-18T21:54:43.984190Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
+      "bundle": {
+        "kind": "cloud_download",
+        "sha256": "ee3acaf3bb91040f306f18a1cc946eee73b675b976753feac30f98c1cf4bf5f6"
+      },
+      "definition_sha256": "b01723450854ff5c9512167689d61f7ee096815ece13d0c60e19845cf5389993",
       "directory": "automation-7b7ca607-3052-476e-b9f9-63d98ed98971",
       "enabled": true,
-      "error": "http_500",
+      "files": {
+        "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._auto_close_duplicate_issues.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._main.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "auto_close_duplicate_issues.py": "d44c3a469974fa34d890890d0f72f5c891f7f12f8e75883dd67ff492804e32de",
+        "main.py": "b19d049458592a75e61f2733b96140b37811eb81ca416e3e7b4d8fb5569cb061"
+      },
       "id": "7b7ca607-3052-476e-b9f9-63d98ed98971",
-      "name": "Issue Duplicate Checker — auto-close sweep",
+      "name": "Issue Duplicate Checker - auto-close sweep",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
-      "status": "incomplete",
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/88a0d229-cb07-4fbe-b887-9e4c261f1a02",
+      "updated_at": "2026-09-18T21:55:13.540802Z",
+      "updated_at_after_download": "2026-09-18T21:55:13.540802Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
+      "bundle": {
+        "kind": "cloud_download",
+        "sha256": "af46f105e1ded303c088cb4d27236faa4a436cc96ef1bbe832ad2c091f1d1e4f"
+      },
+      "definition_sha256": "3011aec024cbffd710086cff73abb292a0aa0d5d5d6ffa8dc4171e6e01677bfb",
       "directory": "automation-d0f69df6-4757-4403-8106-2013ae5e0db5",
       "enabled": true,
-      "error": "http_500",
+      "files": {
+        "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._main.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._setup.sh": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "main.py": "f6e19fe0a2d9243e336592f3fb4565dd6fd07142ef049c01c7fa2d1cefcf5de6",
+        "setup.sh": "15a3f67d56ae4648b28c2fa2677b8b1983249c8b2b190f09ec41ed7cfbf3c426"
+      },
       "id": "d0f69df6-4757-4403-8106-2013ae5e0db5",
-      "name": "Issue Duplicate Checker — detect",
+      "name": "Issue Duplicate Checker - detect",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
-      "status": "incomplete",
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/aeb2c3bc-f4c2-4c4f-9c68-16bb61cf4325",
+      "updated_at": "2026-09-18T21:54:43.510343Z",
+      "updated_at_after_download": "2026-09-18T21:54:43.510343Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
+      "bundle": {
+        "kind": "cloud_download",
+        "sha256": "18b25921683a7014bfba4a0cdaaefe8aa8e11007618e8de75779e52156ef1dd8"
+      },
+      "definition_sha256": "d5141de393d76d17b41b9f0d30866ba39a6c98305749632c9a1b538cc1578b37",
       "directory": "automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86",
       "enabled": false,
-      "error": "http_500",
+      "files": {
+        "main.py": "546b29a8a212443fad4219ba18c30b9e37e68459367a0a88e8045ba251df4223",
+        "plugins_config.json": "962de7e3b44a7aa4b471f4dc903f9f4f9474b9971b90aa5e26d99a2f0aa07506",
+        "prompt.txt": "bbaf4eae97ca90a412ddd36fcca364e9f0caf1dd5ce28bb2a3bace91c21d73a4",
+        "setup.sh": "15a3f67d56ae4648b28c2fa2677b8b1983249c8b2b190f09ec41ed7cfbf3c426"
+      },
       "id": "de2d1215-bbb3-42a9-bec4-7feee4f19a86",
-      "name": "Roasted Code Review — OpenHands PRs (on behalf of @enyst)",
+      "name": "Roasted Code Review - OpenHands PRs (on behalf of @enyst)",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
-      "status": "incomplete",
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/163eb016-3e05-4b90-95b7-85cac0e6795d",
+      "updated_at": "2026-09-18T21:42:10.061762Z",
+      "updated_at_after_download": "2026-09-18T21:42:10.061762Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -161,13 +217,14 @@
       "status": "complete",
       "tarball_path": "oh-internal://uploads/acc675cd-c2fd-48c2-92ee-df554e7aa56e",
       "updated_at": "2026-07-03T00:34:17.196055Z",
+      "updated_at_after_download": "2026-07-03T00:34:17.196055Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     }
   ],
-  "complete": false,
+  "complete": true,
   "direction": "cloud_to_git_export_only",
   "exported_owner_definitions": 8,
-  "generated_at": "2026-09-18T01:54:06.062106+00:00",
+  "generated_at": "2026-09-18T21:55:53.897346+00:00",
   "identity": {
     "login": "enyst",
     "org_id": "18881862-24a9-4521-ba8a-8424314c6458",

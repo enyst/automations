@@ -19,8 +19,9 @@ is enabled by this setup.
 
 **13 definitions: 9 enabled and 4 disabled.** Local sync exported all five with
 source. The [Cloud manifest](cloud-automations/manifest.json), recorded at
-01:54:06 UTC, contains eight definitions: **four with verified source and four
-metadata-only**. Enabled means eligible for triggers, not currently running.
+21:55:53 UTC, contains **eight definitions with complete source**, downloaded
+directly from Cloud (60 bundled files). Enabled means eligible for triggers, not
+currently running.
 
 | Where | Automation | State | Purpose | Export |
 | --- | --- | --- | --- | --- |
@@ -31,19 +32,20 @@ metadata-only**. Enabled means eligible for triggers, not currently running.
 | Local | [OpenHands-Astra: supervised review trial 2026-09-17 r2](local-automations/openhands-astra-supervised-review-trial-2026-09-17-r2/) | Disabled | Completed four manual reviews; one later received a transparent correction. | Source complete |
 | Cloud | [Weekly re-vendor: smolpaws openhands-agent-server (SDK + server ports)](cloud-automations/automation-d4f8b4de-be10-4795-822b-72ca38dc323e/) | Enabled | Re-vendors SDK main into the SmolPaws server, handles server changes and opens/resumes a PR. | [Source complete](cloud-automations/automation-d4f8b4de-be10-4795-822b-72ca38dc323e/export-status.json) |
 | Cloud | [Weekly upstream drift: openhands-agent (OpenHands SDK -> TypeScript)](cloud-automations/automation-e6b527a2-5cd1-45d6-82c5-ac1cf89ebda6/) | Enabled | Ports a bounded Python SDK release interval into the TypeScript SDK and opens/resumes a PR. | [Source complete](cloud-automations/automation-e6b527a2-5cd1-45d6-82c5-ac1cf89ebda6/export-status.json) |
-| Cloud | [QA Changes — Auto-Test PR description (software-agent-sdk)](cloud-automations/automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee/) | Enabled | Tests SDK PR changes and appends an Auto-Test report to the PR description. | [Metadata only](cloud-automations/automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee/export-status.json) |
-| Cloud | [Attention router — weekly SDK PRs and @enyst mentions](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/) | Enabled | Scores SDK PRs and recent @enyst mentions weekly, then updates Review Notebook notes. | [Source recovered](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/export-status.json) |
-| Cloud | [Issue Duplicate Checker — auto-close sweep](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/) | Enabled | Revisits marked duplicate issues for possible closure; deployed safeguards remain unverified. | [Metadata only](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/export-status.json) |
-| Cloud | [Issue Duplicate Checker — detect](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/) | Enabled | Checks newly opened issues for duplicates and marks candidates for later closure. | [Metadata only](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/export-status.json) |
-| Cloud | [Roasted Code Review — OpenHands PRs (on behalf of @enyst)](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/) | Disabled | Historical PR reviewer posting COMMENT reviews and updating the public review log. | [Metadata only](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/export-status.json) |
+| Cloud | [QA Changes - Auto-Test PR description (software-agent-sdk)](cloud-automations/automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee/) | Enabled | Tests SDK PR changes and appends an Auto-Test report to the PR description. | [Source complete](cloud-automations/automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee/export-status.json) |
+| Cloud | [Attention router - weekly SDK PRs and @enyst mentions](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/) | Enabled | Scores SDK PRs and recent @enyst mentions weekly, then updates Review Notebook notes. | [Source complete](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/export-status.json) |
+| Cloud | [Issue Duplicate Checker - auto-close sweep](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/) | Enabled | Revisits marked duplicate issues for possible closure; deployed safeguards remain unverified. | [Source complete](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/export-status.json) |
+| Cloud | [Issue Duplicate Checker - detect](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/) | Enabled | Checks newly opened issues for duplicates and marks candidates for later closure. | [Source complete](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/export-status.json) |
+| Cloud | [Roasted Code Review - OpenHands PRs (on behalf of @enyst)](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/) | Disabled | Historical PR reviewer posting COMMENT reviews and updating the public review log. | [Source complete](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/export-status.json) |
 | Cloud | [Daily external PR security screen and review for OpenHands repos](cloud-automations/automation-e2ca316e-2896-4189-b1fc-fef6100d85f1/) | Disabled | Screens external contributors’ PR diffs for security concerns and reports findings. | [Source complete](cloud-automations/automation-e2ca316e-2896-4189-b1fc-fef6100d85f1/export-status.json) |
 
-Cloud downloads for QA Auto-Test, duplicate detection, duplicate closure and
-Roasted Code Review returned HTTP 500. Their metadata is retained, but their code
-is not backed up here. Attention routing uses the **exact original uploaded
-archive**, recovered against its deployment receipt, SHA-256 and member hashes;
-it was not rebuilt from current source. The two weekly jobs and the paused
-security screen were downloaded directly.
+**Download workaround:** an em dash (`U+2014`) in five Cloud names broke Latin-1
+encoding of the download filename header, producing HTTP 500. Replacing those
+name characters with ASCII hyphens restored direct downloads for all eight.
+This is a naming workaround, **not a server patch**; the upstream report is
+[OpenHands/automation #498](https://github.com/OpenHands/automation/issues/498).
+The initial partial export and Attention archive-recovery receipt remain in Git
+history; the current snapshot uses direct Cloud downloads throughout.
 
 The deleted TypeScript-client release maintainer is retired history and is not
 included in these thirteen definitions.
@@ -92,8 +94,9 @@ python3 scripts/export_cloud.py \
 ```
 
 Exit codes: **0** complete export; **2** partial export with incomplete entries
-recorded; **1** failed identity, safety, credential or export check. The initial
-Cloud export returned **2**, as expected for the four unavailable bundles.
+recorded; **1** failed identity, safety, credential or export check. The latest
+Cloud export returned **0** with all eight complete; the initial partial export
+returned **2** before the naming workaround.
 An optional `--recovery-manifest` accepts an approved private recovery record for
 an exact saved archive; do not substitute an arbitrary source checkout. A refresh
 without that recovery can report a bundle unavailable while preserving its

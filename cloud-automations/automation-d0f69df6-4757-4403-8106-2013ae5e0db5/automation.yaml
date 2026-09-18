@@ -1,0 +1,26 @@
+{
+  "enabled": true,
+  "entrypoint": ".venv/bin/python main.py",
+  "keep_alive": null,
+  "model": "deep-flash",
+  "name": "Issue Duplicate Checker - detect",
+  "preset_metadata": null,
+  "prompt": null,
+  "setup_script_path": "setup.sh",
+  "tarball_executables": [
+    "._.",
+    "._setup.sh",
+    "setup.sh"
+  ],
+  "tarball_source": {
+    "type": "internal",
+    "url": null
+  },
+  "timeout": 1500,
+  "trigger": {
+    "filter": "glob(repository.full_name, 'OpenHands/OpenHands') || glob(repository.full_name, 'OpenHands/software-agent-sdk') || glob(repository.full_name, 'OpenHands/automation') || glob(repository.full_name, 'OpenHands/extensions')",
+    "on": "issues.opened",
+    "source": "github",
+    "type": "event"
+  }
+}

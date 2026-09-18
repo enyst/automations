@@ -188,6 +188,86 @@ class ExportTests(unittest.TestCase):
             self.assertEqual(report["automations"][0]["error"], "definition_changed_during_export")
             self.assertFalse((Path(folder).resolve() / ("automation-" + ID) / "automation.yaml").exists())
 
+    def test_runtime_timestamp_churn_completes_and_keeps_observations(self):
+        class PollingClient(FakeClient):
+            def json(self, path):
+                response = super().json(path)
+                tick = str(len(self.calls))
+                rows = response["automations"] if "?" in path else [response]
+                if path != "/api/v1/users/me":
+                    for row in rows:
+                        row["updated_at"] = "poll-" + tick
+                        row["last_polled_at"] = "poll-" + tick
+                        row["last_triggered_at"] = "run-" + tick
+                return response
+        with tempfile.TemporaryDirectory() as folder:
+            report = exporter.export(PollingClient(), Path(folder).resolve(), ORG)
+            self.assertTrue(report["complete"])
+            receipt = report["automations"][0]
+            self.assertNotEqual(receipt["updated_at"], receipt["updated_at_after_download"])
+
+    def test_each_semantic_change_during_download_rejects_bundle(self):
+        changes = {
+            "name": "Renamed", "model": "another-profile",
+            "trigger": {"type": "cron", "schedule": "0 3 * * *"},
+            "setup_script_path": "new-setup.sh", "entrypoint": "python other.py",
+            "timeout": 900, "keep_alive": True, "enabled": True,
+            "prompt": "Different task", "preset_metadata": {"kind": "changed"},
+            "agent_profile_id": "other-agent",
+            "tarball_path": "oh-internal://uploads/replaced",
+            "user_id": OTHER, "org_id": OTHER, "id": OTHER,
+        }
+        for key, value in changes.items():
+            class ChangedClient(FakeClient):
+                def json(self, path):
+                    response = super().json(path)
+                    if path == exporter.API + "/" + ID and self.detail_calls == 2:
+                        response[key] = value
+                        # Deliberately unchanged timestamp: content, not time, must guard.
+                    return response
+            with self.subTest(field=key), tempfile.TemporaryDirectory() as folder:
+                output = Path(folder).resolve()
+                report = exporter.export(ChangedClient(), output, ORG)
+                self.assertFalse(report["complete"])
+                self.assertEqual(report["automations"][0]["status"], "incomplete")
+                self.assertFalse((output / ("automation-" + ID) / "automation.yaml").exists())
+
+    def test_final_listing_content_changes_even_with_same_timestamp_abort_before_write(self):
+        for change in ("name", "enabled", "user_id", "org_id", "tarball_path", "agent_profile_id",
+                       "added", "removed"):
+            class ChangedListing(FakeClient):
+                def json(self, path):
+                    response = super().json(path)
+                    if "?" in path and self.detail_calls >= 2:
+                        if change == "added":
+                            response["automations"].append(definition(OTHER))
+                            response["total"] += 1
+                        elif change == "removed":
+                            response["automations"] = []
+                            response["total"] = 0
+                        else:
+                            response["automations"][0][change] = True if change == "enabled" else OTHER
+                    return response
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as folder:
+                output = Path(folder).resolve() / "cloud"
+                with self.assertRaisesRegex(exporter.ExportError, "listing_changed"):
+                    exporter.export(ChangedListing(), output, ORG)
+                self.assertFalse(output.exists())
+
+    def test_listing_to_detail_change_is_not_exported(self):
+        class ChangedBefore(FakeClient):
+            def json(self, path):
+                response = super().json(path)
+                if path == exporter.API + "/" + ID:
+                    response["prompt"] = "Changed before the first detailed read"
+                return response
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder).resolve()
+            report = exporter.export(ChangedBefore(), output, ORG)
+            self.assertFalse(report["complete"])
+            self.assertEqual(report["automations"][0]["error"], "definition_changed_during_export")
+            self.assertFalse((output / ("automation-" + ID) / "automation.yaml").exists())
+
     def test_recovery_requires_pointer_and_digest_and_exports_provenance(self):
         with tempfile.TemporaryDirectory() as folder:
             archive_path = Path(folder).resolve() / "recovery.tgz"
