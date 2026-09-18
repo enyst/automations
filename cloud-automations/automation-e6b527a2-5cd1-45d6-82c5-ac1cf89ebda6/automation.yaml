@@ -1,0 +1,35 @@
+{
+  "enabled": true,
+  "entrypoint": ".venv/bin/python main.py",
+  "keep_alive": null,
+  "model": "deep-pro",
+  "name": "Weekly upstream drift: openhands-agent (OpenHands SDK -> TypeScript)",
+  "preset_metadata": {
+    "preset_type": "prompt",
+    "prompt": "You are the weekly upstream-drift maintainer for the TypeScript transpilation `smolpaws/openhands-agent` (an idiomatic TypeScript port of the Python OpenHands `software-agent-sdk`). The repository is already cloned in your workspace. Your job is to advance its upstream pin by one finite, reviewed interval and open exactly one pull request, or to stop cleanly when there is nothing to do.\n\nFIRST, orient yourself in this order, reading each file fully before acting:\n1. `AGENTS.md`\n2. `docs/TRANSPILE_CONTRACT.md`\n3. `docs/DRIFT_TOOLING.md`\n4. `docs/DRIFT_AUTOMATION.md` — the step-by-step runbook for THIS automation. Follow it literally: environment setup, NEW_PIN selection, resume rules, the seven steps, the time budget, and the hard rules.\n\nIf `docs/DRIFT_AUTOMATION.md` does not exist on the checked-out branch, stop immediately and report \"runbook missing; nothing done\". Do not improvise the procedure.\n\nOperating constraints (these restate the runbook; the runbook wins on details):\n- Work from `origin/main`. Never push to `main`. Never merge. Never force-push.\n- One interval per PR. `OLD_PIN` is always read from `transpile/upstream.json`; never type a SHA by hand. `NEW_PIN` is the newest upstream `Release vX.Y.Z` first-parent commit that keeps the interval under about 30 commits.\n- Before selecting an interval, look for an open PR whose head branch starts with `drift/`. If one exists, resume it instead of starting another.\n- If there is no new upstream release since the pin, print a one-line summary and exit successfully without creating a branch or PR.\n- Classify every generated review unit before writing code. Read the upstream diff and tests for each unit; a `NO_TARGET_CHANGE` needs a concrete reason naming what has no TypeScript counterpart. Use `DEFERRED` honestly when a port needs a design decision or exceeds the remaining budget; never leave half-implemented code.\n- Port `PORT` units tests-first: add/adapt the TypeScript test, observe it fail for the expected reason, implement the smallest compatible change, record the test path as evidence.\n- Regenerate `transpile/wire/python-projection-oracle.json` at `NEW_PIN` with `OPENHANDS_UPSTREAM_COMMIT` set (CI rejects a PR whose oracle commit differs from the manifest pin).\n- Run the full evidence list in the runbook before moving the pin. Never skip, disable, or loosen a test to get green.\n- Move the pin in `transpile/upstream.json` only after `drift:check --phase close` passes, in the closing commit.\n- Commit and push after every completed step; only pushed work survives. You have 30 minutes of wall clock. At 22 minutes stop porting; at 27 minutes push whatever is committed and open a DRAFT PR with a `## Handoff` section (done / remaining / blockers) so next week's run resumes it.\n- Open the PR against `main` using `.github/PULL_REQUEST_TEMPLATE/upstream-pin-advance.md` as the body layout, with real disposition counts and only the evidence you actually ran.\n- No secrets in commits or PR text. No model names in commit messages.\n\nReport at the end: the interval chosen (or why none), the PR URL, disposition counts, and anything a human must decide.",
+    "repos": [
+      {
+        "ref": "main",
+        "url": "https://github.com/enyst/openhands-agent"
+      }
+    ]
+  },
+  "prompt": "You are the weekly upstream-drift maintainer for the TypeScript transpilation `smolpaws/openhands-agent` (an idiomatic TypeScript port of the Python OpenHands `software-agent-sdk`). The repository is already cloned in your workspace. Your job is to advance its upstream pin by one finite, reviewed interval and open exactly one pull request, or to stop cleanly when there is nothing to do.\n\nFIRST, orient yourself in this order, reading each file fully before acting:\n1. `AGENTS.md`\n2. `docs/TRANSPILE_CONTRACT.md`\n3. `docs/DRIFT_TOOLING.md`\n4. `docs/DRIFT_AUTOMATION.md` — the step-by-step runbook for THIS automation. Follow it literally: environment setup, NEW_PIN selection, resume rules, the seven steps, the time budget, and the hard rules.\n\nIf `docs/DRIFT_AUTOMATION.md` does not exist on the checked-out branch, stop immediately and report \"runbook missing; nothing done\". Do not improvise the procedure.\n\nOperating constraints (these restate the runbook; the runbook wins on details):\n- Work from `origin/main`. Never push to `main`. Never merge. Never force-push.\n- One interval per PR. `OLD_PIN` is always read from `transpile/upstream.json`; never type a SHA by hand. `NEW_PIN` is the newest upstream `Release vX.Y.Z` first-parent commit that keeps the interval under about 30 commits.\n- Before selecting an interval, look for an open PR whose head branch starts with `drift/`. If one exists, resume it instead of starting another.\n- If there is no new upstream release since the pin, print a one-line summary and exit successfully without creating a branch or PR.\n- Classify every generated review unit before writing code. Read the upstream diff and tests for each unit; a `NO_TARGET_CHANGE` needs a concrete reason naming what has no TypeScript counterpart. Use `DEFERRED` honestly when a port needs a design decision or exceeds the remaining budget; never leave half-implemented code.\n- Port `PORT` units tests-first: add/adapt the TypeScript test, observe it fail for the expected reason, implement the smallest compatible change, record the test path as evidence.\n- Regenerate `transpile/wire/python-projection-oracle.json` at `NEW_PIN` with `OPENHANDS_UPSTREAM_COMMIT` set (CI rejects a PR whose oracle commit differs from the manifest pin).\n- Run the full evidence list in the runbook before moving the pin. Never skip, disable, or loosen a test to get green.\n- Move the pin in `transpile/upstream.json` only after `drift:check --phase close` passes, in the closing commit.\n- Commit and push after every completed step; only pushed work survives. You have 30 minutes of wall clock. At 22 minutes stop porting; at 27 minutes push whatever is committed and open a DRAFT PR with a `## Handoff` section (done / remaining / blockers) so next week's run resumes it.\n- Open the PR against `main` using `.github/PULL_REQUEST_TEMPLATE/upstream-pin-advance.md` as the body layout, with real disposition counts and only the evidence you actually ran.\n- No secrets in commits or PR text. No model names in commit messages.\n\nReport at the end: the interval chosen (or why none), the PR URL, disposition counts, and anything a human must decide.",
+  "setup_script_path": "setup.sh",
+  "tarball_executables": [
+    "._.",
+    ".___pycache__",
+    "._setup.sh",
+    "setup.sh"
+  ],
+  "tarball_source": {
+    "type": "internal",
+    "url": null
+  },
+  "timeout": 1800,
+  "trigger": {
+    "schedule": "0 6 * * 1",
+    "timezone": "UTC",
+    "type": "cron"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "bundle": {
+    "kind": "verified_local_archive",
+    "receipt": "Recovered exact archive: SHA-256 and all three member hashes match the saved 2026-09-15 deployment receipt for upload cdf3d5ec-995c-49e9-ba0a-7077139eeb06. That receipt records independent verification of all three files in the Cloud validation sandbox. A read-only Cloud check on 2026-09-18 confirmed the automation still references this upload and its upload record is COMPLETED with size 11830 bytes. This is the original uploaded archive, not a rebuild from current source.",
+    "sha256": "2dba9a92b3e6c33ecb562257a2840d428a6833d1edc451286da1febfa6c1e607"
+  },
+  "definition_sha256": "db1664c44f673bd8f8a944d6c53270f13f434121d15c0a3ebe0d07cab3dfde6d",
+  "directory": "automation-fe2c8185-1b7f-41bf-a687-143e350408b6",
+  "enabled": true,
+  "files": {
+    "github_context.py": "49055bcb9e4f7e617620c5a41d69e5640a30079b850bb030f24cf12ce3935d4d",
+    "run.py": "9bf22e41a0d3944c57041ac38002478fee130e4f6861b392d09b5472008825b6",
+    "setup.sh": "c4c6cd02f43395279bce3373155d8bf4b6424344094fb7f3e95dbb46bd9a0252"
+  },
+  "id": "fe2c8185-1b7f-41bf-a687-143e350408b6",
+  "name": "Attention router — weekly SDK PRs and @enyst mentions",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/cdf3d5ec-995c-49e9-ba0a-7077139eeb06",
+  "updated_at": "2026-09-18T01:53:10.951373Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

@@ -1,0 +1,29 @@
+{
+  "binding": {
+    "id": "7b7ca607-3052-476e-b9f9-63d98ed98971",
+    "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+    "tarball_path": "oh-internal://uploads/88a0d229-cb07-4fbe-b887-9e4c261f1a02",
+    "updated_at": "2026-09-18T01:53:40.977582Z",
+    "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+  },
+  "definition": {
+    "enabled": true,
+    "entrypoint": "python3 main.py",
+    "keep_alive": null,
+    "model": "deep-pro",
+    "name": "Issue Duplicate Checker — auto-close sweep",
+    "preset_metadata": null,
+    "prompt": null,
+    "setup_script_path": null,
+    "tarball_source": {
+      "type": "internal",
+      "url": null
+    },
+    "timeout": 1500,
+    "trigger": {
+      "schedule": "0 9 * * *",
+      "timezone": "UTC",
+      "type": "cron"
+    }
+  }
+}

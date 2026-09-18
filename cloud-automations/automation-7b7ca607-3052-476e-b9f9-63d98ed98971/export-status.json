@@ -1,0 +1,11 @@
+{
+  "directory": "automation-7b7ca607-3052-476e-b9f9-63d98ed98971",
+  "enabled": true,
+  "error": "http_500",
+  "id": "7b7ca607-3052-476e-b9f9-63d98ed98971",
+  "name": "Issue Duplicate Checker — auto-close sweep",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "incomplete",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

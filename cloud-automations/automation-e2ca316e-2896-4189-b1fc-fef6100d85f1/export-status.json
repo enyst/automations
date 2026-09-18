@@ -1,0 +1,22 @@
+{
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "4f6d711383016a8c0d4eff271b72ade1f39dffa7c41ea4bf8c2c200f8c850f47"
+  },
+  "definition_sha256": "189643f564268d5b53664f69f81e5c5c4945be10b06943b7ccd3c09740f4ee12",
+  "directory": "automation-e2ca316e-2896-4189-b1fc-fef6100d85f1",
+  "enabled": false,
+  "files": {
+    "main.py": "991d0b1d52d403804c5aa63df68f6ecfd3458ef540e19872f6e08c57a95f79f4",
+    "prompt.txt": "e13ae825f0d77cbd9449d044612febdd1658c14ad35bfb4c523b1e80632487b5",
+    "setup.sh": "15a3f67d56ae4648b28c2fa2677b8b1983249c8b2b190f09ec41ed7cfbf3c426"
+  },
+  "id": "e2ca316e-2896-4189-b1fc-fef6100d85f1",
+  "name": "Daily external PR security screen and review for OpenHands repos",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/acc675cd-c2fd-48c2-92ee-df554e7aa56e",
+  "updated_at": "2026-07-03T00:34:17.196055Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

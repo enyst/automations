@@ -1,0 +1,181 @@
+{
+  "automations": [
+    {
+      "bundle": {
+        "kind": "cloud_download",
+        "sha256": "d67c33ad8ed5600ff9b946fc74ff28b41f05997bebde9b0072c4b4c4a7a28e53"
+      },
+      "definition_sha256": "bff7eca5a95551557efd92f57e5f763e596d4d57b00be59be6dbe06c4d7d2fa6",
+      "directory": "automation-d4f8b4de-be10-4795-822b-72ca38dc323e",
+      "enabled": true,
+      "files": {
+        "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        ".___pycache__": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._finish_tool_hook.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._gate.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._main.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._prompt.txt": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._repos_config.json": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._setup.sh": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "__pycache__/._gate.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "__pycache__/._main.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "__pycache__/gate.cpython-314.pyc": "284cef5f87d4c25458b2fecd1c8903b3d5141c94bcf277ef49b33f082f1b8e1d",
+        "__pycache__/main.cpython-314.pyc": "836fd5612f66b61fb72ce1521425933e3c343094e6d2c60699dfad9176720559",
+        "finish_tool_hook.py": "2c40af043b94471b2711f92f959b0d55460b798a1add1cb5ed9a6def0eb4ff97",
+        "gate.py": "589251e9eed6f20c418caa2b9068873a8e6731090526119c29ef52f56961a492",
+        "main.py": "a98b407b6e36a8333bdb1b5fa49dfd92053022c709aa05f2aab2472620f07ff4",
+        "prompt.txt": "c5a4caad8ecf5d48897f123a31e45ae590f2947d93e1ace0fd7d220f7cc00e00",
+        "repos_config.json": "4f038eaabeb846cecd185dc37308d65998bfb13a2930ec0b9ac9d1d19d66b8cc",
+        "setup.sh": "b707aab4edef736041f63d7324b02001d4b6c9362ea69152611c61fb1a7431be"
+      },
+      "id": "d4f8b4de-be10-4795-822b-72ca38dc323e",
+      "name": "Weekly re-vendor: smolpaws openhands-agent-server (SDK + server ports)",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/fa7b9525-f48d-4d2c-b3df-8983ea1ae1d6",
+      "updated_at": "2026-09-18T01:53:39.593712Z",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "bundle": {
+        "kind": "cloud_download",
+        "sha256": "2d0f4ca2bba7f368fa32692d7e38bcb392d3bc58a3c344fc2f00f76c7d8df792"
+      },
+      "definition_sha256": "e1f78924be69e92ce1dce1ae697bc258fd7d9e3e7b30b84624a1298fa92a2e8a",
+      "directory": "automation-e6b527a2-5cd1-45d6-82c5-ac1cf89ebda6",
+      "enabled": true,
+      "files": {
+        "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        ".___pycache__": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._finish_tool_hook.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._gate.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._main.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._prompt.txt": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._repos_config.json": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "._setup.sh": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "__pycache__/._gate.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "__pycache__/._main.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+        "__pycache__/gate.cpython-314.pyc": "a5c46f17dcaf582ac850426478ebe9eea7c437e70f561e6267b03724e6260534",
+        "__pycache__/main.cpython-314.pyc": "79a1f2de0b271cc3c0601fe1e4b062062f82fd1d0347ab3d25c24cf1cc1ac75b",
+        "finish_tool_hook.py": "2c40af043b94471b2711f92f959b0d55460b798a1add1cb5ed9a6def0eb4ff97",
+        "gate.py": "589251e9eed6f20c418caa2b9068873a8e6731090526119c29ef52f56961a492",
+        "main.py": "d0d08859dc4e42f1acd26bd3e37c7df04aac431ba23ee3b107279a345672115f",
+        "prompt.txt": "10ed9a1ade620c41bd36215cc160442a2fdad84fd4fccb7e73a914778a1d5569",
+        "repos_config.json": "5961d9c98dc99ab753e724fcf8b4470b16776a20528354efa56bc2d6c9aaecbf",
+        "setup.sh": "b707aab4edef736041f63d7324b02001d4b6c9362ea69152611c61fb1a7431be"
+      },
+      "id": "e6b527a2-5cd1-45d6-82c5-ac1cf89ebda6",
+      "name": "Weekly upstream drift: openhands-agent (OpenHands SDK -> TypeScript)",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/d25717ff-c045-40ee-b831-c9b2e582fe74",
+      "updated_at": "2026-09-18T01:53:37.626464Z",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "directory": "automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee",
+      "enabled": true,
+      "error": "http_500",
+      "id": "1dd76c1d-5c79-4598-b19e-018ad893c6ee",
+      "name": "QA Changes — Auto-Test PR description (software-agent-sdk)",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "incomplete",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "bundle": {
+        "kind": "verified_local_archive",
+        "receipt": "Recovered exact archive: SHA-256 and all three member hashes match the saved 2026-09-15 deployment receipt for upload cdf3d5ec-995c-49e9-ba0a-7077139eeb06. That receipt records independent verification of all three files in the Cloud validation sandbox. A read-only Cloud check on 2026-09-18 confirmed the automation still references this upload and its upload record is COMPLETED with size 11830 bytes. This is the original uploaded archive, not a rebuild from current source.",
+        "sha256": "2dba9a92b3e6c33ecb562257a2840d428a6833d1edc451286da1febfa6c1e607"
+      },
+      "definition_sha256": "db1664c44f673bd8f8a944d6c53270f13f434121d15c0a3ebe0d07cab3dfde6d",
+      "directory": "automation-fe2c8185-1b7f-41bf-a687-143e350408b6",
+      "enabled": true,
+      "files": {
+        "github_context.py": "49055bcb9e4f7e617620c5a41d69e5640a30079b850bb030f24cf12ce3935d4d",
+        "run.py": "9bf22e41a0d3944c57041ac38002478fee130e4f6861b392d09b5472008825b6",
+        "setup.sh": "c4c6cd02f43395279bce3373155d8bf4b6424344094fb7f3e95dbb46bd9a0252"
+      },
+      "id": "fe2c8185-1b7f-41bf-a687-143e350408b6",
+      "name": "Attention router — weekly SDK PRs and @enyst mentions",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/cdf3d5ec-995c-49e9-ba0a-7077139eeb06",
+      "updated_at": "2026-09-18T01:53:10.951373Z",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "directory": "automation-7b7ca607-3052-476e-b9f9-63d98ed98971",
+      "enabled": true,
+      "error": "http_500",
+      "id": "7b7ca607-3052-476e-b9f9-63d98ed98971",
+      "name": "Issue Duplicate Checker — auto-close sweep",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "incomplete",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "directory": "automation-d0f69df6-4757-4403-8106-2013ae5e0db5",
+      "enabled": true,
+      "error": "http_500",
+      "id": "d0f69df6-4757-4403-8106-2013ae5e0db5",
+      "name": "Issue Duplicate Checker — detect",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "incomplete",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "directory": "automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86",
+      "enabled": false,
+      "error": "http_500",
+      "id": "de2d1215-bbb3-42a9-bec4-7feee4f19a86",
+      "name": "Roasted Code Review — OpenHands PRs (on behalf of @enyst)",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "incomplete",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "bundle": {
+        "kind": "cloud_download",
+        "sha256": "4f6d711383016a8c0d4eff271b72ade1f39dffa7c41ea4bf8c2c200f8c850f47"
+      },
+      "definition_sha256": "189643f564268d5b53664f69f81e5c5c4945be10b06943b7ccd3c09740f4ee12",
+      "directory": "automation-e2ca316e-2896-4189-b1fc-fef6100d85f1",
+      "enabled": false,
+      "files": {
+        "main.py": "991d0b1d52d403804c5aa63df68f6ecfd3458ef540e19872f6e08c57a95f79f4",
+        "prompt.txt": "e13ae825f0d77cbd9449d044612febdd1658c14ad35bfb4c523b1e80632487b5",
+        "setup.sh": "15a3f67d56ae4648b28c2fa2677b8b1983249c8b2b190f09ec41ed7cfbf3c426"
+      },
+      "id": "e2ca316e-2896-4189-b1fc-fef6100d85f1",
+      "name": "Daily external PR security screen and review for OpenHands repos",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/acc675cd-c2fd-48c2-92ee-df554e7aa56e",
+      "updated_at": "2026-07-03T00:34:17.196055Z",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    }
+  ],
+  "complete": false,
+  "direction": "cloud_to_git_export_only",
+  "exported_owner_definitions": 8,
+  "generated_at": "2026-09-18T01:54:06.062106+00:00",
+  "identity": {
+    "login": "enyst",
+    "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+    "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+  },
+  "listed": 8,
+  "not_in_current_listing_preserved": [],
+  "schema": 1,
+  "skipped_other_owners": 0,
+  "source": "https://app.all-hands.dev"
+}

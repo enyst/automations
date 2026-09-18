@@ -1,0 +1,37 @@
+{
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "d67c33ad8ed5600ff9b946fc74ff28b41f05997bebde9b0072c4b4c4a7a28e53"
+  },
+  "definition_sha256": "bff7eca5a95551557efd92f57e5f763e596d4d57b00be59be6dbe06c4d7d2fa6",
+  "directory": "automation-d4f8b4de-be10-4795-822b-72ca38dc323e",
+  "enabled": true,
+  "files": {
+    "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    ".___pycache__": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._finish_tool_hook.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._gate.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._main.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._prompt.txt": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._repos_config.json": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "._setup.sh": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "__pycache__/._gate.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "__pycache__/._main.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
+    "__pycache__/gate.cpython-314.pyc": "284cef5f87d4c25458b2fecd1c8903b3d5141c94bcf277ef49b33f082f1b8e1d",
+    "__pycache__/main.cpython-314.pyc": "836fd5612f66b61fb72ce1521425933e3c343094e6d2c60699dfad9176720559",
+    "finish_tool_hook.py": "2c40af043b94471b2711f92f959b0d55460b798a1add1cb5ed9a6def0eb4ff97",
+    "gate.py": "589251e9eed6f20c418caa2b9068873a8e6731090526119c29ef52f56961a492",
+    "main.py": "a98b407b6e36a8333bdb1b5fa49dfd92053022c709aa05f2aab2472620f07ff4",
+    "prompt.txt": "c5a4caad8ecf5d48897f123a31e45ae590f2947d93e1ace0fd7d220f7cc00e00",
+    "repos_config.json": "4f038eaabeb846cecd185dc37308d65998bfb13a2930ec0b9ac9d1d19d66b8cc",
+    "setup.sh": "b707aab4edef736041f63d7324b02001d4b6c9362ea69152611c61fb1a7431be"
+  },
+  "id": "d4f8b4de-be10-4795-822b-72ca38dc323e",
+  "name": "Weekly re-vendor: smolpaws openhands-agent-server (SDK + server ports)",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/fa7b9525-f48d-4d2c-b3df-8983ea1ae1d6",
+  "updated_at": "2026-09-18T01:53:39.593712Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}
