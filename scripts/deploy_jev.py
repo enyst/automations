@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CLOUD = "https://app.all-hands.dev"
 API = "/api/automation/v1"
 OWNER = "18881862-24a9-4521-ba8a-8424314c6458"
-SECRETS = ("TYPESAFE_API_KEY", "ENYST_GH_TOKEN")
+SECRETS = ("TYPESAFE_API_KEY",)
 DRAFT_FIELDS = {"name", "trigger", "entrypoint", "setup_script_path", "timeout", "keep_alive"}
 SENSITIVE = re.compile(rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\b(?:gh[pousr]_|github_pat_)[A-Za-z0-9_]{20,}|\bsk-(?:oh-|proj-|ant-)?[A-Za-z0-9_-]{20,}")
 
@@ -205,15 +205,15 @@ def main(argv=None) -> int:
             "ready": capabilities.get("ready"), "triggerKinds": capabilities.get("triggerKinds"),
             "eventSources": capabilities.get("eventSources"), "eventTypes": capabilities.get("eventTypes")}))
     elif args.command == "install-secrets":
-        github = github_identity()
+        github_identity()
         names = secret_names(cloud)
         installed = []
         for name in SECRETS:
             if name in names:
                 continue
-            value = github.credential if name == "ENYST_GH_TOKEN" else keychain(name)
+            value = keychain(name)
             cloud.request("POST", "/api/v1/secrets", {"name": name, "value": value,
-                "description": "Jev Fast Audit: " + ("TypeSafe classifier access" if name == "TYPESAFE_API_KEY" else "GitHub as enyst")})
+                "description": "Jev Fast Audit: TypeSafe classifier access"})
             installed.append(name)
         if set(SECRETS) - secret_names(cloud):
             raise DeploymentError("secrets_verification_failed")

@@ -21,7 +21,7 @@ import urllib.request
 from audit import AuditValidationError, MODEL, build_context, questions_for, render_summary, validate_answers
 from description import strip_audit, upsert_audit
 
-VERSION = "1"
+VERSION = "2"
 GITHUB = "https://api.github.com"
 TYPESAFE = "https://api.typesafe.ai"
 CLOUD = "https://app.all-hands.dev"
@@ -38,8 +38,9 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 class API:
-    def __init__(self, host, token, header="Authorization"):
+    def __init__(self, host, token, header="Authorization", *, receipt_key=None):
         self.host, self.token, self.header = host, token, header
+        self.receipt_key = receipt_key
         self.opener = urllib.request.build_opener(NoRedirect())
 
     def request(self, path, method="GET", data=None, raw=False, limit=8 * 1024 * 1024):
@@ -94,7 +95,9 @@ def fingerprint(pr):
 
 
 def signature(gh, identity):
-    return hmac.new(gh.token.encode(), ("jev-fast-audit-v1:" + identity).encode(), hashlib.sha256).hexdigest()
+    if not gh.receipt_key:
+        raise AuditError("receipt_key_missing")
+    return hmac.new(gh.receipt_key.encode(), ("jev-fast-audit-receipt-v2:" + identity).encode(), hashlib.sha256).hexdigest()
 
 
 def files_for(gh, repository, number):
@@ -282,7 +285,8 @@ def run(argv=None):
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     config = json.loads(Path(__file__).with_name("config.json").read_text())
-    gh = API(GITHUB, secret("ENYST_GH_TOKEN"))
+    typesafe_key = secret("TYPESAFE_API_KEY")
+    gh = API(GITHUB, secret("github_token"), receipt_key=typesafe_key)
     if gh.request("/user").get("login") != "enyst":
         raise AuditError("wrong_github_account")
     if bool(args.repository) != bool(args.pr):
@@ -292,7 +296,7 @@ def run(argv=None):
     if not targets:
         print(json.dumps({"status": "no_changed_prs"}))
         return
-    jev = API(TYPESAFE, secret("TYPESAFE_API_KEY"))
+    jev = API(TYPESAFE, typesafe_key)
     failed = False
     for repository, number in targets:
         try:

@@ -78,11 +78,12 @@ commands from the PR.
 
 The input fingerprint covers head SHA, base SHA, PR title, description with Jev's
 section removed, model version, runner version, and the hash of `audit.py`.
-A hidden `jev-input-signature` receipt is an HMAC of that fingerprint using the
-GitHub credential. An unchanged, matching signed receipt skips another classifier
-call. An author cannot create a valid new receipt merely by calculating the public
-fingerprint. This signs input identity, not the displayed scorecard text.
-Credential rotation invalidates previous receipts. A signed partial audit caused
+A hidden `jev-input-signature` receipt is a domain-separated HMAC of that
+fingerprint using the TypeSafe API key. An unchanged, matching signed receipt skips
+another classifier call. An author cannot create a valid new receipt merely by
+calculating the public fingerprint. This signs input identity, not the displayed
+scorecard text. GitHub OAuth token refresh leaves these receipts valid; rotating
+the TypeSafe key invalidates them. A signed partial audit caused
 by explicit content or size limits remains cached until its inputs change; transient
 source-fetch failures do not receive a new receipt.
 
@@ -134,11 +135,34 @@ python3 -B scripts/deploy_jev.py preflight
 python3 -B scripts/deploy_jev.py install-secrets
 ```
 
-Credentials remain under Keychain service `openhands` and the Cloud secret store.
-The helper uses `OPENHANDS_API_KEY` internally and installs only missing
-`TYPESAFE_API_KEY` and `ENYST_GH_TOKEN` entries; existing Cloud values are preserved.
-The runtime fetches only those two named secrets. No values belong in configuration,
-source, archives, receipts, or Git history.
+### Credentials
+
+The helper uses `OPENHANDS_API_KEY` from Keychain service `openhands` for Cloud
+administration. Its local GitHub identity and repository-privacy checks use the
+local `ENYST_GH_TOKEN`; that token is never uploaded. `install-secrets` installs
+only a missing `TYPESAFE_API_KEY`, preserving all existing Cloud values.
+
+The runtime reads the Cloud integration's built-in **`github_token`** and the
+custom **`TYPESAFE_API_KEY`** through the sandbox-scoped endpoint:
+
+```text
+GET /api/v1/sandboxes/{SANDBOX_ID}/settings/secrets/{name}
+X-Session-API-Key: <sandbox session key>
+```
+
+The GitHub integration resolves the owner's current OAuth credential and refreshes
+it when needed. The runner verifies that GitHub reports `enyst` before writing.
+A raw Python automation does not depend on an agent conversation exporting
+credentials into its shell. No values belong in configuration, source, archives,
+receipts, or Git history.
+
+**Migration verified September 19, 2026:** a Cloud trial resolved `github_token`
+as `enyst`, confirmed repository write permissions for all four OpenHands repos,
+and successfully replaced the existing audit section on the private test PR.
+The redundant custom Cloud `ENYST_GH_TOKEN` was then removed. The existing
+`REMOTE_GH` secret and local Keychain entry were preserved. Version 2 changes the
+receipt signing key/domain, so prior receipts refresh once; subsequent GitHub
+OAuth refreshes do not trigger unnecessary audits.
 
 Supply a definition JSON file with `name: "Jev Fast Audit"`, the intended `trigger`,
 `entrypoint: "python3 main.py"`, and optional `timeout`/`keep_alive`. The helper adds

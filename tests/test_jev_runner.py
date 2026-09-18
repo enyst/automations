@@ -20,6 +20,7 @@ def pr(body="## Summary\nKeep me.\n\n## Auto-Test\nOther reviewer owns this.\n")
 
 class GitHub:
     token = "synthetic-test-token"
+    receipt_key = "synthetic-typesafe-test-key"
 
     def __init__(self, record, guard_edit=False, after_edit=False):
         self.record = copy.deepcopy(record)
@@ -88,6 +89,44 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(result["status"], "current")
         self.assertFalse(gh.writes)
         self.assertNotEqual(r.signature(gh, "0" * 64), signed)
+
+    def test_github_token_refresh_preserves_cached_audit(self):
+        original = pr()
+        gh = GitHub(original)
+        identity = r.fingerprint(original)
+        saved = r.signature(gh, identity)
+        gh.record["body"] = r.upsert_audit(original["body"], "Scores\n<!-- jev-input-signature " + saved + " -->")
+        gh.token = "refreshed-synthetic-github-token"
+        result = r.audit_pr(gh, None, "enyst/automations", 1, {"repositories": ["enyst/automations"]})
+        self.assertEqual(result["status"], "current")
+        self.assertFalse(gh.writes)
+        gh.receipt_key = "rotated-synthetic-typesafe-key"
+        self.assertNotEqual(r.signature(gh, identity), saved)
+
+    def test_receipt_requires_separate_signing_key(self):
+        gh = r.API(r.GITHUB, "synthetic-github-token")
+        with self.assertRaisesRegex(r.AuditError, "receipt_key_missing"):
+            r.signature(gh, "0" * 64)
+
+    def test_run_uses_integrated_github_and_reuses_typesafe_secret(self):
+        values = {"github_token": "synthetic-provider-token", "TYPESAFE_API_KEY": "synthetic-typesafe-key"}
+        with patch.object(r, "secret", side_effect=values.__getitem__) as secrets, \
+             patch.object(r.API, "request", return_value={"login": "enyst"}), \
+             patch.object(r, "select_targets", return_value=[]) as select, \
+             patch("builtins.print"):
+            r.run([])
+        self.assertEqual([call.args[0] for call in secrets.call_args_list], ["TYPESAFE_API_KEY", "github_token"])
+        gh = select.call_args.args[0]
+        self.assertEqual(gh.token, values["github_token"])
+        self.assertEqual(gh.receipt_key, values["TYPESAFE_API_KEY"])
+
+    def test_integrated_wrong_account_fails_before_selecting_prs(self):
+        with patch.object(r, "secret", return_value="synthetic-test-secret"), \
+             patch.object(r.API, "request", return_value={"login": "different-account"}), \
+             patch.object(r, "select_targets") as select:
+            with self.assertRaisesRegex(r.AuditError, "wrong_github_account"):
+                r.run([])
+        select.assert_not_called()
 
     def test_cron_wrapper_allows_manual_trial_and_event_selects_exact_pr(self):
         config = {"manual_target": {"repository": "enyst/automations", "number": 1}}

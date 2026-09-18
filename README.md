@@ -70,6 +70,9 @@ The deployed configuration has no manual target, force re-auditing is off,
 the run timeout is 240 seconds, and sandbox keep-alive is off.
 
 The runner calls TypeSafe's **`jev-1.13.0`** classifier and writes as **@enyst**.
+It reads the Cloud integration's built-in `github_token`; the custom Cloud
+`ENYST_GH_TOKEN` copy was removed after a successful migration trial on September
+19. The existing `REMOTE_GH` secret is preserved.
 It maintains one `## Jev-Fast-Audit` section in each selected PR description:
 a compact signal, evidence link, coverage, and timing, with all estimates in a
 collapsed table. Repeat runs replace that section; unchanged inputs with a valid
