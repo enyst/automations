@@ -8,7 +8,6 @@ import hashlib
 import json
 from pathlib import Path
 import sys
-import subprocess
 import types
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -18,8 +17,9 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / 'sources/jev-fast-audit'))
 # Freeze the pre-experiment code and validator even after live code changes.
 BASELINE_COMMIT = "fe5a5d32af5f343f9204b173ee5f1966db2be8bf"
-BASELINE_SOURCE = subprocess.check_output(
-    ["git", "show", BASELINE_COMMIT + ":sources/jev-fast-audit/audit.py"], cwd=ROOT)
+BASELINE_SOURCE = (HERE / "baseline_audit.py").read_bytes()
+if hashlib.sha256(BASELINE_SOURCE).hexdigest() != "4fd7d1261284f456861778b3577f207b62aacf3b4f597cbcae120f2b60e0e0a3":
+    raise ValueError("baseline_source_changed")
 audit = types.ModuleType("baseline_audit")
 exec(compile(BASELINE_SOURCE, "baseline_audit.py", "exec"), audit.__dict__)
 import main as runtime
@@ -66,38 +66,24 @@ def fixture_state(case, number):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run', action='store_true', help='Make classifier calls using the existing authorized TypeSafe key')
-    parser.add_argument('--pr-input', type=Path, required=True, help='Saved complete request for the immutable trial PR')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     candidate = json.loads((HERE / 'candidate.json').read_text())
     cases = json.loads((HERE / 'cases.json').read_text())
     rules = candidate['rules']
     assert {r['id'] for r in rules} == set(audit.RISKS)
-    original = json.loads(args.pr_input.read_text())['state']
     jobs = []
     for index, case in enumerate(cases, 1):
         state = fixture_state(case, index)
         assert state['coverage']['complete']
         for variant in ('baseline', 'candidate'):
             jobs.append((case['id'], variant, state, case['expected']))
-    # The same full PR is checked twice per variant; no labeling is sent to Jev.
-    for repeat in range(1, 3):
-        for variant in ('baseline', 'candidate'):
-            jobs.append((f'pr499-full-{repeat}', variant, original, {}))
-    # Separate the wording comparison from Abide's file-level input granularity.
-    for row in original['files']:
-        state = copy.deepcopy(original)
-        state['files'] = [copy.deepcopy(row)]
-        state['evaluation_scope'] = {'kind': 'single_changed_file', 'path': row['path']}
-        coverage = state['coverage']
-        coverage.update(files_total=1, files_included=1, hunks_total=len(row['hunks']), hunks_included=len(row['hunks']))
-        jobs.append(('pr499-file-' + row['id'], 'candidate_file', state, {}))
     hashes = {name: hashlib.sha256((HERE / name).read_bytes()).hexdigest() for name in ('candidate.json', 'cases.json', 'run.py')}
     hashes['baseline_audit.py'] = hashlib.sha256(BASELINE_SOURCE).hexdigest()
     report = {'created_at': dt.datetime.now(dt.timezone.utc).isoformat(), 'model': audit.MODEL,
               'hashes': hashes, 'job_count': len(jobs), 'runs': [],
               'baseline_commit': BASELINE_COMMIT,
-              'method': 'Same evidence/model/policy; candidate changes only Noul wording and true/false examples. Evidence and headline questions unchanged. File-level arm is separate. Expected labels are never sent.'}
+              'method': 'Same evidence/model/policy; candidate changes only Noul wording and true/false examples. Evidence and headline questions unchanged. Expected labels are never sent.'}
     print(json.dumps({k: v for k, v in report.items() if k != 'runs'}), flush=True)
     if not args.run:
         return

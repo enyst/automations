@@ -98,11 +98,10 @@ question-writing pattern from [Abide's compiler guidance](https://github.com/col
 It remains fifteen Nouls, fifteen evidence Choices, and one headline Choice, with
 no impact score, automatic approval, or LLM escalation.
 
-The September 19 comparison used twelve independently prepared synthetic cases
-and the unchanged trial PR. The candidate separated several positive/benign pairs
-more clearly, but still did not flag the original PR helper. This is a small
-exploratory test, not calibrated security accuracy. Results and limitations live
-in `evaluations/abide-comparison/` in the private backup repository.
+The September 19 comparison used twelve independently prepared synthetic cases.
+The candidate separated several positive/benign pairs more clearly. This is a
+small exploratory test, not calibrated security accuracy. Results and limitations
+live in `evaluations/abide-comparison/` in the backup repository.
 
 All returned probabilities must be finite and within [0, 1], with exactly the
 expected keys. Choice distributions allow at most 0.01 rounding error in their

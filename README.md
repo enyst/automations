@@ -39,7 +39,7 @@ not currently running.
 | Cloud | [Attention router - weekly SDK PRs and @enyst mentions](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/) | Enabled | Scores SDK PRs and recent @enyst mentions weekly, then updates Review Notebook notes. | [Source complete](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/export-status.json) |
 | Cloud | [Issue Duplicate Checker - auto-close sweep](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/) | Enabled | Revisits marked duplicate issues for possible closure; deployed safeguards remain unverified. | [Source complete](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/export-status.json) |
 | Cloud | [Issue Duplicate Checker - detect](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/) | Enabled | Checks newly opened issues for duplicates and marks candidates for later closure. | [Source complete](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/export-status.json) |
-| Cloud | [Jev Fast Audit](sources/jev-fast-audit/) | Enabled | Polls four OpenHands repositories every five minutes and replaces its scorecard in eligible PR descriptions. | [Deployment definition](definitions/jev-fast-audit.json); [export manifest](cloud-automations/manifest.json) |
+| Cloud | [Jev Fast Audit](sources/jev-fast-audit/) | Enabled | Polls four OpenHands repositories hourly and replaces its scorecard in eligible PR descriptions. | [Deployment definition](definitions/jev-fast-audit.json); [export manifest](cloud-automations/manifest.json) |
 | Cloud | [Roasted Code Review - OpenHands PRs (on behalf of @enyst)](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/) | Disabled | Historical PR reviewer posting COMMENT reviews and updating the public review log. | [Source complete](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/export-status.json) |
 | Cloud | [Daily external PR security screen and review for OpenHands repos](cloud-automations/automation-e2ca316e-2896-4189-b1fc-fef6100d85f1/) | Disabled | Screens external contributors’ PR diffs for security concerns and reports findings. | [Source complete](cloud-automations/automation-e2ca316e-2896-4189-b1fc-fef6100d85f1/export-status.json) |
 
@@ -58,7 +58,7 @@ included in these fourteen definitions.
 
 Cloud automation **`5aee9a93-51e5-4843-ad13-301a31e1397e`** runs the source in
 [`sources/jev-fast-audit/`](sources/jev-fast-audit/). Deployment read-back verified
-**enabled, every five minutes** (`*/5 * * * *`, UTC) on September 19, 2026, polling:
+**enabled, hourly** (`0 * * * *`, UTC) on September 19, 2026, polling:
 
 - `OpenHands/OpenHands`
 - `OpenHands/software-agent-sdk`

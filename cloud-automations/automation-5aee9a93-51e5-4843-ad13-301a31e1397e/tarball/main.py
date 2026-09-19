@@ -18,10 +18,17 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+import audit
 from audit import AuditValidationError, MODEL, build_context, questions_for, render_summary, validate_answers
 from description import strip_audit, upsert_audit
 
 VERSION = "2"
+# When TypeSafe/Jev rejects a request with "max_tokens_exceeded", rebuild the same
+# already-fetched context at a smaller transport budget (whole hunks are dropped,
+# then surrounding source) and retry. Jev publishes no tokenizer, so these byte
+# budgets are a data-driven ladder measured against its 64k-request / 32k-state
+# token limits; 128 KiB keeps all patches for typical large PRs (~40-44k tokens).
+RETRY_BUDGETS = (131072, 98304, 65536, 49152)
 GITHUB = "https://api.github.com"
 TYPESAFE = "https://api.typesafe.ai"
 CLOUD = "https://app.all-hands.dev"
@@ -62,8 +69,15 @@ class API:
             return body if raw else json.loads(body) if body else None
         except urllib.error.HTTPError as exc:
             code = exc.code
+            try:
+                body = exc.read().decode("utf-8", "replace")
+            except Exception:
+                body = ""
             exc.close()
-            raise AuditError("http_" + str(code)) from None
+            error = AuditError("http_" + str(code))
+            error.http_status = code
+            error.http_body = body
+            raise error from None
         except (urllib.error.URLError, TimeoutError, OSError):
             raise AuditError("network_unavailable") from None
         except (ValueError, UnicodeError):
@@ -134,7 +148,7 @@ def file_text(gh, repository, path, ref):
         return None
 
 
-def gather(gh, repository, pr):
+def gather_raw(gh, repository, pr):
     rows = files_for(gh, repository, pr["number"])
     if len(rows) != pr.get("changed_files", len(rows)):
         raise AuditError("incomplete_file_listing")
@@ -153,7 +167,59 @@ def gather(gh, repository, pr):
         contents = dict(pool.map(load, candidates))
     clean = dict(pr, body=strip_audit(pr.get("body") or "").rstrip())
     clean["base"] = dict(pr["base"], sha=merge_base)
+    return clean, rows, contents
+
+
+def gather(gh, repository, pr):
+    clean, rows, contents = gather_raw(gh, repository, pr)
     return build_context(clean, rows, contents)
+
+
+def _build_state(clean, rows, contents, budget):
+    """Build request state at an explicit transport budget, or the full default if None."""
+    if budget is None:
+        return build_context(clean, rows, contents)
+    previous = audit.MAX_TRANSPORT_BYTES
+    audit.MAX_TRANSPORT_BYTES = budget
+    try:
+        return build_context(clean, rows, contents)
+    finally:
+        audit.MAX_TRANSPORT_BYTES = previous
+
+
+def classify(jev, state):
+    questions = questions_for(state)
+    started = time.monotonic()
+    result = jev.request("/v1/systemone", "POST", {"model": MODEL, "state": state, "questions": questions})
+    latency = round((time.monotonic() - started) * 1000)
+    return questions, result, latency
+
+
+def _is_max_tokens(error):
+    return isinstance(error, AuditError) and str(error) == "http_400" and "max_tokens_exceeded" in getattr(error, "http_body", "")
+
+
+def classify_with_retry(jev, clean, rows, contents):
+    """Classify, shrinking the transport budget when Jev rejects with max_tokens_exceeded.
+
+    Only the state's omitted-hunk/context metadata changes on retry; the fetched
+    source, merge base, and PR identity are unchanged, so coverage reasons already
+    record which hunks were dropped for each reduced attempt.
+    """
+    last = None
+    for budget in (None,) + RETRY_BUDGETS:
+        state = _build_state(clean, rows, contents, budget)
+        try:
+            questions, result, latency = classify(jev, state)
+        except AuditError as exc:
+            last = exc
+            if _is_max_tokens(exc):
+                continue
+            raise
+        return state, questions, result, latency
+    if last is not None:
+        raise last
+    raise AuditError("max_tokens_exceeded")
 
 
 def publish(gh, repository, number, expected_fingerprint, summary):
@@ -194,11 +260,8 @@ def audit_pr(gh, jev, repository, number, config, force=False, write=True):
     identity = fingerprint(pr)
     if not force and RECEIPT.search(pr.get("body") or "") and any(hmac.compare_digest(signature(gh, identity), saved) for saved in RECEIPT.findall(pr.get("body") or "")):
         return {"repository": repository, "pr": number, "status": "current"}
-    state = gather(gh, repository, pr)
-    questions = questions_for(state)
-    started = time.monotonic()
-    result = jev.request("/v1/systemone", "POST", {"model": MODEL, "state": state, "questions": questions})
-    latency = round((time.monotonic() - started) * 1000)
+    clean, rows, contents = gather_raw(gh, repository, pr)
+    state, questions, result, latency = classify_with_retry(jev, clean, rows, contents)
     validate_answers(result, questions)
     summary = render_summary(state, result, latency)
     summary += "\n\n<!-- jev-input-signature " + signature(gh, identity) + " -->"

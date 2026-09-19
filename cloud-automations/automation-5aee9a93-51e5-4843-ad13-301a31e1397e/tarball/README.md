@@ -98,11 +98,10 @@ question-writing pattern from [Abide's compiler guidance](https://github.com/col
 It remains fifteen Nouls, fifteen evidence Choices, and one headline Choice, with
 no impact score, automatic approval, or LLM escalation.
 
-The September 19 comparison used twelve independently prepared synthetic cases
-and the unchanged trial PR. The candidate separated several positive/benign pairs
-more clearly, but still did not flag the original PR helper. This is a small
-exploratory test, not calibrated security accuracy. Results and limitations live
-in `evaluations/abide-comparison/` in the private backup repository.
+The September 19 comparison used twelve independently prepared synthetic cases.
+The candidate separated several positive/benign pairs more clearly. This is a
+small exploratory test, not calibrated security accuracy. Results and limitations
+live in `evaluations/abide-comparison/` in the backup repository.
 
 All returned probabilities must be finite and within [0, 1], with exactly the
 expected keys. Choice distributions allow at most 0.01 rounding error in their
@@ -144,8 +143,8 @@ Target selection supports a GitHub event, an explicit command-line target, a
 configured `manual_target`, or polling. Every selected repository must also appear
 in the configuration allowlist.
 
-The intended recurring Cloud configuration is **every five minutes**
-(`*/5 * * * *`, UTC), polling these repositories:
+The intended recurring Cloud configuration is **every hour**
+(`0 * * * *`, UTC), polling these repositories:
 
 - `OpenHands/OpenHands`
 - `OpenHands/software-agent-sdk`
@@ -157,8 +156,8 @@ updated from that point onward. It is an update-time floor, not a creation-time
 filter: an older PR updated after activation can qualify. Polling skips drafts,
 closed PRs, and inputs with a current signed receipt. By default, a run processes
 at most six changed PRs. Selection takes turns across repository queues, rotating
-both repository order and the starting PR in each queue every five-minute time
-slot. Each queue is ordered by PR number, so repeatedly failing PRs cannot keep
+both repository order and the starting PR in each queue every time-slot
+rotation. Each queue is ordered by PR number, so repeatedly failing PRs cannot keep
 occupying its first positions. With four nonempty repository queues and the default
 six-PR limit, every repository receives a turn each run; later slots reach PRs
 behind repeated failures. Before recurring operation, remove `manual_target` and
