@@ -3,28 +3,30 @@
     {
       "bundle": {
         "kind": "cloud_download",
-        "sha256": "7f13d47b5d2aa13cd24e61310458fe78ef04275c94725ef78124e18c9f0e8865"
+        "sha256": "612a59ba0e298e9304126f70f3ea72726e3de14ff1d74f0ab04ea56dac282d41"
       },
       "definition_sha256": "a2ce905f9ff364d8714db87e1b82565768161aa324b86e4bdd7af39762501eb0",
       "directory": "automation-623cc664-07c2-425e-bc99-8da3d43c4206",
       "enabled": true,
       "files": {
-        "RUBRIC.md": "674b41e56c71347bde94a98f543e14f6d1084abb3a6458016b352d800a5019b3",
-        "config.json": "aa3dc4b3fa5f1b72bedb528ffee6ef31f0e88cb33c20689f99c73ec11554a44c",
-        "core.py": "9e707989a94e2f4e02f2110bdce4253fbf836e22e5490dfba5a154bb871d7f84",
-        "main.py": "82e254c67109a37431df7abe67929fc2d5adeccb5ff81b2f747ff8c503b37e65",
+        "RUBRIC.md": "c47ec5ef4b100f61ec499e55b610ba7bef45f6273929c5a6d09950174d0bbe47",
+        "comments.py": "b140daf5a593e42b3d754e217ece0c7727acffb06fbf368e4a6a84bbd20cffdc",
+        "config.json": "ad2fbe1207d122d69ff4d6c0c88bc48ac512e928daf9f68a9843d08befed5a35",
+        "core.py": "c052b1a958676a112467de9bf5d51f0752c2153d208695b6d4fbf27555c69236",
+        "descriptions.py": "51daec6f661e3fe3317a7f3bab46246fa2b2ea58f1848c8d77f18455f5a42825",
+        "main.py": "7db68a4f349a02d261b685c8833cad796ef1de1eaf5f86b4b586c42681b70da3",
         "setup.sh": "41357c12d49e2784b8d981d5e446984d8f33f95ca9048c54a4c645d2695229fa",
-        "transport.py": "679510bc0a5f62c4e906197b19e1f53396b9e13c309665febf91f975b389ec5a",
-        "writer.py": "303d7d579875d8bafaff7849854d01c202675a8bbb502b937d1fa007efdc5b58"
+        "transport.py": "878b8351a6eab9743b55bb17e311cf2a63b2576930352a92f65d749f98990be5",
+        "writer.py": "3b8ae7c7ae9ddf383d49b9bb1b2e8026077456aac55cc5fa10f4063985cbda44"
       },
       "id": "623cc664-07c2-425e-bc99-8da3d43c4206",
       "name": "Notebook Field Notes",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
       "status": "complete",
-      "tarball_path": "oh-internal://uploads/778813b9-04c3-4351-a17e-36ac6abc8307",
-      "updated_at": "2026-09-19T20:50:21.384035Z",
-      "updated_at_after_download": "2026-09-19T20:50:21.384035Z",
+      "tarball_path": "oh-internal://uploads/f7aa8e65-a1ac-47fb-9b23-ea76cf4952f6",
+      "updated_at": "2026-09-19T21:38:26.367522Z",
+      "updated_at_after_download": "2026-09-19T21:38:26.367522Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -277,7 +279,7 @@
   "complete": true,
   "direction": "cloud_to_git_export_only",
   "exported_owner_definitions": 10,
-  "generated_at": "2026-09-19T20:51:09.253091+00:00",
+  "generated_at": "2026-09-19T21:39:52.591685+00:00",
   "identity": {
     "login": "enyst",
     "org_id": "18881862-24a9-4521-ba8a-8424314c6458",

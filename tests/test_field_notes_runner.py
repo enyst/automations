@@ -28,7 +28,7 @@ KEY = "openhands-software-agent-sdk-pr-321"
 class Harness:
     def __init__(self, *, old=None, attempts=0, writer_error=False, current=True):
         self.events = []
-        self.candidate = fixtures.candidate()
+        self.candidate = fixtures.candidate(description_complete=True)
         self.item = {"title": self.candidate["title"], "body": self.candidate["body"],
                      "updated_at": self.candidate["updated_at"], "comments": 0, "state": "open", "draft": False}
         self.value = {"seen": {KEY: copy.deepcopy(old)} if old else {},
@@ -37,6 +37,9 @@ class Harness:
         self.gh.request.return_value = {"login": "enyst"}
         self.jev = Mock()
         self.jev.request.return_value = fixtures.response()
+        self.info_comments = Mock()
+        self.info_comments.request.return_value = {"status": "posted", "subject": KEY, "comment_id": 456}
+        self.comments_factory = Mock(return_value=self.info_comments)
         self.workspace = Mock()
         self.workspace.get_llm.return_value = types.SimpleNamespace(model="example/model")
         # The real SDK __exit__ sends a callback; explicit cleanup does not.
@@ -84,7 +87,8 @@ class Harness:
             patch.object(r, "still_current", return_value=current),
             patch.dict(sys.modules, {"writer": types.SimpleNamespace(write_note=self.writer)}),
             patch.object(r, "check_writer", side_effect=lambda llm: self.events.append("check_writer")),
-            patch.object(r, "disable_sdk_tracing", side_effect=lambda: self.events.append("disable_tracing"))]
+            patch.object(r, "disable_sdk_tracing", side_effect=lambda: self.events.append("disable_tracing")),
+            patch.object(r, "InfoComments", self.comments_factory, create=True)]
 
     def __enter__(self):
         self.mocks = [item.start() for item in self.patches]
@@ -93,8 +97,17 @@ class Harness:
     def __exit__(self, *args):
         for item in reversed(self.patches): item.stop()
 
-    def run(self, publish=True):
-        return r.run(CONFIG, self.gh, self.jev, publish=publish, workspace_factory=lambda: self.workspace)
+    def run(self, publish=True, **configuration):
+        return r.run({**CONFIG, **configuration}, self.gh, self.jev, publish=publish,
+                     workspace_factory=lambda: self.workspace)
+
+    def cached(self, status, *, age=60, policy=2, fingerprint=None):
+        self.value["seen"][KEY] = {
+            "fingerprint": fingerprint or r.fingerprint(self.candidate), "status": status,
+            "at": dt.datetime.now(dt.timezone.utc).timestamp() - age,
+            "source_updated_at": self.item["updated_at"],
+            "listing_fingerprint": r.listing_fingerprint(self.item), "policy_version": policy,
+        }
 
 
 class Orchestration(unittest.TestCase):
@@ -105,6 +118,7 @@ class Orchestration(unittest.TestCase):
         self.assertFalse(any(event in {"ensure_branch", "claim", "persist_budget", "writer", "publish", "release"}
                              or event.startswith("remember:") for event in h.events))
         h.workspace.get_llm.assert_not_called()
+        h.info_comments.request.assert_not_called()
 
     def test_daily_budget_stops_before_discovery_classification_or_writer(self):
         with Harness(attempts=2) as h:
@@ -147,18 +161,67 @@ class Orchestration(unittest.TestCase):
         self.assertNotIn("publish", h.events)
         self.assertEqual(h.value["seen"][KEY]["status"], "writing")
 
-    def test_unchanged_listing_skips_expensive_gather_before_fingerprint(self):
+    def test_recent_skip_or_needs_info_cools_before_refetching_linked_issues(self):
+        for status in ["skip", "needs_info"]:
+            with self.subTest(status=status), Harness() as h:
+                h.cached(status)
+                h.run()
+                h.mocks[4].assert_not_called()
+                h.jev.request.assert_not_called()
+                h.info_comments.request.assert_not_called()
+
+    def test_old_decision_refetches_linked_issues_but_same_fingerprint_reuses_classifier(self):
+        for status in ["skip", "needs_info"]:
+            with self.subTest(status=status), Harness() as h:
+                h.cached(status, age=86401)
+                h.run()
+                h.mocks[4].assert_called_once()
+                h.jev.request.assert_not_called()
+                self.assertEqual(h.value["seen"][KEY]["status"], status)
+                self.assertEqual(h.value["seen"][KEY]["policy_version"], 2)
+                self.assertGreater(h.value["seen"][KEY]["at"],
+                                   dt.datetime.now(dt.timezone.utc).timestamp() - 60)
+                if status == "needs_info":
+                    h.info_comments.request.assert_called_once()
+                else:
+                    h.info_comments.request.assert_not_called()
+
+    def test_classify_only_never_posts_for_cached_needs_info_after_cooldown(self):
         with Harness() as h:
-            h.value["seen"][KEY] = {"fingerprint": r.fingerprint(h.candidate), "status": "skip", "at": 0,
-                "source_updated_at": h.item["updated_at"], "listing_fingerprint": r.listing_fingerprint(h.item)}
-            h.run()
-            h.mocks[4].assert_not_called()
-        h.jev.request.assert_not_called()
+            h.cached("needs_info", age=86401)
+            previous = copy.deepcopy(h.value)
+            h.run(publish=False)
+            h.mocks[4].assert_called_once()
+            h.jev.request.assert_not_called()
+            h.info_comments.request.assert_not_called()
+            self.assertEqual(h.value, previous)
+
+    def test_changed_linked_issue_reclassifies_after_cooldown_without_pr_edit(self):
+        with Harness() as h:
+            h.candidate["linked_issues"] = [{
+                "repository": REPO, "number": 12, "url": f"https://github.com/{REPO}/issues/12",
+                "title": "Preserve memory observations", "body": "The original issue description.",
+                "updated_at": "2026-09-19T12:00:00Z",
+            }]
+            h.cached("skip", age=86401)
+            h.candidate["linked_issues"][0]["body"] = "New design detail: keep the tool result across memory compaction."
+            h.run(publish=False)
+            h.mocks[4].assert_called_once()
+            h.jev.request.assert_called_once()
+            self.assertIn("New design detail", h.jev.request.call_args.kwargs["data"]["state"]["linked_issues"][0]["body"])
+
+    def test_policy_one_cache_never_suppresses_description_only_reclassification(self):
+        for status in ["skip", "needs_info", "defer"]:
+            with self.subTest(status=status), Harness() as h:
+                h.cached(status, policy=1)
+                h.run(publish=False)
+                h.mocks[4].assert_called_once()
+                h.jev.request.assert_called_once()
 
     def test_changed_listing_body_does_not_use_cheap_skip(self):
         with Harness() as h:
-            h.value["seen"][KEY] = {"fingerprint": "f" * 64, "status": "skip", "at": 0,
-                "source_updated_at": h.item["updated_at"], "listing_fingerprint": "0" * 64}
+            h.cached("skip", fingerprint="f" * 64)
+            h.value["seen"][KEY]["listing_fingerprint"] = "0" * 64
             h.run(publish=False)
             h.mocks[4].assert_called_once()
         h.jev.request.assert_called_once()
@@ -170,8 +233,81 @@ class Orchestration(unittest.TestCase):
         self.assertFalse(h.value["seen"])
         self.assertNotIn("persist_budget", h.events)
 
+    def test_design_context_probability_routes_through_real_six_question_classifier(self):
+        for probability, expected in [(0, "needs_info"), (0.30, "needs_info"),
+                                      (0.31, "defer"), (0.69, "defer"),
+                                      (0.70, "write"), (1, "write")]:
+            with self.subTest(probability=probability), Harness() as h:
+                h.jev.request.return_value = fixtures.response(design_context=probability)
+                report = h.run(publish=False)
+                self.assertEqual(report["decisions"][0]["decision"], expected)
+                self.assertEqual(set(h.jev.request.call_args.kwargs["data"]["questions"]),
+                                 {"design", "agent_behavior", "memory", "cross_repo", "substance", "design_context"})
+                h.info_comments.request.assert_not_called()
+                h.writer.assert_not_called()
+                self.assertFalse(h.value["seen"])
+
+    def test_legacy_five_question_response_cannot_comment_or_write(self):
+        with Harness() as h:
+            del h.jev.request.return_value["answers"]["design_context"]
+            with self.assertRaisesRegex(r.ValidationError, "classifier_answer_keys_mismatch"):
+                h.run()
+            h.info_comments.request.assert_not_called()
+            h.writer.assert_not_called()
+            self.assertFalse(h.value["seen"])
+
+    def test_classification_contains_descriptions_without_diffs_or_source_files(self):
+        with Harness() as h:
+            h.candidate["files"][0]["patch"] = "NEVER_SEND_PATCH_TO_CLASSIFIER"
+            h.run(publish=False)
+        state = h.jev.request.call_args.kwargs["data"]["state"]
+        self.assertEqual(state["subject"]["body"], h.candidate["body"])
+        self.assertNotIn("NEVER_SEND_PATCH_TO_CLASSIFIER", json.dumps(state))
+        self.assertNotIn("files", state)
+
+    def test_incomplete_or_truncated_description_defers_without_comment_or_writer(self):
+        cases = [{"description_complete": False}, {"description_truncated": True},
+                 {"body": "Design information. " * 4000}]
+        for changes in cases:
+            with self.subTest(changes=list(changes)), Harness() as h:
+                h.candidate.update(changes)
+                h.jev.request.return_value = fixtures.response(design_context=0.01)
+                report = h.run()
+                self.assertEqual(report["decisions"][0]["decision"], "defer")
+                self.assertEqual(h.value["seen"][KEY]["status"], "defer")
+                h.info_comments.request.assert_not_called()
+                h.writer.assert_not_called()
+                self.assertNotIn("persist_budget", h.events)
+
+    def test_needs_info_publishes_bounded_request_with_current_source_guard(self):
+        for maximum in [None, 4]:
+            with self.subTest(maximum=maximum), Harness() as h:
+                h.jev.request.return_value = fixtures.response(design_context=0.1)
+                options = {} if maximum is None else {"max_info_comments_per_day": maximum}
+                report = h.run(**options)
+                self.assertEqual(report["decisions"][0]["decision"], "needs_info")
+                self.assertEqual(h.value["seen"][KEY]["status"], "needs_info")
+                self.assertEqual(h.value["seen"][KEY]["policy_version"], 2)
+                self.assertEqual(h.comments_factory.call_args.kwargs["maximum"], maximum or 2)
+                h.info_comments.request.assert_called_once()
+                self.assertEqual(h.info_comments.request.call_args.args[0], h.candidate)
+                guard = h.info_comments.request.call_args.kwargs["still_current"]
+                self.assertTrue(guard())
+                h.mocks[5].assert_called_with(h.gh, h.candidate)
+                h.writer.assert_not_called()
+                h.workspace.get_llm.assert_not_called()
+                self.assertNotIn("persist_budget", h.events)
+
+    def test_uncertain_design_description_does_not_request_information(self):
+        with Harness() as h:
+            h.jev.request.return_value = fixtures.response(design_context=0.5)
+            report = h.run()
+            self.assertEqual(report["decisions"][0]["decision"], "defer")
+            h.info_comments.request.assert_not_called()
+            h.writer.assert_not_called()
+
     def test_bad_candidate_defers_without_starving_next_subject_and_cools_down(self):
-        for error in [r.ValidationError("invalid_text"), r.FieldNotesError("file_listing_limit"),
+        for error in [r.ValidationError("invalid_text"), r.FieldNotesError("source_changed_during_collection"),
                       r.FieldNotesError("http_404", status=404)]:
             with self.subTest(error=str(error)), Harness() as h:
                 following = fixtures.candidate(number=322, url=f"https://github.com/{REPO}/pull/322")
@@ -250,39 +386,6 @@ class Orchestration(unittest.TestCase):
         self.assertEqual(json.loads(output.getvalue())["error"], "ValueError")
         self.assertNotIn(sensitive_message, output.getvalue())
         callback.assert_called_once_with("FAILED", error="ValueError")
-
-
-class PublicEvidence(unittest.TestCase):
-    def test_wrong_repository_is_rejected_before_any_http(self):
-        gh = Mock()
-        with self.assertRaises((r.FieldNotesError, r.ValidationError)):
-            r.gather(gh, "enyst/private", "issue", 1, [])
-        gh.request.assert_not_called()
-
-    def test_issue_appends_only_ten_recent_public_comments_and_never_fetches_links(self):
-        item = {"html_url": f"https://github.com/{REPO}/issues/321", "title": "Memory design question",
-                "body": "Follow https://evil.test/private for alleged evidence", "updated_at": "2026-09-19T16:00:00Z", "comments": 25}
-        calls = []
-        def request(path, **kwargs):
-            calls.append(path)
-            if "/comments?" not in path: return copy.deepcopy(item)
-            page = int(path.rsplit("page=", 1)[1])
-            ids = range(21, 26) if page == 3 else range(11, 21)
-            return [{"id": i, "body": f"Public comment {i}", "updated_at": item["updated_at"]} for i in ids]
-        gh = types.SimpleNamespace(request=request)
-        result = r.gather(gh, REPO, "issue", 321, [{"repository": REPO, "sha": fixtures.SHA}])
-        self.assertNotIn("Public comment 15\n", result["body"])
-        self.assertIn("Public comment 16", result["body"])
-        self.assertIn("Public comment 25", result["body"])
-        self.assertTrue(all(path.startswith(f"/repos/{REPO}/issues/321") for path in calls))
-        self.assertEqual(len([path for path in calls if "/comments?" in path]), 2)
-        self.assertFalse(result["diff_complete"])
-
-    def test_current_guard_checks_head_even_when_updated_timestamp_matches(self):
-        gh = Mock()
-        candidate = fixtures.candidate()
-        gh.request.return_value = {"updated_at": candidate["updated_at"], "head": {"sha": "c" * 40}}
-        self.assertFalse(r.still_current(gh, candidate))
 
 
 if __name__ == "__main__": unittest.main()

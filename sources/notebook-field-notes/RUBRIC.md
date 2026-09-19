@@ -10,10 +10,18 @@ allowlisted name alone is not proof that fetched material is public.
 
 Treat an issue and a pull request as distinct subjects. A subject has one stable
 identifier, for example `field-note-openhands-software-agent-sdk-pr-321`.
-Version fingerprints include the title, description, exact source commits,
-changed-file excerpts and coverage flags. Updating a timestamp or the fully
-delimited Jev Fast Audit scorecard alone does not count as a material change.
-Human text following the scorecard remains part of the fingerprint.
+Policy version **2** uses descriptions for triage. Version fingerprints include
+that policy version, the title, description, linked issue descriptions, source
+identity and coverage flags. Updating a timestamp or the fully delimited Jev Fast
+Audit scorecard alone does not count as a material change. Human text following
+the scorecard remains part of the fingerprint. The candidate's original body is
+retained for freshness checks; only the classifier copy omits the scorecard.
+
+The collector supplies `linked_issues` rows with a public issue URL, title, body
+and optional `updated_at`, plus `description_complete` and
+`description_truncated`. Up to four linked issues are retained. Missing retrieval
+or additional omitted issues make coverage incomplete. An empty description
+successfully fetched from GitHub is distinct from a failed fetch.
 
 The initial screen excludes draft PRs, already-published subjects and completed
 fingerprints. Recently active merged PRs and closed issues remain eligible.
@@ -21,13 +29,12 @@ Failed or deferred work must never be added to completed fingerprints. A
 candidate becomes completed only after a valid explicit selection result, or
 after its publication artifact is durably committed.
 
-Mechanical exclusions are deliberately narrow: an explicitly described lockfile
-regeneration/reformatting with complete changed-file evidence, no dependency,
-version, integrity, registry or source changes in its patch, and no design or
-behavior signal in the title/description. Ordinary dependency updates go to Jev.
-There is no minimum patch size, and design documents are eligible.
+There is no minimum patch size, and design documents are eligible. The current
+collector does not retrieve changed-file patches for triage. The older optional
+mechanical screen still requires complete file evidence and never sends it to
+Jev; it does not apply to the new description-only candidates.
 
-## Five independent Jev questions
+## Six independent Jev questions
 
 The pinned classifier is `jev-1.13.0`, using TypeSafe's
 `https://api.typesafe.ai/v1/systemone`. The existing Cloud secret name is
@@ -40,24 +47,49 @@ an estimated probability, not measured confidence or a statement of fact.
 | Agent behavior/performance | Tool loops, reasoning, observations, recovery, evaluation, latency or cost | An incidental mention of AI |
 | Memory | Retention, retrieval, compaction, replay or context trust boundaries | Ordinary RAM allocation alone |
 | Cross-repository | A concrete contract spanning at least two allowed repositories | Merely naming another repository |
-| Substance | An explainable mechanism, failure or unresolved question worth investigating | A routine PR announcement or unsupported speculation |
+| Substance | An explainable mechanism, failure or unresolved question worth investigating | Routine administrative work, even if fully described |
+| Design context | Intent, motivation and intended behavior are clear enough for this change's scope | Vague or empty text that does not explain what changes or why |
 
-The exact questions and positive/negative criteria live in `core.py`. A candidate
-is selected when at least one of the first four probabilities is at least 0.65
-and substance is at least 0.70. Runtime configuration may set stricter thresholds.
-Multiple categories can pass; categories are never forced to compete.
+The exact short questions and positive/negative criteria live in `core.py`.
+Design context measures description sufficiency, separately from whether the
+topic is interesting. A clear one-line routine fix can have sufficient context;
+the rubric does not demand architecture documents for every change.
+
+Decisions are evaluated in this order:
+
+1. Incomplete retrieval or any truncated description: **defer**, regardless of
+   probabilities. The automation's missing input must not be blamed on an author.
+2. Design context at or below 0.30: **needs information**, even when the interest
+   probabilities are low. Vague text must not disappear into the uninteresting
+   bucket merely because its purpose cannot be understood.
+3. Design context below 0.70: **defer** the ambiguous case.
+4. Otherwise, at least one of the four topic probabilities at or above 0.65 and
+   substance at or above 0.70: **write**; a clearly described, uninteresting topic
+   is **skipped**.
+
+These thresholds are estimated probability gates, not rankings or calibrated
+quality scores. Multiple topic categories can pass. The runtime separately
+controls whether a needs-information decision may produce one bounded comment
+on an open PR; the core itself performs no external writes.
 
 Invalid model identity, missing answers, nonnumeric probabilities and values
-outside `[0, 1]` raise errors. They are not negative classifications. A negative
-result on incomplete context is deferred. A strong positive can proceed despite
-bounded excerpts: the writing agent then inspects pinned source through its
-restricted public-evidence tool. Selection is not a security audit or a claim
-that every changed line was reviewed.
+outside `[0, 1]` raise errors. They are not negative classifications. Live
+responses must include all six answers. If selected, the writing agent performs
+the deeper investigation using pinned source through its restricted public
+evidence tool. Selection itself is not a code review or security audit.
 
-Context has an explicit byte budget, which is a transport bound and not a token
-estimate. Description and patch truncation set incomplete coverage flags.
-Question wording is never shortened to fit the budget. Titles, descriptions,
-comments and code are untrusted evidence, not instructions for the automation.
+Jev receives only the subject title/description, linked issue titles/descriptions,
+the three repository names and coverage flags. A strict whitelist excludes
+fetched source, diffs, changed-file paths, comments and commit metadata. Enormous
+patches supplied by another caller are discarded before classifier validation.
+
+The state is bounded to **24,000 UTF-8 bytes** (or a smaller requested bound),
+which is a transport limit, not a token estimate. When needed, a shared byte cap
+distributes the available space across descriptions and keeps valid Unicode.
+Any truncation sets an explicit coverage flag and prevents author-facing requests
+for context. Question wording is never shortened. Descriptions remain untrusted
+evidence, not instructions. TypeSafe's larger documented model limits do not
+justify sending unrelated source to this focused classifier.
 
 ## Public artifact boundary
 
@@ -72,6 +104,10 @@ An artifact has `schema_version: 1`, `id`, `subject_id`, `title`, `summary`,
 version `fingerprint`. The `source` carries repository, PR/issue kind and number,
 canonical URL, timestamp and immutable `head_sha` (the default branch's inspected
 commit for an issue), optional `base_sha`, and optional `linked_subjects`.
+New artifacts preserve all six classifier probabilities, including
+`design_context`. Legacy artifacts with the original five probabilities remain
+valid and are not rewritten; they are never treated as new six-question live
+responses. The artifact's schema version remains 1.
 
 Only the following subject tags are accepted: `architecture`, `agent-behavior`,
 `agent-performance`, `memory` and `cross-repo`. Trusted code adds `field-notes`.
@@ -103,6 +139,7 @@ python3 -B -m unittest discover -s sources/notebook-field-notes -p test_core.py
 
 These tests run without network access, credentials, model calls or publication.
 They cover alias deduplication, material-change identity, public destinations,
-small behavioral changes, incomplete evidence, structured answer validation,
+small behavioral changes, description-only classifier inputs, Unicode truncation,
+missing-context decisions, legacy five-score artifacts, structured answer validation,
 source provenance, model attempts to choose metadata, reference exclusion and
 inert rendering.

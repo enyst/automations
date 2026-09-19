@@ -210,13 +210,33 @@ configuration changes through the next sync.
 autonomous design investigations for Liberty Labs Notebook. They watch public
 PRs and issues across OpenHands, software-agent-sdk and automation.
 
-Deterministic gates run before Jev 1.13 classifies design, agent behavior,
-memory and cross-repository interest. A bounded OpenHands writer reads pinned
-public code; trusted code validates and creates a dated note in
+Deterministic gates run before `jev-1.13.0` answers six independent questions:
+design, agent behavior/performance, memory, cross-repository interaction,
+explanatory substance and sufficient design context. Classifier policy 2 uses
+only PR/issue titles and descriptions plus up to four linked issue descriptions;
+it sends no diffs, fetched source or discussion comments. The classifier state
+has a **24,000-byte UTF-8 transport bound**, not a model token limit. Policy 2
+invalidates cached decisions from the earlier classifier policy.
+
+Insufficient design context is its own bucket, independent of topic interest.
+Only complete, untruncated input can lead to a fixed request for more context:
+at most one automatic comment attempt per open, nondraft PR and two attempts
+per UTC day. Missing retrieval or truncated input defers without an author-facing
+comment. Descriptions, including linked issue improvements, can be assessed
+again after the 24-hour cooldown; an existing request is not posted again.
+
+After selection, a bounded OpenHands writer still reads pinned public code;
+trusted code validates and creates a dated note in
 enyst/enyst.github.io/field-notes. Notes carry their autonomous byline and
 evidence. Existing notes are never overwritten by this automation.
 
 The desired hourly schedule allows at most two writing attempts per UTC day.
+The comment counter is separate, but exhausting the writing allowance still
+stops the whole run, including discovery and clarification checks, until a later
+UTC day. There is no persistent pending queue:
+unprocessed items are rediscovered oldest-update-first within the rolling
+seven-day window and can age out. The six probabilities are selection gates,
+not a score-based ranking.
 Its state and lease use a dedicated branch of this private repository, because
 the current Cloud deployment does not advertise the KV capability.
 Liberty Labs imports new notes into local D1 separately and preserves all
@@ -224,6 +244,8 @@ existing writing, visibility decisions and plate numbers. Website deployment
 remains a separate action.
 
 Use scripts/deploy_field_notes.py to stage, test, enable, inspect or pause this
-automation. After an explicit deployment, scripts/export_cloud.py refreshes the
+automation. The nine-file runtime allowlist includes `descriptions.py` and
+`comments.py`; tests, local environments and working references are excluded.
+After an explicit deployment, scripts/export_cloud.py refreshes the
 observed definition and exact runtime source under cloud-automations/.
 Pushing this repository alone does not update Cloud.

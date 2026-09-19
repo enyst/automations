@@ -15,7 +15,7 @@ NAME="Notebook Field Notes"
 STAGING={"type":"cron","schedule":"0 0 1 1 *","timezone":"UTC"}
 
 def runtime_bundle(source,known_secrets=()):
-    allowed=("main.py","core.py","writer.py","transport.py","config.json","setup.sh","RUBRIC.md")
+    allowed=("main.py","core.py","writer.py","transport.py","descriptions.py","comments.py","config.json","setup.sh","RUBRIC.md")
     with tempfile.TemporaryDirectory(prefix="field-notes-bundle-") as temporary:
         staging=Path(temporary)
         for name in allowed:

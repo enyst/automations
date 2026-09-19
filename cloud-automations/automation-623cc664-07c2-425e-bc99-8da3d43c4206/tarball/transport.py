@@ -160,11 +160,12 @@ class GitState:
         self.value["attempts"]+=1
         self.save()
         return True
-    def remember(self,key,fingerprint,status,*,source_updated_at=None,listing_fingerprint=None):
+    def remember(self,key,fingerprint,status,*,source_updated_at=None,listing_fingerprint=None,policy_version=None):
         self.assert_owned()
         self.value["seen"][key]={"fingerprint":fingerprint,"status":status,"at":self.now}
         if source_updated_at is not None:self.value["seen"][key]["source_updated_at"]=source_updated_at
         if listing_fingerprint is not None:self.value["seen"][key]["listing_fingerprint"]=listing_fingerprint
+        if policy_version is not None:self.value["seen"][key]["policy_version"]=policy_version
         # Published subjects remain deduplicated by the public manifest after pruning.
         if len(self.value["seen"])>500:
             keep=sorted(self.value["seen"],key=lambda k:self.value["seen"][k]["at"],reverse=True)[:500]

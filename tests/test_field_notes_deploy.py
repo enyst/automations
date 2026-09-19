@@ -17,7 +17,7 @@ d = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(d)
 
 IDENTIFIER = "11111111-2222-4333-8444-555555555555"
-RUNTIME = {"main.py", "core.py", "writer.py", "transport.py", "config.json", "setup.sh", "RUBRIC.md"}
+RUNTIME = {"main.py", "core.py", "writer.py", "transport.py","descriptions.py","comments.py", "config.json", "setup.sh", "RUBRIC.md"}
 
 
 def runtime_files(root):

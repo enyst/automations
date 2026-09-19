@@ -13,11 +13,13 @@ import time
 import urllib.parse
 import uuid
 
-from core import (REPOSITORIES, ValidationError, canonical_repository, normalize_candidate, subject_id, fingerprint,
+from core import (REPOSITORIES, POLICY_VERSION, ValidationError, canonical_repository, fingerprint,
     screen_candidate, classification_request, validate_classification, classify_decision,
     build_note, render_document)
 from transport import (API, CLOUD, GITHUB, FieldNotesError, GitState, Publisher, secret)
 from writer import WriterError, check_writer, disable_sdk_tracing
+from descriptions import gather, still_current
+from comments import InfoComments
 
 def timestamp():
     return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds").replace("+00:00","Z")
@@ -44,7 +46,7 @@ def load_config():
     value=json.loads(Path(__file__).with_name("config.json").read_text())
     if value.get("repositories")!=list(REPOSITORIES):
         raise FieldNotesError("repository_configuration_mismatch")
-    for key,low,high in [("max_candidates_per_run",1,30),("max_notes_per_day",1,5),
+    for key,low,high in [("max_candidates_per_run",1,30),("max_notes_per_day",1,5),("max_info_comments_per_day",1,5),
                          ("min_quiet_minutes",0,120),("lookback_days",1,30)]:
         if isinstance(value.get(key),bool) or not isinstance(value.get(key),int) or not low<=value[key]<=high:
             raise FieldNotesError("invalid_run_budget")
@@ -89,7 +91,7 @@ def listing_fingerprint(item):
 
 
 def _settled_or_cooling(old, now):
-    return old.get("status") in {"skip", "published", "existing", "reserved"} or now.timestamp() - old.get("at", 0) < 86400
+    return old.get("status") in {"published", "existing", "reserved"} or now.timestamp() - old.get("at", 0) < 86400
 
 
 def _daily_budget_full(state, config, now):
@@ -101,8 +103,6 @@ def _candidate_failure(error):
     return isinstance(error, ValidationError) or (
         isinstance(error, FieldNotesError) and (
             error.status in {404, 422} or str(error) in {
-                "invalid_file_listing", "file_listing_limit", "incomplete_file_listing",
-                "invalid_comment_count", "invalid_comment_listing", "invalid_public_comment",
                 "source_changed_during_collection", "response_too_large",
             }
         )
@@ -115,77 +115,6 @@ def _target(repository, kind, number):
         raise FieldNotesError("invalid_public_subject")
     return repository
 
-
-def public_comments(gh, repository, number, count):
-    """Read at most two fixed API pages for the latest ten issue-thread comments."""
-    if type(count) is not int or count < 0:
-        raise FieldNotesError("invalid_comment_count")
-    if not count:
-        return [], False
-    last_page = (count + 9) // 10
-    comments = gh.request(f"/repos/{repository}/issues/{number}/comments?per_page=10&page={last_page}")
-    if not isinstance(comments, list) or len(comments) > 10:
-        raise FieldNotesError("invalid_comment_listing")
-    if len(comments) < 10 and last_page > 1:
-        previous = gh.request(f"/repos/{repository}/issues/{number}/comments?per_page=10&page={last_page - 1}")
-        if not isinstance(previous, list) or len(previous) > 10:
-            raise FieldNotesError("invalid_comment_listing")
-        comments = previous + comments
-    return comments[-10:], count > 10
-
-
-def gather(gh,repository,kind,number,pins):
-    repository = _target(repository, kind, number)
-    route="pulls" if kind=="pr" else "issues"
-    item=gh.request(f"/repos/{repository}/{route}/{number}")
-    candidate={"repository":repository,"kind":kind,"number":number,"url":item["html_url"],
-        "title":item["title"],"body":item.get("body") or "","updated_at":item["updated_at"],
-        "draft":item.get("draft",False),"private":False,"files":[],"files_complete":True,"diff_complete":True}
-    if kind=="pr":
-        candidate["head_sha"]=item["head"]["sha"]
-        comparison=gh.request(f"/repos/{repository}/compare/{item['base']['sha']}...{item['head']['sha']}")
-        candidate["base_sha"]=comparison["merge_base_commit"]["sha"]
-        for page in range(1,11):
-            batch=gh.request(f"/repos/{repository}/pulls/{number}/files?per_page=100&page={page}")
-            if not isinstance(batch,list):raise FieldNotesError("invalid_file_listing")
-            candidate["files"].extend({"path":r["filename"],"patch":r.get("patch"),"status":r["status"]} for r in batch)
-            if len(batch)<100:break
-        else:raise FieldNotesError("file_listing_limit")
-        if len(candidate["files"])!=item["changed_files"]:raise FieldNotesError("incomplete_file_listing")
-        candidate["diff_complete"]=all(r["patch"] is not None for r in candidate["files"])
-    else:
-        candidate["head_sha"]=next(p["sha"] for p in pins if p["repository"]==repository)
-    comments, omitted = public_comments(gh, repository, number, item.get("comments", 0))
-    if comments:
-        excerpts = []
-        for comment in comments:
-            if not isinstance(comment, dict) or type(comment.get("id")) is not int or comment["id"] < 1:
-                raise FieldNotesError("invalid_public_comment")
-            text = comment.get("body") or ""
-            if not isinstance(text, str):
-                raise FieldNotesError("invalid_public_comment")
-            omitted = omitted or len(text) > 1200
-            # Construct the link from the already validated subject; never follow body URLs.
-            excerpts.append(candidate["url"] + "#issuecomment-" + str(comment["id"]) + "\n" + text[:1200])
-        omitted = omitted or len(candidate["body"]) > 80_000
-        candidate["body"] = (candidate["body"][:80_000] +
-            "\n\n### Recent public discussion (untrusted evidence)\n\n" + "\n\n".join(excerpts))
-    candidate["diff_complete"] = candidate["diff_complete"] and not omitted
-    after = gh.request(f"/repos/{repository}/{route}/{number}")
-    if after["updated_at"] != item["updated_at"] or (kind == "pr" and after["head"]["sha"] != item["head"]["sha"]):
-        raise FieldNotesError("source_changed_during_collection")
-    # Only canonical public subject URLs become eligible citations.
-    links=re.findall(r"https://github\.com/(OpenHands/(?:OpenHands|software-agent-sdk|automation))/(pull|issues)/(\d+)",candidate["body"])
-    candidate["linked_subjects"]=list(dict.fromkeys(f"https://github.com/{repo}/{route}/{n}" for repo,route,n in links))[:30]
-    return normalize_candidate(candidate)
-
-def still_current(gh,candidate):
-    repo = _target(candidate["repository"], candidate["kind"], candidate["number"])
-    number = candidate["number"]
-    route="pulls" if candidate["kind"]=="pr" else "issues"
-    current=gh.request(f"/repos/{repo}/{route}/{number}")
-    return (current["updated_at"]==candidate["updated_at"]
-        and (candidate["kind"]!="pr" or current["head"]["sha"]==candidate["head_sha"]))
 
 def load_workspace():
     from openhands.workspace import OpenHandsCloudWorkspace
@@ -208,7 +137,7 @@ def run(config,gh,jev,*,publish=False,workspace_factory=load_workspace):
     workspace=None
     claimed=False
     failed=False
-    report={"considered":0,"classified":0,"written":0,"published":[],"decisions":[]}
+    report={"considered":0,"classified":0,"written":0,"published":[],"decisions":[],"comments":[]}
     try:
         if publish and _daily_budget_full(state, config, now):
             return {**report, "status": "daily_budget"}
@@ -230,7 +159,7 @@ def run(config,gh,jev,*,publish=False,workspace_factory=load_workspace):
             if report["considered"] >= config["max_candidates_per_run"]:break
             old=state.value["seen"].get(key,{})
             listed_identity = listing_fingerprint(item)
-            if (old.get("source_updated_at") == item["updated_at"]
+            if (old.get("policy_version") == POLICY_VERSION and old.get("source_updated_at") == item["updated_at"]
                 and old.get("listing_fingerprint") == listed_identity and _settled_or_cooling(old, now)):
                 continue
             report["considered"]+=1
@@ -238,32 +167,42 @@ def run(config,gh,jev,*,publish=False,workspace_factory=load_workspace):
                 candidate=gather(gh,repo,kind,number,pins)
                 identity=fingerprint(candidate)
                 screened=screen_candidate(candidate)
-                request=classification_request(candidate,max_context_bytes=60000)
+                request=classification_request(candidate)
             except (FieldNotesError, ValidationError) as error:
                 if not _candidate_failure(error):raise
                 if publish:
                     # An uncollected candidate has no source fingerprint yet. The
                     # listing digest supports cooldown only, never completion.
                     state.remember(key, listed_identity, "defer", source_updated_at=item["updated_at"],
-                                   listing_fingerprint=listed_identity)
+                                   listing_fingerprint=listed_identity, policy_version=POLICY_VERSION)
                 report["decisions"].append({"subject":key,"decision":"defer","reason":"candidate_unavailable"})
                 continue
             def remember(status):
                 state.remember(key, identity, status, source_updated_at=candidate["updated_at"],
-                               listing_fingerprint=listed_identity)
-            if old.get("fingerprint")==identity and _settled_or_cooling(old, now):
-                if publish and old.get("status") in {"skip", "published", "existing", "reserved"}:
-                    remember(old["status"])
+                               listing_fingerprint=listed_identity, policy_version=POLICY_VERSION)
+            coverage=request["state"]["coverage"]
+            complete=coverage["retrieval_complete"] and not coverage["truncated"]
+            def request_info():
+                if publish and complete:
+                    receipt=InfoComments(gh,state,maximum=config.get("max_info_comments_per_day",2)).request(
+                        candidate,still_current=lambda:still_current(gh,candidate))
+                    report["comments"].append(receipt)
+            # Re-fetch linked issues after the cooldown, even if the PR itself
+            # has not changed. Unchanged descriptions need no new paid judgment.
+            if (old.get("policy_version")==POLICY_VERSION and old.get("fingerprint")==identity
+                and (old.get("status") in {"skip","needs_info"} or _settled_or_cooling(old,now))):
+                if old.get("status")=="needs_info":request_info()
+                if publish:remember(old["status"])
                 continue
             if screened["decision"]=="skip":
                 if publish:remember("skip")
                 continue
             judged=validate_classification(jev.request("/v1/systemone",method="POST",data=request))
-            complete=request["state"]["files_complete"] and request["state"]["diff_complete"]
             decision=classify_decision(judged,context_complete=complete)
             report["classified"]+=1
             report["decisions"].append({"subject":key,"decision":decision["decision"],"probabilities":judged["probabilities"]})
             if decision["decision"]!="write":
+                if decision["decision"]=="needs_info":request_info()
                 if publish:remember(decision["decision"])
             elif publish:
                 if workspace is None:workspace=workspace_factory()

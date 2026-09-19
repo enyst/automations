@@ -7,6 +7,7 @@
   "watch_since": "2026-09-18T00:00:00Z",
   "max_candidates_per_run": 12,
   "max_notes_per_day": 2,
+  "max_info_comments_per_day": 2,
   "min_quiet_minutes": 20,
   "lookback_days": 7
 }
