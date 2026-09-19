@@ -29,8 +29,8 @@ Within the fetched description, other content is preserved, including sections
 written by humans or other automations. Concurrent editing has the limitation below.
 
 The visible summary shows the strongest signal, an evidence link, coverage,
-classifier latency, and the reviewed commit. A collapsed table contains ten risk
-estimates, an impact-breadth score, and the selected primary concern. Noul values
+classifier latency, and the reviewed commit. A collapsed table contains fifteen risk
+estimates and the selected primary concern. Noul values
 are model estimates of likelihood. They are not approvals or calibrated guarantees.
 The runner does not submit reviews, post comments, merge changes, or run PR tests.
 
@@ -60,12 +60,26 @@ runner does not claim atomic preservation against concurrent writers.
    `NONE`. Code maps the selected ID to a commit-pinned GitHub file/line link;
    deleted code links to the merge-base version.
 
-The **entire serialized request**—model, state, and every question—must fit within
-**30 KiB**. The builder retains whole hunks rather than cutting code mid-hunk.
-Omitted hunks/files, missing context, malformed or incomplete patches, and
-oversized description/title fields are recorded explicitly. Oversized text fields
-are omitted whole, with their byte count and hash retained. If essential metadata
-cannot fit, the audit fails.
+Jev's published limits are **64k tokens for state plus all questions**, and
+**32k tokens for state plus the longest question**. Questions are evaluated in
+parallel against the shared state. Full instructions and criteria are preserved
+for every question; the previous 30 KiB request cap confused bytes with context
+capacity and has been removed. See [the model limits](https://docs.typesafe.ai/models).
+
+No official Jev tokenizer or preflight counting endpoint is published. The
+provider validates token fit; actual token usage is retained from its response.
+Local byte counts are transport measurements, not token estimates. An oversized
+request rejected by the API fails that audit without publishing or caching a
+scorecard; the runner does not silently shorten its questions or retry with a
+weaker rubric.
+
+A separate **1 MiB operational transport guard** bounds local payload handling.
+Within that guard the builder admits whole patch hunks before adding surrounding
+source, so early import context cannot displace later code/test changes. It never
+cuts a hunk mid-code. Omitted hunks/files, missing or budget-omitted context,
+malformed/incomplete patches, and oversized description/title fields are
+recorded explicitly. Oversized text fields are omitted whole, with their byte
+count and hash retained. If essential metadata cannot fit, the audit fails.
 
 Every scorecard reports complete supplied coverage or **partial coverage**, with
 file/hunk counts and omission reasons. Complete supplied coverage means the
@@ -73,6 +87,23 @@ selected patch and surrounding context were available; it does not mean the
 whole repository was analyzed. Missing evidence is not treated as proof of safety.
 The runner reads source as data and never executes code, tests, or installation
 commands from the PR.
+
+## SDK-derived security questions
+
+Nine additional rubrics come from the SDK's default security, risk-assessment,
+repository-context, memory, and secret-handling instructions. They cover sensitive
+data disclosure, unexpected transfers, credential misuse, prompt injection,
+package-source redirection, unverified remote execution, privileged environment
+access, security-assessment bypass, and prohibited workloads. Each has a full
+probability question and an independent file/hunk evidence question.
+
+The [source mapping and interpretation guide](SECURITY_RUBRIC.md) pins the SDK
+revision and explains exceptions. A patch can expose risky behavior; it usually
+cannot establish private user consent, actual execution, or a tool's risk label.
+Scores are evidence-based scrutiny signals, not a claim that every flagged action
+violated policy. The remaining six original review categories retain their full wording. Test coverage,
+description mismatch, resource cleanup, behavior regression, and impact scoring
+are not asked or displayed.
 
 ## Repeat runs and scope
 

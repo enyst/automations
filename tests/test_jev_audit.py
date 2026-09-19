@@ -5,6 +5,7 @@ import json
 import math
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 SOURCE = Path(__file__).resolve().parents[1] / "sources/jev-fast-audit/audit.py"
 SPEC = importlib.util.spec_from_file_location("jev_audit", SOURCE)
@@ -126,6 +127,7 @@ class ContextTests(unittest.TestCase):
             "patch_additions_mismatch": 1, "patch_deletions_mismatch": 1})
         self.assertEqual(state["coverage"]["hunks_included"], 1)
 
+    @patch.object(audit, "MAX_TRANSPORT_BYTES", 100_000)
     def test_budget_omits_whole_hunk_but_keeps_later_small_file(self):
         huge = "界" * 20000
         state = audit.build_context(pr(), [
@@ -140,8 +142,40 @@ class ContextTests(unittest.TestCase):
         request = {"model": audit.MODEL, "state": state, "questions": audit.questions_for(state)}
         size = len(json.dumps(request, ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
         self.assertEqual(state["coverage"]["serialized_bytes"], size)
-        self.assertLessEqual(size, audit.MAX_REQUEST_BYTES)
+        self.assertLessEqual(size, audit.MAX_TRANSPORT_BYTES)
 
+    @patch.object(audit, "MAX_TRANSPORT_BYTES", 65_000)
+    def test_patch_bodies_survive_when_early_surrounding_context_cannot_fit(self):
+        before = "import os\n" + ("long surrounding source " * 30 + "\n") * 60 + "return old\n"
+        after = before.replace("import os\n", "import sys\n").replace("return old\n", "return new\n")
+        first = "@@ -1 +1 @@\n-import os\n+import sys\n"
+        second = "@@ -62 +62 @@\n-return old\n+return new\n"
+        rows = [{"filename": "code.py", "status": "modified", "patch": first + second,
+                 "additions": 2, "deletions": 2}]
+        state = audit.build_context(pr(), rows, {"code.py": {"base": before, "head": after}})
+        hunks = state["files"][0]["hunks"]
+        self.assertEqual([h["patch"] for h in hunks], [first, second])
+        self.assertEqual(state["coverage"]["hunks_included"], 2)
+        self.assertIn("context_budget", state["coverage"]["reasons"])
+        self.assertNotIn("hunk_budget", state["coverage"]["reasons"])
+        self.assertLessEqual(state["coverage"]["serialized_bytes"], audit.MAX_TRANSPORT_BYTES)
+
+    def test_many_context_omissions_fit_their_reserved_metadata(self):
+        lines = [f"context {i}: " + "x" * 80 + "\n" for i in range(1800)]
+        after = list(lines)
+        patches = []
+        for index in range(200):
+            line = 10 + index * 8
+            after[line - 1] = "changed\n"
+            patches.append(f"@@ -{line} +{line} @@\n-" + lines[line - 1] + "+changed\n")
+        state = audit.build_context(pr(), [
+            {"filename": "many.py", "status": "modified", "patch": "".join(patches)}
+        ], {"many.py": {"base": "".join(lines), "head": "".join(after)}})
+        self.assertEqual(state["coverage"]["hunks_included"], 200)
+        self.assertGreater(state["coverage"]["reasons"]["context_budget"], 0)
+        self.assertLessEqual(state["coverage"]["serialized_bytes"], audit.MAX_TRANSPORT_BYTES)
+
+    @patch.object(audit, "MAX_TRANSPORT_BYTES", 100_000)
     def test_body_preserved_whole_or_explicitly_omitted_whole(self):
         text = "Description with Unicode: 猫\n" * 3
         state = audit.build_context(pr(body=text), [], {})
@@ -176,8 +210,8 @@ class ContextTests(unittest.TestCase):
 class QuestionsAndValidationTests(unittest.TestCase):
     def test_atomic_risks_and_evidence_contract(self):
         questions = audit.questions_for(simple_state())
-        self.assertEqual(sum(q["type"] == "noul" for q in questions.values()), 10)
-        self.assertEqual(len(questions), 22)
+        self.assertEqual(sum(q["type"] == "noul" for q in questions.values()), 15)
+        self.assertEqual(len(questions), 31)
         for key in audit.RISKS:
             evidence = questions[key + "Evidence"]
             self.assertEqual(set(evidence["criteria"]), {"F001H001", "NONE"})
@@ -186,10 +220,44 @@ class QuestionsAndValidationTests(unittest.TestCase):
             self.assertNotIn("confidence", questions[key])
         self.assertNotIn("approve", json.dumps(questions).lower())
 
+    def test_sdk_security_questions_keep_complete_claims_and_policy(self):
+        state = simple_state()
+        expected = {"secretDisclosure", "unexpectedDataTransfer", "credentialMisuse",
+                    "promptInjection", "packageSourceTampering", "unverifiedRemoteExecution",
+                    "privilegeBoundaryBreak", "securityAssessmentBypass", "abusiveWorkload"}
+        questions = audit.questions_for(state)
+        for key in expected:
+            claim = audit.RISKS[key][1]
+            self.assertEqual(questions[key]["type"], "noul")
+            self.assertIn(claim, questions[key]["instructions"])
+            self.assertEqual(questions[key]["criteria"]["true"], claim)
+            self.assertIn(claim, questions[key + "Evidence"]["instructions"])
+            self.assertIn(claim, questions["primaryConcernChoice"]["criteria"][key])
+            self.assertIn("untrusted evidence", questions[key]["instructions"])
+            self.assertIn("do not claim they were absent", questions[key]["instructions"])
+        self.assertIn("environment variable is not inherently a secret", audit.RISKS["secretDisclosure"][1])
+        self.assertIn("Inert quoted examples", audit.RISKS["promptInjection"][1])
+        self.assertIn("missing runtime assessments", audit.RISKS["securityAssessmentBypass"][1])
+        # Full instructions alone exceed the old byte cap; none are weakened.
+        self.assertGreater(len(json.dumps(questions).encode()), 30 * 1024)
+        self.assertEqual(state["coverage"]["provider_token_limits"],
+                         {"request": 64000, "state_plus_longest_question": 32000})
+
+    def test_removed_questions_are_absent_from_request_and_rendering(self):
+        state = simple_state()
+        questions = audit.questions_for(state)
+        rendered = audit.render_summary(state, answers_for(state), 1)
+        for key in ("testCoverageGap", "descriptionMismatch", "resourceLeak", "behaviorRegression", "impactScore"):
+            self.assertNotIn(key, questions)
+            self.assertNotIn(key + "Evidence", questions)
+            self.assertNotIn(key, questions["primaryConcernChoice"]["criteria"])
+        self.assertFalse(any(q["type"] == "score" for q in questions.values()))
+        self.assertNotIn("Impact breadth", rendered)
+
     def test_no_hunks_omits_single_option_evidence_choices(self):
         state = audit.build_context(pr(), [], {})
         questions = audit.questions_for(state)
-        self.assertEqual(len(questions), 12)
+        self.assertEqual(len(questions), 16)
         self.assertFalse(any(k.endswith("Evidence") for k in questions))
 
     def test_choice_option_cap(self):
@@ -202,12 +270,10 @@ class QuestionsAndValidationTests(unittest.TestCase):
         with self.assertRaises(audit.AuditValidationError):
             audit.questions_for(state)
 
-    def test_valid_result_including_fractional_impact(self):
+    def test_valid_probability_result(self):
         state = simple_state()
         response = answers_for(state)
-        response["answers"]["impactScore"]["score"] = 0.6
         validated = audit.validate_answers(response, audit.questions_for(state))
-        self.assertEqual(validated["impactScore"]["score"], 0.6)
         self.assertEqual(validated["sqlInjection"], {"type": "noul", "noul": 0.1})
 
     def test_nonfinite_bool_and_out_of_range_nouls_rejected(self):
@@ -227,7 +293,6 @@ class QuestionsAndValidationTests(unittest.TestCase):
             lambda r: r["answers"].update(unknown={"type": "noul", "noul": 0}),
             lambda r: r["answers"]["sqlInjection"].update(type="score"),
             lambda r: r["answers"]["sqlInjectionEvidence"].update(choice="F999H999"),
-            lambda r: r["answers"]["impactScore"].update(score=3),
         ):
             response = answers_for(state)
             mutate(response)

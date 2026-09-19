@@ -80,7 +80,14 @@ signed receipt skip another classifier call. Polling skips drafts and closed PRs
 uses the configured activation-time floor, and processes at most six changed PRs
 per run by default. These are estimated signals, not review approvals.
 
-The manual trial verified replacement on repeat runs and classifier calls below
+The [SDK security rubric](sources/jev-fast-audit/SECURITY_RUBRIC.md) maps nine
+security checks to pinned SDK system-prompt instructions. The current request
+uses 15 probability questions, 15 evidence selections, and one primary-concern
+choice. Full question wording is retained. There is no impact score, test-coverage,
+description-mismatch, resource-cleanup, or general behavior-regression question.
+Jev's token limits are enforced by the provider; byte counts are transport metrics.
+
+The initial manual trial verified replacement on repeat runs and classifier calls below
 0.5 seconds. That timing measures the classifier call, not the entire automation.
 See the [implementation notes](sources/jev-fast-audit/README.md) for coverage
 limits, polling behavior, credential references, and the PR-description editing
