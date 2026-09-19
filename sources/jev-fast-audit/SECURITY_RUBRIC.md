@@ -101,3 +101,13 @@ this automation to escalate to an LLM or alter GitHub review state. See
 [repo-context]: https://github.com/OpenHands/software-agent-sdk/blob/28e8ed273617992e9556410804f54937cc059878/openhands-sdk/openhands/sdk/context/prompts/sections/dynamic.py#L60-L68
 [memory-context]: https://github.com/OpenHands/software-agent-sdk/blob/28e8ed273617992e9556410804f54937cc059878/openhands-sdk/openhands/sdk/context/prompts/sections/dynamic.py#L87-L91
 [secret-output]: https://github.com/OpenHands/software-agent-sdk/blob/28e8ed273617992e9556410804f54937cc059878/openhands-sdk/openhands/sdk/context/prompts/sections/dynamic.py#L147-L155
+
+## Concrete questions and examples
+
+As of September 19, the executable `RISK_RUBRICS` mapping in `audit.py` adds one
+existence question and positive/benign worked examples to each unchanged claim.
+The complete trust and consent policy still prefixes every question. This follows
+[Abide's question-writing guidance](https://github.com/coldteadotai/abide/blob/5099cbb1020f5885181f0fa9eb2851cb8f1e93ce/skills/abide-compile/SKILL.md);
+its thresholds and hooks are not part of this automation. The original claims
+remain in the true criterion, evidence-selection instruction, and primary-concern
+options. These are independent likelihood estimates, not ordinal impact grades.

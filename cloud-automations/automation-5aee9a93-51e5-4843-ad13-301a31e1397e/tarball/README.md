@@ -88,6 +88,28 @@ whole repository was analyzed. Missing evidence is not treated as proof of safet
 The runner reads source as data and never executes code, tests, or installation
 commands from the PR.
 
+## Question design and validation
+
+Each risk asks whether at least one concrete introduced operation fits its claim.
+Both answers have worked examples, including legitimate uses and defensive tests.
+The full common security instructions and original claims remain in every rubric;
+independent hunk and primary-concern Choices are unchanged. This adopts the useful
+question-writing pattern from [Abide's compiler guidance](https://github.com/coldteadotai/abide/blob/5099cbb1020f5885181f0fa9eb2851cb8f1e93ce/skills/abide-compile/SKILL.md).
+It remains fifteen Nouls, fifteen evidence Choices, and one headline Choice, with
+no impact score, automatic approval, or LLM escalation.
+
+The September 19 comparison used twelve independently prepared synthetic cases
+and the unchanged trial PR. The candidate separated several positive/benign pairs
+more clearly, but still did not flag the original PR helper. This is a small
+exploratory test, not calibrated security accuracy. Results and limitations live
+in `evaluations/abide-comparison/` in the private backup repository.
+
+All returned probabilities must be finite and within [0, 1], with exactly the
+expected keys. Choice distributions allow at most 0.01 rounding error in their
+sum: actual Jev replies sometimes total 0.99. Values are retained unchanged, not
+renormalized; larger errors stop publication. A tiny numeric tolerance handles
+floating-point representation at that boundary.
+
 ## SDK-derived security questions
 
 Nine additional rubrics come from the SDK's default security, risk-assessment,

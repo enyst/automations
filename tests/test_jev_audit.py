@@ -229,8 +229,9 @@ class QuestionsAndValidationTests(unittest.TestCase):
         for key in expected:
             claim = audit.RISKS[key][1]
             self.assertEqual(questions[key]["type"], "noul")
-            self.assertIn(claim, questions[key]["instructions"])
-            self.assertEqual(questions[key]["criteria"]["true"], claim)
+            self.assertIn(claim, questions[key]["criteria"]["true"])
+            self.assertIn(" Example: ", questions[key]["criteria"]["true"])
+            self.assertIn(" Examples: ", questions[key]["criteria"]["false"])
             self.assertIn(claim, questions[key + "Evidence"]["instructions"])
             self.assertIn(claim, questions["primaryConcernChoice"]["criteria"][key])
             self.assertIn("untrusted evidence", questions[key]["instructions"])
@@ -275,6 +276,21 @@ class QuestionsAndValidationTests(unittest.TestCase):
         response = answers_for(state)
         validated = audit.validate_answers(response, audit.questions_for(state))
         self.assertEqual(validated["sqlInjection"], {"type": "noul", "noul": 0.1})
+
+    def test_rounded_choice_distributions_preserve_raw_probabilities(self):
+        state = simple_state()
+        for probability in (0.79, 0.81):
+            response = answers_for(state)
+            choice = response["answers"]["sqlInjectionEvidence"]
+            choice["probabilities"] = {"NONE": probability, "F001H001": 0.20}
+            before = copy.deepcopy(response)
+            validated = audit.validate_answers(response, audit.questions_for(state))
+            self.assertEqual(validated["sqlInjectionEvidence"]["probabilities"], choice["probabilities"])
+            self.assertEqual(response, before)
+        for probability in (0.78, 0.82):
+            response["answers"]["sqlInjectionEvidence"]["probabilities"]["NONE"] = probability
+            with self.assertRaisesRegex(audit.AuditValidationError, "probability_sum_mismatch"):
+                audit.validate_answers(response, audit.questions_for(state))
 
     def test_nonfinite_bool_and_out_of_range_nouls_rejected(self):
         state = simple_state()
