@@ -1,0 +1,491 @@
+{
+  "reviewer": "root",
+  "protocol_version": 1,
+  "blinded": true,
+  "records": [
+    {
+      "issue_number": 4863,
+      "input_sha256": "b2a28ed1f8db48dd78dc26d7f549f3353d26f2d56b31e4da955b13747e65bff5",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Non-destructive configuration updates and lost caller preferences are a concrete ownership contract affecting agent instructions. The two SDK packages are not separate repositories.",
+      "evidence": [
+        {
+          "text": "only change the two fields the function itself is responsible for",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4262,
+      "input_sha256": "b872f9192f6eb2aac21f586b68306779a88790604efb6b7e24b25a9d432fcaeb",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "uncertain",
+      "reason": "The behavioral-versus-sentinel security-testing lesson is clear, but the finding targets a Zentra fork and files outside the watched source trees. Applicability to the permitted writer evidence needs checking.",
+      "evidence": [
+        {
+          "text": "OpenHands Zentra fork",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "external_fork_scope"
+      ]
+    },
+    {
+      "issue_number": 4562,
+      "input_sha256": "b74e9e24d08b5bab798ec1e77c28aea278df3b5f09abc352a58f89d42981fb53",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A precise browser/server cookie contract explains LAN failures and secure-context tradeoffs. It is architecture interest without being LLM behavior or a demonstrated cross-repo change.",
+      "evidence": [
+        {
+          "text": "Cross-site embedding should continue to require HTTPS.",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4696,
+      "input_sha256": "50589b9beda6815a5412d9116d21594c9dd84b427d1ad0239bd6fab04dbfba1d",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Separating ephemeral deltas from durable Events changes fan-out, version compatibility and Canvas guards. This is a concrete SDK-to-Canvas wire contract.",
+      "evidence": [
+        {
+          "text": "The wire must not change.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "cross_repo",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "overlapping_issue"
+      ]
+    },
+    {
+      "issue_number": 4735,
+      "input_sha256": "02b4e4fd7ce968d1a63ddcb8ad9ac02813d603c6827045367751b0f7e1a5cd72",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Retry idempotency, cancellation and server backoff form a useful client reliability design. This is generic transport rather than a described change to the agent reasoning loop.",
+      "evidence": [
+        {
+          "text": "Retry only idempotent requests (GET) by default, with opt-in for POST",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5091,
+      "input_sha256": "cc34137e192339baa5d829ef7a96f9385acde943c05119aa9baffac74f2ed122",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A small schema bug exposes order-dependent union semantics and an untrusted MCP input that can disable the agent's full tool list. That is more than routine syntax repair.",
+      "evidence": [
+        {
+          "text": "takes down the whole tool list rather than one tool",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5177,
+      "input_sha256": "ded902d12874e39f72e11370b52667b223b03b53e4af8f82ebeb195a6bb6d45d",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Runtime suspension versus persisted conversation identity is a substantive lifecycle problem, with races and an explicit shared Canvas/Automation availability impact.",
+      "evidence": [
+        {
+          "text": "preserving the bind-mounted conversation, workspace, and provisioning data",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "memory",
+            "cross_repo",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4758,
+      "input_sha256": "30b2a058282d2a322a680c533a8e8dbd7cc720b3c9ec3a99e39c1c41dac62f9f",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The question precisely states local-versus-remote agent scope and three architectural choices. An issue need not already choose its answer to be sufficient.",
+      "evidence": [
+        {
+          "text": "This tracks the product/API decision before any future breaking cleanup.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "standalone_issue_scope"
+      ]
+    },
+    {
+      "issue_number": 4574,
+      "input_sha256": "05fbe62f41529fd2d07106be57e0252ba4b6fc94fb5e49a6b17b7ec7162c8c01",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The SDK catalog/Canvas picker interaction is concrete, but adding another provider and attribution headers follows an existing pattern. Clear integration work is not automatically a useful standalone design essay.",
+      "evidence": [
+        {
+          "text": "Nothing else changes: model ids stay",
+          "supports": [
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "routine_but_clear"
+      ]
+    },
+    {
+      "issue_number": 4664,
+      "input_sha256": "02b74ec85fcdace23316240cb5c8c49a59276e1d714015890c39e0343a3224d2",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A resumed workspace carrying two different endpoint/key pairs is a clear lifecycle and state-ownership failure, even without the reproducer stored in comments.",
+      "evidence": [
+        {
+          "text": "The object can describe two different connections at once.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4242,
+      "input_sha256": "8bf565e69de9d4769525cac10c0cd440ea35db05a2d357e2a676482496ceb0ac",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Dependency repositories in skill frontmatter pose a real ownership choice: automatic checkout versus instructions to the agent. Named repositories are examples, not a demonstrated contract between their implementations.",
+      "evidence": [
+        {
+          "text": "Maybe then we could clone automatically",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "standalone_issue_scope"
+      ]
+    },
+    {
+      "issue_number": 4591,
+      "input_sha256": "374076a5d3320101c0793af7b48bfd0e3d6285243e2781180026dae224c039fa",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "unclear",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Repairable orphan observations becoming a permanent conversation failure connects crash recovery, event parsing, context views and condensation. Canvas appears as deployment context, making cross-repo scope uncertain.",
+      "evidence": [
+        {
+          "text": "View.manipulation_indices",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "memory",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "ambiguous_repo_boundary"
+      ]
+    },
+    {
+      "issue_number": 4248,
+      "input_sha256": "194257d537d0479c2ce08ea9547410d5737d45ca5162d8f3c50ce3085e67b67d",
+      "labels": {
+        "design": "unclear",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "unclear",
+        "design_context": "unclear"
+      },
+      "suggested_action": "uncertain",
+      "reason": "The exact tool-argument error and model provide a real behavior signal, but no version or reproduction explains whether a code-design investigation is warranted. I would defer rather than confidently blame the author.",
+      "evidence": [
+        {
+          "text": "Model: deepseek-reasoner",
+          "supports": [
+            "agent_behavior"
+          ]
+        }
+      ],
+      "flags": [
+        "sparse_description"
+      ]
+    },
+    {
+      "issue_number": 4777,
+      "input_sha256": "59a3179bbaf0dde9d8f72d1c543e702367dcf3ffb0ac8ade2a88e8c92f554dc6",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "User cancellation must prevent queued effects after lock acquisition. This is an explicit concurrency contract with a detailed deterministic reproduction.",
+      "evidence": [
+        {
+          "text": "a queued file, terminal, browser, or other resource-using operation can begin after the user has interrupted the run",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4957,
+      "input_sha256": "939618e768b390c8717078eff60b8964dc77cd176209189a474d0d9bc1f1b5d6",
+      "labels": {
+        "design": "unclear",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "no"
+      },
+      "suggested_action": "insufficient_description",
+      "reason": "The issue quotes an agent's narration but supplies no rejected command or actual shell diagnostic. Those details are needed before proposing a more permissive parser or assuming the SDK caused rejection.",
+      "evidence": [
+        {
+          "text": "The shell rejected my combined heredoc",
+          "supports": [
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": [
+        "sparse_description"
+      ]
+    },
+    {
+      "issue_number": 4880,
+      "input_sha256": "e0c19b4dae6a0b4d484461f710254d9bd09d5d76590110cf37eedb9c5712367b",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Ownership of model capabilities versus live dependency metadata changes truncation and wire behavior. The deterministic-versus-freshness tradeoff is well explained; LiteLLM is outside the three watched repos.",
+      "evidence": [
+        {
+          "text": "only the fields that change behaviour",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "memory",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4671,
+      "input_sha256": "429833b06f22c1da9bcf58e9fa5a923dc97ca2915525e42858fc0f2a2efe153a",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A complete SDK/Canvas protocol redesign separates persistence and transport, with explicit recovery and ordering tradeoffs. It is highly relevant but overlaps several individually tracked steps.",
+      "evidence": [
+        {
+          "text": "protocol repair in the view layer",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "memory",
+            "cross_repo",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "overlapping_issue"
+      ]
+    },
+    {
+      "issue_number": 4577,
+      "input_sha256": "c7f6c30f1e325c43a3f37899ec45588196f75eab6eca561c7b081c335b89254c",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Atomic per-key metadata updates resolve a documented Canvas/SDK race while preserving timestamp semantics. The lesson is API ownership and concurrency, not agent reasoning.",
+      "evidence": [
+        {
+          "text": "a race between two clients patching different keys will silently drop one client's write",
+          "supports": [
+            "design",
+            "cross_repo",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    }
+  ]
+}

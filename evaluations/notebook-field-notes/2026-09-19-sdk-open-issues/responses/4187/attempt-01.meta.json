@@ -1,0 +1,9 @@
+{
+  "issue_number": 4187,
+  "input_sha256": "77329324ba774fb4691bc8ca5e922511e7cfbe548d824af327bc8f3d66a17f98",
+  "started_at": "2026-09-19T21:53:18.304761+00:00",
+  "completed_at": "2026-09-19T21:53:19.061487+00:00",
+  "duration_seconds": 0.757,
+  "http_status": 200,
+  "credential_redacted": false
+}

@@ -1,0 +1,442 @@
+[
+  {
+    "issue_number": 481,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.85,
+          "agent_behavior": 0.83,
+          "memory": 0.03,
+          "cross_repo": 0.23,
+          "substance": 0.8,
+          "design_context": 0.7
+        },
+        "response_file": "responses/481/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.86,
+          "agent_behavior": 0.85,
+          "memory": 0.03,
+          "cross_repo": 0.23,
+          "substance": 0.8,
+          "design_context": 0.69
+        },
+        "response_file": "stability/481-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.84,
+          "agent_behavior": 0.83,
+          "memory": 0.03,
+          "cross_repo": 0.24,
+          "substance": 0.8,
+          "design_context": 0.68
+        },
+        "response_file": "stability/481-repeat-2.json"
+      }
+    ]
+  },
+  {
+    "issue_number": 4262,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.89,
+          "agent_behavior": 0.91,
+          "memory": 0.09,
+          "cross_repo": 0.49,
+          "substance": 0.79,
+          "design_context": 0.7
+        },
+        "response_file": "responses/4262/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.89,
+          "agent_behavior": 0.92,
+          "memory": 0.1,
+          "cross_repo": 0.5,
+          "substance": 0.78,
+          "design_context": 0.68
+        },
+        "response_file": "stability/4262-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.9,
+          "agent_behavior": 0.92,
+          "memory": 0.09,
+          "cross_repo": 0.53,
+          "substance": 0.78,
+          "design_context": 0.69
+        },
+        "response_file": "stability/4262-repeat-2.json"
+      }
+    ]
+  },
+  {
+    "issue_number": 4762,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "skip",
+        "probabilities": {
+          "design": 0.82,
+          "agent_behavior": 0.16,
+          "memory": 0.04,
+          "cross_repo": 0.27,
+          "substance": 0.46,
+          "design_context": 0.7
+        },
+        "response_file": "responses/4762/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "skip",
+        "probabilities": {
+          "design": 0.84,
+          "agent_behavior": 0.17,
+          "memory": 0.04,
+          "cross_repo": 0.27,
+          "substance": 0.47,
+          "design_context": 0.71
+        },
+        "response_file": "stability/4762-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "skip",
+        "probabilities": {
+          "design": 0.82,
+          "agent_behavior": 0.16,
+          "memory": 0.04,
+          "cross_repo": 0.3,
+          "substance": 0.47,
+          "design_context": 0.73
+        },
+        "response_file": "stability/4762-repeat-2.json"
+      }
+    ]
+  },
+  {
+    "issue_number": 5096,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.87,
+          "agent_behavior": 0.64,
+          "memory": 0.05,
+          "cross_repo": 0.29,
+          "substance": 0.85,
+          "design_context": 0.7
+        },
+        "response_file": "responses/5096/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.87,
+          "agent_behavior": 0.67,
+          "memory": 0.05,
+          "cross_repo": 0.3,
+          "substance": 0.85,
+          "design_context": 0.7
+        },
+        "response_file": "stability/5096-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.87,
+          "agent_behavior": 0.67,
+          "memory": 0.05,
+          "cross_repo": 0.31,
+          "substance": 0.86,
+          "design_context": 0.71
+        },
+        "response_file": "stability/5096-repeat-2.json"
+      }
+    ]
+  },
+  {
+    "issue_number": 3442,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.95,
+          "agent_behavior": 0.93,
+          "memory": 0.41,
+          "cross_repo": 0.29,
+          "substance": 0.83,
+          "design_context": 0.69
+        },
+        "response_file": "responses/3442/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.95,
+          "agent_behavior": 0.93,
+          "memory": 0.37,
+          "cross_repo": 0.28,
+          "substance": 0.82,
+          "design_context": 0.69
+        },
+        "response_file": "stability/3442-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.95,
+          "agent_behavior": 0.93,
+          "memory": 0.41,
+          "cross_repo": 0.29,
+          "substance": 0.83,
+          "design_context": 0.7
+        },
+        "response_file": "stability/3442-repeat-2.json"
+      }
+    ]
+  },
+  {
+    "issue_number": 4338,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.96,
+          "agent_behavior": 0.89,
+          "memory": 0.39,
+          "cross_repo": 0.68,
+          "substance": 0.91,
+          "design_context": 0.71
+        },
+        "response_file": "responses/4338/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.96,
+          "agent_behavior": 0.89,
+          "memory": 0.41,
+          "cross_repo": 0.68,
+          "substance": 0.91,
+          "design_context": 0.73
+        },
+        "response_file": "stability/4338-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.96,
+          "agent_behavior": 0.89,
+          "memory": 0.4,
+          "cross_repo": 0.67,
+          "substance": 0.91,
+          "design_context": 0.72
+        },
+        "response_file": "stability/4338-repeat-2.json"
+      }
+    ]
+  },
+  {
+    "issue_number": 4540,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.67,
+          "agent_behavior": 0.95,
+          "memory": 0.04,
+          "cross_repo": 0.34,
+          "substance": 0.82,
+          "design_context": 0.69
+        },
+        "response_file": "responses/4540/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.67,
+          "agent_behavior": 0.95,
+          "memory": 0.04,
+          "cross_repo": 0.35,
+          "substance": 0.8,
+          "design_context": 0.66
+        },
+        "response_file": "stability/4540-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.65,
+          "agent_behavior": 0.95,
+          "memory": 0.04,
+          "cross_repo": 0.33,
+          "substance": 0.8,
+          "design_context": 0.67
+        },
+        "response_file": "stability/4540-repeat-2.json"
+      }
+    ]
+  },
+  {
+    "issue_number": 4555,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.88,
+          "agent_behavior": 0.71,
+          "memory": 0.92,
+          "cross_repo": 0.51,
+          "substance": 0.86,
+          "design_context": 0.69
+        },
+        "response_file": "responses/4555/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.88,
+          "agent_behavior": 0.71,
+          "memory": 0.92,
+          "cross_repo": 0.52,
+          "substance": 0.86,
+          "design_context": 0.71
+        },
+        "response_file": "stability/4555-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.89,
+          "agent_behavior": 0.71,
+          "memory": 0.91,
+          "cross_repo": 0.47,
+          "substance": 0.86,
+          "design_context": 0.71
+        },
+        "response_file": "stability/4555-repeat-2.json"
+      }
+    ]
+  },
+  {
+    "issue_number": 4627,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.86,
+          "agent_behavior": 0.94,
+          "memory": 0.1,
+          "cross_repo": 0.84,
+          "substance": 0.75,
+          "design_context": 0.71
+        },
+        "response_file": "responses/4627/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.86,
+          "agent_behavior": 0.94,
+          "memory": 0.11,
+          "cross_repo": 0.83,
+          "substance": 0.75,
+          "design_context": 0.72
+        },
+        "response_file": "stability/4627-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "write",
+        "probabilities": {
+          "design": 0.86,
+          "agent_behavior": 0.93,
+          "memory": 0.1,
+          "cross_repo": 0.83,
+          "substance": 0.75,
+          "design_context": 0.73
+        },
+        "response_file": "stability/4627-repeat-2.json"
+      }
+    ]
+  },
+  {
+    "issue_number": 4744,
+    "samples": [
+      {
+        "primary": true,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.23,
+          "agent_behavior": 0.08,
+          "memory": 0.03,
+          "cross_repo": 0.2,
+          "substance": 0.24,
+          "design_context": 0.69
+        },
+        "response_file": "responses/4744/attempt-01.json"
+      },
+      {
+        "primary": false,
+        "decision": "skip",
+        "probabilities": {
+          "design": 0.24,
+          "agent_behavior": 0.08,
+          "memory": 0.03,
+          "cross_repo": 0.2,
+          "substance": 0.22,
+          "design_context": 0.7
+        },
+        "response_file": "stability/4744-repeat-1.json"
+      },
+      {
+        "primary": false,
+        "decision": "defer",
+        "probabilities": {
+          "design": 0.23,
+          "agent_behavior": 0.08,
+          "memory": 0.03,
+          "cross_repo": 0.2,
+          "substance": 0.23,
+          "design_context": 0.69
+        },
+        "response_file": "stability/4744-repeat-2.json"
+      }
+    ]
+  }
+]

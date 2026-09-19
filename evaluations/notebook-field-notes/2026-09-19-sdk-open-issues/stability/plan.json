@@ -1,0 +1,17 @@
+{
+  "method": "Ten cases nearest the 0.70 design_context boundary, chosen before repeats; exploratory, not a random sample.",
+  "issue_numbers": [
+    481,
+    4262,
+    4762,
+    5096,
+    3442,
+    4338,
+    4540,
+    4555,
+    4627,
+    4744
+  ],
+  "repeats_per_case": 2,
+  "started_at": "2026-09-19T21:59:35.449530+00:00"
+}

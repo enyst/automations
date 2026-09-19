@@ -1,0 +1,1 @@
+{"model":"jev-1.13.0","answers":{"design":{"type":"noul","noul":0.95},"agent_behavior":{"type":"noul","noul":0.93},"memory":{"type":"noul","noul":0.41},"cross_repo":{"type":"noul","noul":0.29},"substance":{"type":"noul","noul":0.83},"design_context":{"type":"noul","noul":0.69}},"usage":{"input_tokens":1383,"output_tokens":104}}

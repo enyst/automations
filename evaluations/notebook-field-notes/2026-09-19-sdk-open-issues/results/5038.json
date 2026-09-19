@@ -1,0 +1,32 @@
+{
+  "issue_number": 5038,
+  "url": "https://github.com/OpenHands/software-agent-sdk/issues/5038",
+  "input_sha256": "567cab9067ac72fa386499c7f311d5c641917bd433ed93b707342f3cc5db4041",
+  "response_file": "responses/5038/attempt-01.json",
+  "http_status": 200,
+  "status": "ok",
+  "classification": {
+    "model": "jev-1.13.0",
+    "probabilities": {
+      "design": 0.81,
+      "agent_behavior": 0.65,
+      "memory": 0.03,
+      "cross_repo": 0.27,
+      "substance": 0.88,
+      "design_context": 0.81
+    }
+  },
+  "decision": {
+    "decision": "write",
+    "reason": "relevant_with_substance",
+    "tags": [
+      "field-notes",
+      "architecture",
+      "agent-behavior"
+    ]
+  },
+  "coverage": {
+    "retrieval_complete": true,
+    "truncated": false
+  }
+}

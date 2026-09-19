@@ -1,0 +1,2066 @@
+{
+  "reviewer": "field_notes_site",
+  "protocol_version": 1,
+  "records": [
+    {
+      "issue_number": 4477,
+      "input_sha256": "5fdace7e2719d366cfa2514d3f0cf287df15bc7ba300c088895d435f75eea9c8",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Tests expose whether independent conversations really overlap LLM work; this is a concurrency/performance contract. The other-repository link alone does not establish a cross-repository interaction.",
+      "evidence": [
+        {
+          "text": "Verifies LLM requests overlap rather than execute serially.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4577,
+      "input_sha256": "c7f6c30f1e325c43a3f37899ec45588196f75eab6eca561c7b081c335b89254c",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Atomic tag updates address lost writes and define metadata timestamp semantics across SDK endpoints and an identified Canvas caller. The text fully specifies the race and intended contract.",
+      "evidence": [
+        {
+          "text": "a race between two clients patching different keys will silently drop one client's write.",
+          "supports": [
+            "design",
+            "cross_repo",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4304,
+      "input_sha256": "6918bbd40e9870bf9d2e2efdc4986749206abc87e0953b0b2da5a40f4f0aeb40",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The inventory supports a useful explanation of reproducible agent environments and the ownership of mutable runtime inputs, beyond individual dependency pins. No interaction between two of the three watched repositories is actually described.",
+      "evidence": [
+        {
+          "text": "silently change agent behavior",
+          "supports": [
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4555,
+      "input_sha256": "114b266c0a7136d5dc09c6493769277b712c1b0dce29cea18884d3059e73b21b",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A blocked cleanup lifecycle prevents unrelated access to completed conversations. This is a bounded-cleanup/service-isolation design issue; stored-event access is not itself evidence of changed agent memory or reasoning.",
+      "evidence": [
+        {
+          "text": "Conversation cleanup must be bounded and must not indefinitely block event",
+          "supports": [
+            "design",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4965,
+      "input_sha256": "1439506c84b10a663694e2be5d7bb168acf713a946530a9026e8900babd07a55",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A persistent history entry can poison every later provider call, exposing serialization invariants between internal messages and strict provider schemas. The reported failure and expected normalization are sufficient.",
+      "evidence": [
+        {
+          "text": "every subsequent LLM call in that conversation fails",
+          "supports": [
+            "agent_behavior",
+            "memory",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4583,
+      "input_sha256": "b8f1b0c184511f741562ff89a484a17faad4baac907dda09bd04fe60c86cbf97",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The tool produces the wrong edit, but the described fix is a well-scoped trailing-newline correction rather than a consequential design question or rich standalone investigation. Completeness is not a problem.",
+      "evidence": [
+        {
+          "text": "the inserted line `X` starts on its own line.",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4252,
+      "input_sha256": "a29e0df15c0908bdc70cad77038ceee75e151506851c62ae3600bb0b56a974a0",
+      "labels": {
+        "design": "unclear",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A reproducible skill-discovery failure affects what the agent can use. The path/restart expectations justify investigation even without an identified cause; the description does not establish a particular cross-repository contract.",
+      "evidence": [
+        {
+          "text": "None of them gets loaded into OpenHands",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4093,
+      "input_sha256": "4aca35273d7b4ece1360aef6df4876961eddd714e38f443de08829870bad2691",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A dependency upgrade silently discards model-selection data, making the compatibility boundary and version-range promise worth explaining. ACP/Gemini are outside the three watched repos.",
+      "evidence": [
+        {
+          "text": "Pydantic silently discards Gemini's `models` payload",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4910,
+      "input_sha256": "2c3f4b28172546335ec20ba9b2f96a0af829eaa8eaeac76c3a65ccecc9784f4b",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Ownership of a spawned process tree is a meaningful lifecycle problem with a concrete reproduction and proposed group-termination contract. Its memory consumption is ordinary RAM, not agent memory.",
+      "evidence": [
+        {
+          "text": "it only signals the top PID",
+          "supports": [
+            "design",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4975,
+      "input_sha256": "c51bb818381b5620c6e7732d7a4e18ee0ed722a37491f3606904eb458da43512",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "One typed usage boundary unifies provider-dependent token and cache-cost metrics across sync/async paths. This offers a concrete adapter-design explanation, with sufficient scope and acceptance criteria.",
+      "evidence": [
+        {
+          "text": "normalize provider-specific completion and Responses API usage objects once at a typed boundary",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4317,
+      "input_sha256": "36b53fedc33249fd428897adbae0f922bed04d17b3df5ffb08c52e9a707e7e51",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Editor access reuses a broader API credential, exposing a concrete privilege-boundary flaw. Canvas mitigations and server-side token ownership form an explicit cross-repository contract.",
+      "evidence": [
+        {
+          "text": "it is full `/api/*` access on the agent server",
+          "supports": [
+            "design",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5141,
+      "input_sha256": "ddefb6ca08382b6ca13b49adeba29cb8c35f9b56665cbb2f876c4665dfc9d74c",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A detailed cross-repository reproduction shows identical profiles producing different tools, prompts, compaction and secret scope. Unifying launch ownership is a strong architecture and agent-behavior investigation.",
+      "evidence": [
+        {
+          "text": "The model sees a different agent depending on the profile's **name**.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "cross_repo"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4663,
+      "input_sha256": "01e7ecc1797bd7687754362bc21cda3c548015d1f734ed58a29f119307f850ca",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A tool mutates process-global state, forcing serialization and leaving direct callers racy. It supports an explanation of concurrency/resource ownership rather than just glob syntax.",
+      "evidence": [
+        {
+          "text": "`cwd` is process-global",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4549,
+      "input_sha256": "052f4bc7c1e598a1c5f93fd1c69f5f626ec4ac38a8a627bc93d9ba2cce9e2b97",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "unclear",
+        "design_context": "yes"
+      },
+      "suggested_action": "uncertain",
+      "reason": "The provider rejection and desired successful setup are clear enough for a bug issue. It may be a routine API-version configuration fix; the description alone does not establish a substantial design lesson.",
+      "evidence": [
+        {
+          "text": "Responses API is enabled only for api-version 2025-03-01-preview and later",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 1060,
+      "input_sha256": "a2c9b26e2b6eeac133bb689fae150ab41bb81d782a4fe0176e2c28aa54ca670f",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A2A discovery and task lifecycle must map to existing conversation identities and streams. Scope and supported operations are concrete; external A2A interoperability is not cross-repo evidence among the three watched repositories.",
+      "evidence": [
+        {
+          "text": "mapping A2A task IDs to OpenHands conversation IDs.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4642,
+      "input_sha256": "e399f9a7ec1c25b9da8454246fda6a02de0a5d344bf3c325e7603fb10e8fe9a5",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Deterministic paired evaluation, matched configurations and failure accounting provide a useful methodology for distinguishing agent performance from evaluation noise.",
+      "evidence": [
+        {
+          "text": "An LLM must not calculate metrics or decide whether a threshold was crossed.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4654,
+      "input_sha256": "67b60bddc7b4f6d4333df93f2566e129d53b4389ef538500f9ba896bd374d54b",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Per-worker model selection requires clear override, isolation, discovery and resume semantics. This is meaningful delegation design; SDK and agent-server packages are not separate watched repositories.",
+      "evidence": [
+        {
+          "text": "A caller-supplied profile must not be silently ignored.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 481,
+      "input_sha256": "e2a6a28a07511479f0944644b911264f6eb36dc5682f3f38acf1fc611f5d99a1",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "unclear",
+        "design_context": "yes"
+      },
+      "suggested_action": "uncertain",
+      "reason": "The desired browser-agent capability is clear, so this is not an empty issue. It names several modal types without showing a particular failure or mechanism, leaving standalone explanatory value uncertain.",
+      "evidence": [
+        {
+          "text": "modal popups (login forms, cookie dialogs, confirmation modals) that block page interaction.",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4978,
+      "input_sha256": "f6d3b176c25f36ea9d05a28f1e173121f1df7e87bc83bec9fd7be59343cdb175",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Explicit typed metadata interfaces replacing reflective discovery raise concrete API-design and compatibility questions. No behavioral or memory change is promised.",
+      "evidence": [
+        {
+          "text": "Serialization and public schema output remain backward compatible",
+          "supports": [
+            "design",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4829,
+      "input_sha256": "c406d9d0ef0b83b9b383993344fbba1ef792b76c12c87a5502724c41194114be",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Interrupt, steer and queue define when user information enters an agent turn and how cancellation behaves. Canvas message loss and UI projection provide concrete downstream interactions, not just repository mentions.",
+      "evidence": [
+        {
+          "text": "steer = at the next step boundary, still inside the current turn; queue = only once the turn has fully finished.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "memory"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4996,
+      "input_sha256": "726ada4994d6d884c5309cd07f5e3badae42ec02dec7d151444a7122ddc16d39",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Lifecycle normalization has an explicit SDK-to-Canvas ownership boundary and a carefully limited legacy Cloud fallback. Archive metadata is application lifecycle state, not automatically agent memory.",
+      "evidence": [
+        {
+          "text": "No compatibility fallback should be implemented in `OpenHands/OpenHands`.",
+          "supports": [
+            "design",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5092,
+      "input_sha256": "1226964bef76354e7750ed57e775c201c75028db780ae2f3c4f6be699aabd325",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A user revocation becomes implicit approval because pending-action state is mishandled. This is a concrete agent-control and authorization contract with a reproducible safety failure.",
+      "evidence": [
+        {
+          "text": "A user message during WAITING_FOR_CONFIRMATION must never act as consent.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5080,
+      "input_sha256": "6d532e97373e8cc28227f8e482f5f8c33c3c358ef1aa14712c31e0c7b92953ac",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Separating orchestration from interactive history synchronization removes runtime tool dependencies from schedulers. The architecture is clear, but no concrete interaction with the watched automation repository is established.",
+      "evidence": [
+        {
+          "text": "requiring the full interactive client couples the scheduler process to the agent runtime's tools.",
+          "supports": [
+            "design",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5138,
+      "input_sha256": "8a547fbbce33f469025fa947c6d8bf2d526bd239d9c70cb8ed829f62a75c4b4b",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Nested body serialization violates a precise proxy contract and blocks Canvas approval of agent actions. The described Canvas-to-TypeScript-client flow supplies concrete downstream interaction; enterprise alone would not qualify.",
+      "evidence": [
+        {
+          "text": "The agent-canvas \"High Risk / Continue\" confirmation flow",
+          "supports": [
+            "agent_behavior",
+            "cross_repo"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4744,
+      "input_sha256": "c30063f801e2ef36dc1c385a7ebdcfb43c4c6200596e0a41a864d7c24db7349a",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "A clear dependency-upgrade and exact-version policy is routine maintenance. The short description adequately states the requested behavior; it need not invent an architecture rationale.",
+      "evidence": [
+        {
+          "text": "Do not use carat dependencies, pin exact versions",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4880,
+      "input_sha256": "e0c19b4dae6a0b4d484461f710254d9bd09d5d76590110cf37eedb9c5712367b",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Mutable capability metadata controls context truncation and wire behavior despite pinned code. The ownership/freshness tradeoff is explicit, consequential and well explained.",
+      "evidence": [
+        {
+          "text": "context windows and capability flags \u2014 which decide when we truncate and what we put on the wire",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "memory"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 3606,
+      "input_sha256": "bceed22bfee52932b58145419d9c11c16ef092551a2e3270436459c136df4860",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A typed prompt-section registry makes cache tiers and interaction variants explicit and testable. This concerns prompt construction and cache performance; long-term agent memory is explicitly outside scope.",
+      "evidence": [
+        {
+          "text": "enable per-section unit tests and A/B swaps",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4433,
+      "input_sha256": "25f697bad74088c518b550e3b91ecf8e8d800503715bef554d1b98b7e9916a23",
+      "labels": {
+        "design": "unclear",
+        "agent_behavior": "unclear",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "unclear",
+        "design_context": "no"
+      },
+      "suggested_action": "insufficient_description",
+      "reason": "The title is merely repeated and a PR is linked. The supplied text does not say what call context contains, what problem centralization solves, or the desired behavior.",
+      "evidence": [
+        {
+          "text": "Centralize LLM call context in the SDK.",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4085,
+      "input_sha256": "5eb7564805178c5be83d3db0b607499eddd818d2324602ca6b49b375f550a8b8",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Hosted versus client-owned delegation poses a substantive control/observability tradeoff, including opaque inter-agent messages and provider-owned compaction. OpenAI is not another watched repository.",
+      "evidence": [
+        {
+          "text": "Server-side compaction is auto-enabled",
+          "supports": [
+            "agent_behavior",
+            "memory"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4671,
+      "input_sha256": "429833b06f22c1da9bcf58e9fa5a923dc97ca2915525e42858fc0f2a2efe153a",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Wire/storage coupling, durable replay, ordering, cancellation and Canvas reconstruction form a detailed cross-repository protocol redesign. The memory label is supported by durable history/replay, not by buffer RAM.",
+      "evidence": [
+        {
+          "text": "every wire change is a storage migration and every storage change is a wire break",
+          "supports": [
+            "design",
+            "memory",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5188,
+      "input_sha256": "aad470118f302a05794c11f28e2e6e183875185250a96100622eaf9e77725e20",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A concrete new provider route must preserve Responses API tool calls, required regional/project routing and profile secrets. It is primarily integration rather than a proposed architectural change; the upstream issue citation alone does not establish cross-repository behavior.",
+      "evidence": [
+        {
+          "text": "Provider fields survive profile serialization and secret handling.",
+          "supports": [
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 3797,
+      "input_sha256": "5db2faea5613c66e05d956626fe05110fac1b8b949bc81f9dcff71631fa7e22b",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The description fully identifies why INFO logs become error alerts and gives logging/configuration fixes and tests. This is ordinary observability plumbing, without an agent-behavior, memory or consequential architecture question.",
+      "evidence": [
+        {
+          "text": "These should remain visible as INFO, not page application-failure monitors.",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 2047,
+      "input_sha256": "d962ac2155dbcf5603649fe75e1016c64397750fa457fc100c9b3d1d862249c3",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Changing delegation from blocking joins to managed background tasks introduces meaningful parent/subagent concurrency, cancellation, result retrieval and lifecycle ownership. The intended interface and expected behavior are well specified.",
+      "evidence": [
+        {
+          "text": "Add a `background` flag to delegation that returns immediately with task IDs",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4766,
+      "input_sha256": "d37ef5334e10c4692ecd6e769cf9be18cc7955d5f4fadfd3e29670ca302414ca",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The null decision parsing failure is precisely reproduced and affects the hook outcome, so its context is sufficient. The proposed change is a narrow type guard preserving the already captured subprocess result, rather than a substantial design or behavior investigation.",
+      "evidence": [
+        {
+          "text": "if \"decision\" in output_data:\n    decision_str = output_data[\"decision\"].lower()",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4613,
+      "input_sha256": "80b38be831b7c7a0fa4641012fba39396dad3e7847300a7ebdbc51f1b9021ee1",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The namespaced model routing bug and desired normalization are clear, but the issue proposes a small prefix-preservation fix with a regression test. Mentioning an upstream report does not itself describe an interaction between the watched repositories.",
+      "evidence": [
+        {
+          "text": "LiteLLM's Responses API path re-parses and strips the `openai/` prefix again",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4653,
+      "input_sha256": "39a41541abfa39c93f9f99f8238cfd2bbce045424c254b5922867e3999366496",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Mid-run ask_agent consumes an incrementally cached view before matching tool results arrive. The issue connects concurrency, history invariants and provider message validation, with an explicit fix and reproducible evidence.",
+      "evidence": [
+        {
+          "text": "That view skips `enforce_properties` on linear appends",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5067,
+      "input_sha256": "6d78bc4d6445372542314655d44ef6dec0efc6a22244de94af7fa2bcdf0ca3f1",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Fresh clients cannot reconstruct persisted or streamed tool events without server registration metadata. The attach/restore boundary and dynamic imports raise substantive conversation-history and schema contract questions; both sides are packages of this repository.",
+      "evidence": [
+        {
+          "text": "it cannot deserialize that conversation's persisted or streamed events",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4849,
+      "input_sha256": "c0ea260e6ef4a5a5166439048c9b577793d01686b598d2ac0dc4305fa0401b7a",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The issue exposes a silent schema drift boundary between persisted/runtime models and wire responses, and compares typed construction with a structural API change. This is concrete design work; no agent decision or memory behavior is established.",
+      "evidence": [
+        {
+          "text": "The mapping from source model to wire shape should be explicit and type-checked",
+          "supports": [
+            "design",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 2186,
+      "input_sha256": "e47960999ff60874b94b91d4a14a5d77695ddfdf789aff692fc66d2766a5b9d5",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The backlog identifies scoped subagent capabilities, persistent memory, compaction, restrictions and background execution, with compatibility constraints. Individual decisions remain open, but the described feature questions are sufficient to investigate.",
+      "evidence": [
+        {
+          "text": "`memory`: Persistent memory scope.",
+          "supports": [
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5030,
+      "input_sha256": "dce6e78834e44756aa801f836b753629416fb970301d6c9667e961103f53f810",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Profile-scoped secret allowlists change a real server-enforced agent capability boundary and the Canvas editor contract, including eager ACP versus lazy OpenHands delivery. It explains defaults, failure behavior and exposure clearly enough for substantive analysis.",
+      "evidence": [
+        {
+          "text": "Filtering there means the restriction holds no matter what a client sends.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4498,
+      "input_sha256": "09e39085ae0bf73fe02421f9022d8234b6573a686841c34420ea4a94c54b9b60",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Incremental compaction violates action/observation pairing while the rebuild path repairs it. This directly links agent context correctness to a deliberate performance optimization, with clear failure conditions and intended invariants.",
+      "evidence": [
+        {
+          "text": "The **incremental** path (`ConversationState.view` fast path, which calls `append_event` for each new tail event) intentionally skips",
+          "supports": [
+            "design",
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4762,
+      "input_sha256": "70947c2f94fdd59c198782bf602aea4efc20848112bf43f4e70b887d02e0c921",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The requested readiness workflow, idempotent feedback and linked-PR gates are sufficiently specified. This is repository process automation, not the runtime automation-service interaction or agent/design subject matter sought for Field notes.",
+      "evidence": [
+        {
+          "text": "Linked PRs are blocked until their issue is ready.",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4192,
+      "input_sha256": "be2b86b176c54ce2e314605a646f009c75eb9d2d5f1532db39f2e41eb9c7540b",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "yes",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A fast restart makes durable conversation history disappear because of suspected ownership locks. The uncertain root cause does not make the clear Canvas reproduction and desired rehydration insufficient; persistence versus ownership is a substantive design question.",
+      "evidence": [
+        {
+          "text": "Restarting just rehydrates all conversations",
+          "supports": [
+            "design",
+            "memory",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4993,
+      "input_sha256": "c0a998a036295f400687eff9e01d57fbac5b0ccf9d0908d9ec2d2e351aad1dd9",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Separating execution status, runtime availability, ownership and recovery is a consequential public contract needed by Canvas clients. The issue clearly defines reprovision versus explicit resume; it is principally lifecycle architecture, not an agent memory algorithm.",
+      "evidence": [
+        {
+          "text": "`runtime missing != conversation archived` and `execution failed != runtime missing`",
+          "supports": [
+            "design",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4810,
+      "input_sha256": "764f102286748405941400b1c5028f772ce2dff90e89539a7b93f17df7be9ded",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Two sources of conversation state disagree after mutations, silently restoring obsolete security policy and secrets on reload. This is a consequential persistence/authority boundary affecting agent permissions, rather than agent memory in the context-management sense.",
+      "evidence": [
+        {
+          "text": "the changes are silently reverted after eviction or server restart.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4732,
+      "input_sha256": "4321998cdca9d55288abb062b1b5f9aabe8e3c0388c51473e3e75bebd38fc00c",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The issue gives a complete, ordinary library-hygiene change: inject an optional logger and default to no-op. It does not present substantial architecture, agent behavior, memory or watched-repository integration.",
+      "evidence": [
+        {
+          "text": "Default to a no-op logger.",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 3907,
+      "input_sha256": "cc64cf7ca2d09707b777d63b4a3961036f6f07f6f7399ffb997e9f292a8ba469",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The proposal explicitly separates live subagent observability from the parent's persisted/model history, and spans SDK forwarding plus OpenHands app-server storage. Correlation, opt-in behavior and isolation tradeoffs are developed enough for a design note.",
+      "evidence": [
+        {
+          "text": "**Forward, don't persist into the parent.**",
+          "supports": [
+            "design",
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4668,
+      "input_sha256": "5a750f99efe70a8075339272794efa482e7e9cb205fe4b9b33eed6f33c282cf6",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The symptom and expected inherited observation fields are clear despite the separate reproducer link. Preserving a base observation dump is a localized adapter fix; the description does not establish a broader complex design or memory question.",
+      "evidence": [
+        {
+          "text": "Those fields are silently discarded",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4840,
+      "input_sha256": "b322a330efd882211f9a512beb270feebda3a73a4fa210d109e2b52b3374d04c",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "This is a well-explained test-isolation problem with class-level mocks counting other instances' cleanup. The requested change explicitly leaves production code unchanged, so it is ordinary test maintenance rather than an agent behavior investigation.",
+      "evidence": [
+        {
+          "text": "No change to `ACPAgent` production code",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4957,
+      "input_sha256": "939618e768b390c8717078eff60b8964dc77cd176209189a474d0d9bc1f1b5d6",
+      "labels": {
+        "design": "unclear",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "unclear",
+        "design_context": "yes"
+      },
+      "suggested_action": "uncertain",
+      "reason": "The repeated shell rejection and desired valid-heredoc support are clear enough to identify the bug. It concerns agent tool behavior, but without a concrete command or rejection source it is uncertain whether the remedy is routine parsing or an interesting execution-policy tradeoff.",
+      "evidence": [
+        {
+          "text": "combined/valid heredoc commands are accepted instead of rejected",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4405,
+      "input_sha256": "1db27a49b909bc7645a76ecb357f15bfc2a41aa0ae5e8aae14b7ee9618b9e83f",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "This detailed plugin-format design covers compatibility, discovery precedence, containment, trust, failure isolation and extension mapping. It changes how agent capabilities are packaged and loaded; external standards alone are not watched-repository interaction, and plugin data storage is not itself agent memory.",
+      "evidence": [
+        {
+          "text": "Apply the narrowest failure boundary",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4777,
+      "input_sha256": "59a3179bbaf0dde9d8f72d1c543e702367dcf3ffb0ac8ade2a88e8c92f554dc6",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The lock wait opens a cancellation race that can start real tools after a user interrupt. Even with a compact proposed fix, execution ordering, cancellation guarantees and sync/async parity make this a substantive agent-control issue.",
+      "evidence": [
+        {
+          "text": "a queued file, terminal, browser, or other resource-using operation can begin after the user has interrupted the run.",
+          "supports": [
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4660,
+      "input_sha256": "f117ef3c0addb4c675a589b6ba37033805429e63c5d15a8cc8fdfea252e6bedc",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Async bypass and shared mutable selected-model state break per-request routing, including concurrent cross-dispatch. The reported behavior and desired call-local delegation are sufficient without inspecting the separate reproduction.",
+      "evidence": [
+        {
+          "text": "Concurrent calls selecting different children cannot cross-dispatch.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4353,
+      "input_sha256": "1cbb849c12432630d79ee536c0b313295a736fb0e64e839838b7afefb2f1c857",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Although framed as tests, this matrix probes real extension trust boundaries: enablement, containment, refresh reconfirmation and generic SDK versus Canvas behavior. It names the missing invariants rather than merely requesting coverage.",
+      "evidence": [
+        {
+          "text": "Refresh check never mutates or deactivates the active bundle",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4873,
+      "input_sha256": "314b0334702cd8c92e998c7241ebddbb626d7b087e85bb334b8cb047d829890a",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Supporting a preinstalled binary requires a third install contract while preserving provider selection, authentication and image boundaries. The issue provides concrete ACP behavior and acceptance criteria; Canvas branding is explicitly outside this change.",
+      "evidence": [
+        {
+          "text": "the catalog needs a third flavour (preinstalled binary) that `render_docker_install_plan` **rejects**",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4841,
+      "input_sha256": "65aeb8d1ccbbc2e97361095e90f73d37652f38f35a8377bedc395e119487f5d3",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "This explicitly separates SDK registry knowledge from client deployment policy, with Canvas/OpenHands and other consumers enforcing their own offerings. It explains why UI filtering, images and runtime capability discovery cannot substitute for start-time enforcement.",
+      "evidence": [
+        {
+          "text": "The SDK stays a registry and carries no deployment policy.",
+          "supports": [
+            "design",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5145,
+      "input_sha256": "2903a593da1aa928211dc75cefd4ced66df00e87434620b1cb4bf9fd93fc582d",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The goal evaluator blends steering instructions with the transcript in one user message. The proposed role split is small but meaningfully concerns judge behavior and provider instruction semantics; the issue explicitly excludes the main conversation history.",
+      "evidence": [
+        {
+          "text": "the judge's verdict format instructions live in the `user` slot rather than the `system`/`instructions` slot",
+          "supports": [
+            "agent_behavior",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4556,
+      "input_sha256": "d5c80550994a543f764c9def7f6265e23140a2e37c776539622162f84f2004ff",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Per-conversation spawn-time enforcement makes the Canvas toggle real without corrupting the shared global registry. The issue develops scope, resume behavior and why prompt hiding is insufficient; the small implementation estimate does not erase the design question.",
+      "evidence": [
+        {
+          "text": "the sub-agent registry is global to the process",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4893,
+      "input_sha256": "97b2ede14c964eca3407cefb0f1032d55ae03f3a8b8bf7ad72fc57eaabf90a47",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A suspended runtime leaves persisted RUNNING status that blocks normal recovery. Lifecycle ownership, stale leases and resumability are substantial; the author clearly separates an unconfirmed mechanism from concrete symptoms and desired recovery.",
+      "evidence": [
+        {
+          "text": "the conversation is left with `execution_status = RUNNING` on disk and **cannot be resumed through the normal API**.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4943,
+      "input_sha256": "314f4bd813dc9f6585051ed9df8013738f03795cd42ee11b23314bf013317be7",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Server-owned profile composition drops an agent prompt channel, forcing clients to assemble agents. The issue explains the boundary, additive compatibility and eventual typed-registry migration, making it a substantive design and prompt-behavior topic.",
+      "evidence": [
+        {
+          "text": "Profiles then stay server-side, secret-free, and prompt-capable.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4904,
+      "input_sha256": "d5a9491065a00f9e83e3ed674281520293ebf1aa2e8748b46d9d8d562eb20dfc",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The scope and typed replacements make this understandable as a maintenance task. It does not identify a concrete behavioral failure or consequential boundary redesign beyond a broad cleanup, despite naming LLM modules.",
+      "evidence": [
+        {
+          "text": "Use typed response models, explicit capability checks, or canonical normalization at boundaries.",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5142,
+      "input_sha256": "567d8a20c40ec0fcfddedcbeabf3d34a8db3dc67344bf2d462b941e2d454d030",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "This concerns the condenser's actual summarization inputs and steering roles across provider transports. The change is localized but central to how forgotten events become usable agent context, with a clear instruction/data distinction.",
+      "evidence": [
+        {
+          "text": "it conflates \"how to summarize\" (steering) with \"what to summarize\" (data).",
+          "supports": [
+            "agent_behavior",
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5171,
+      "input_sha256": "89479861cead5381abafafb18c00ff1e6407938cdabe984de7f583a4184fe761",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "unclear",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The description completely specifies a missing TypeScript allowlist key and its regression check. It names conversation data-directory isolation but does not develop a broader memory or design issue; the immediate work is a routine payload parity fix.",
+      "evidence": [
+        {
+          "text": "`acp_isolate_data_dir` is forwarded like the other ACP settings keys.",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4776,
+      "input_sha256": "39cf0a2bd8be203e623db5dcb803ee38eab4dc3e0ebb9b620e7b7b976eaeda46",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Loss at the SDK conversion boundary prevents Canvas and other consumers receiving protocol metadata. Preserving structured fields while masking secrets and excluding them from model content is a meaningful schema/security design, even though the agent prompt stays unchanged.",
+      "evidence": [
+        {
+          "text": "The fields stay out of the content sent to the model",
+          "supports": [
+            "design",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5146,
+      "input_sha256": "30a8f4872ff7c39a068000431c859636d004692479bc2268f14dbf47af433ee7",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "This is a fully specified minimal preflight request-shape adjustment to follow a convention. It affects a one-token connectivity probe, with no substantive agent, memory or architecture question presented.",
+      "evidence": [
+        {
+          "text": "The call remains a single-turn pre-flight check; only the message list shape changes.",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5012,
+      "input_sha256": "266f416bd6e529176d625352479a4e3c7aa4de30bf5f4675bc56db7e3d476bef",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "yes",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The issue relocates the shared authenticated stream protocol from Canvas into the SDK, preserving replay, cancellation and lifecycle semantics. It is concise but provides enough invariants for a cross-repository architecture and history-delivery note.",
+      "evidence": [
+        {
+          "text": "authentication, reconnects, and handshake timeouts",
+          "supports": [
+            "design",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4248,
+      "input_sha256": "194257d537d0479c2ce08ea9547410d5737d45ca5162d8f3c50ce3085e67b67d",
+      "labels": {
+        "design": "unclear",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "unclear",
+        "design_context": "yes"
+      },
+      "suggested_action": "uncertain",
+      "reason": "The named model and precise missing tool-schema parameter identify a real agent invocation problem with an implicit expected successful call. The sparse report leaves significance and mechanism uncertain, but a known solution is not required to understand the bug.",
+      "evidence": [
+        {
+          "text": "Error: Missing required parameters for function 'execute_bash': {'security_risk'}",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4774,
+      "input_sha256": "1d3a3acd44db629588fcf92be82f038778a3124700551fca5656523b4ebc8b65",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The empty-message placeholder inconsistency is thoroughly explained with a narrow rendering fix. It changes the visualizer only, not agent context, behavior or a substantial design contract.",
+      "evidence": [
+        {
+          "text": "The underlying event remains valid, but the default conversation visualizer omits it.",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4705,
+      "input_sha256": "acedd5bbef9120dbb45a3322fc57693a8e03a0f5aef3e1fac876f700654fbe71",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A lost MCP schema field causes client event validation and contradictory Canvas automation/task status while execution continues. The SDK-to-application status boundary is substantive, and the steps plus error are sufficient without a solution or fetched screenshots.",
+      "evidence": [
+        {
+          "text": "The task list shows the run as successful, while the automation page shows it as failed",
+          "supports": [
+            "design",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4679,
+      "input_sha256": "1db77a1452686907da84321f3e8b279760e01dc50043fda93491a28c0f0682e5",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The issue asks for measurements that determine transport backpressure and replay architecture, including slow consumers, retries and history growth. This is evidence-led agent performance design rather than generic testing work.",
+      "evidence": [
+        {
+          "text": "the frame-size numbers are what turn that from a hunch into a decision.",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4958,
+      "input_sha256": "12076bd0c003e35e05291d15194e0149c8cf8fd6a8f64de41c8f33d7c945a5ce",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Canvas currently guesses both selectable tools and actual launch outcomes. The proposal places capability metadata and resolved tool selection with their SDK owner, removing a drift-prone boundary that can misrepresent what an agent may do.",
+      "evidence": [
+        {
+          "text": "Both are facts the SDK owns",
+          "supports": [
+            "design",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4995,
+      "input_sha256": "4f02e3508cc66baa8c12a70e2e044311b942d58530ce8015613f2a9d361612b4",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "yes",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Decoupling retained trajectories from disposable runtimes is a substantive history-retention and lifecycle design needed by Canvas. The issue clearly distinguishes archive, deletion, ownership loss and read operations that must never start execution.",
+      "evidence": [
+        {
+          "text": "Reading history never provisions or resumes a runtime.",
+          "supports": [
+            "design",
+            "memory",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5167,
+      "input_sha256": "dbaf26c3117598ed45a07cadd958548fb7416d4aa21447139193481a3fec4fff",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A headless Canvas deployment has usable credentials yet hangs in SDK-triggered interactive authentication. The description thoroughly separates observed controls from hypotheses and proposes preserving provider enforcement while changing session/auth sequencing.",
+      "evidence": [
+        {
+          "text": "an `auth.json`-shaped file alone is not treated as authentication.",
+          "supports": [
+            "design",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4811,
+      "input_sha256": "76113dc77951827c65169c6fb793834b032f022ee4d68239a71785315104e4ae",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Fork titles pollute the user-defined tag map because standalone and server metadata ownership differ. It gives a clear symptom and explicitly raises where title belongs, a modest but real domain-model boundary question rather than a missing-description case.",
+      "evidence": [
+        {
+          "text": "The fix may require deciding where title lives in the standalone SDK context.",
+          "supports": [
+            "design",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4867,
+      "input_sha256": "5b5e70b0ed1c1ad2e6c9d9e8c25a7b52a78212fec862c5ccc4e7c5e9f92dbc23",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "ACP's external-provider credential boundary is violated by ancillary title generation using nominally inert LLM settings. The issue connects Canvas's settings contract to SDK dispatch and a potentially harmful environment workaround, with clear fallback semantics.",
+      "evidence": [
+        {
+          "text": "In ACP mode the conversation is driven by an external subprocess and the LLM settings are inert",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4520,
+      "input_sha256": "fc2ae3e2bd400870df29c146aa31f63f6b2a3b393d7c1d91504bccfee3fffe30",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "This is a fully specified ordinary parser-normalization bug, with duplicate .git suffixes and a small idempotent normalization or rejection fix. Its presence in extension fetching does not make it a substantial agent design topic.",
+      "evidence": [
+        {
+          "text": "It should not be accepted and converted into an unusable clone URL.",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4264,
+      "input_sha256": "743361688191635e8296b99570c74631e31946cccb68bfc074405abb647653ae",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The report explicitly describes stale build artifacts in a particular fork and asks for cleanup/build hygiene. Despite the severity label, no demonstrated upstream behavioral or complex architecture question is supplied.",
+      "evidence": [
+        {
+          "text": "This is a hygiene fix, not a functional fix",
+          "supports": [
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5038,
+      "input_sha256": "567cab9067ac72fa386499c7f311d5c641917bd433ed93b707342f3cc5db4041",
+      "labels": {
+        "design": "no",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "no",
+        "design_context": "yes"
+      },
+      "suggested_action": "skip",
+      "reason": "The invalid binary classification blocks a real agent file tool, and the Unicode sampling bug and preservation requirements are precise. As described, this remains a localized file-validation fix rather than a consequential architecture or memory change.",
+      "evidence": [
+        {
+          "text": "Its 1,024-byte sample can split a multibyte UTF-8 character",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5149,
+      "input_sha256": "f77fc256cacdca13b633f5a852f6cfc526ba5bb733c5cb3f818eea67d1fb33b7",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Hard-reset compaction can replace the system prompt with a user summary, violating context and instruction invariants. The issue directly concerns retained agent memory and behavior, with a clear preserved-prefix approach and sync/async expectations.",
+      "evidence": [
+        {
+          "text": "the system prompt can be entirely forgotten",
+          "supports": [
+            "agent_behavior",
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4964,
+      "input_sha256": "d4bd700e445e5b0ca2655700230605af5d5036e093824e3cdf9b1abf77025785",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The SDK profile schema is missing capability discovery, forcing Canvas to guess releases and risk rejected saves. This explicitly distinguishes accepted fields from settings schema and actual enforcement, with clear ownership and compatibility consequences.",
+      "evidence": [
+        {
+          "text": "every new profile field needs one.",
+          "supports": [
+            "design",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 3612,
+      "input_sha256": "c7667d279cf0bae95fc2c4ce16da12fc76b59a79a47443d5ddffd7ba7d1cd775",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Typed prompt sections bind shell instructions to actual tools and introduce interaction-dependent verification/style policy. The intended changes to model behavior and compatibility are explicit, even though this is one phase of a larger roadmap.",
+      "evidence": [
+        {
+          "text": "Interactive mode produces a measurably terser, less-verification-heavy prompt",
+          "supports": [
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4670,
+      "input_sha256": "d13720f6800f8f38f06c55e1be6b539f244c8c9d9290d93df22df7088fca81fd",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A stop flag cannot wake a silent async receive, so thread ownership is discarded before resources exit. The described cancellation/lifecycle boundary and repeated connection leaks are substantive design issues, without being agent memory merely because resources accumulate.",
+      "evidence": [
+        {
+          "text": "setting a `threading.Event` does not wake the pending WebSocket receive",
+          "supports": [
+            "design",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4187,
+      "input_sha256": "77329324ba774fb4691bc8ca5e922511e7cfbe548d824af327bc8f3d66a17f98",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The feature separates trusted reasoning, memory and credentials from untrusted remote execution, challenging conversation/workspace coupling. It supplies a concrete topology, alternatives and acceptance scenario; generic cloud workspace usage alone is not watched cross-repository interaction.",
+      "evidence": [
+        {
+          "text": "conversation placement and workspace placement become independent choices.",
+          "supports": [
+            "design",
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4643,
+      "input_sha256": "fd9f3fd23107126781d7d8c239a343b353c6c33b2a7ccb544be6296461455ad5",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The supplied portion amply explains selectable image capabilities, acquisition tradeoffs and SDK/Canvas/automation release constraints. These affect agent tool availability and startup behavior. Input is truncated, which is a coverage limitation, not evidence of an insufficient authored description.",
+      "evidence": [
+        {
+          "text": "Choose images **by consumer and tag, never per conversation.**",
+          "supports": [
+            "design",
+            "cross_repo",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "input_truncated"
+      ]
+    }
+  ]
+}

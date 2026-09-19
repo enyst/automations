@@ -1,0 +1,1311 @@
+{
+  "protocol_version": 1,
+  "model": "jev-1.13.0",
+  "policy_version": 2,
+  "interpretation": [
+    "Reviewers are independent agent judgments, not ground truth; agreement is not accuracy.",
+    "Primary reviewer actions map to model routes; uncertainty maps to defer.",
+    "The policy forces defer for incomplete inputs independently of author description sufficiency.",
+    "Unclear category judgments are excluded from binary agreement and counted explicitly.",
+    "Stability cases were selected near the context threshold, not randomly; do not generalize their flip rate.",
+    "Thresholded judgments do not establish probability calibration."
+  ],
+  "artifacts": {
+    "snapshot": "snapshot.json",
+    "rubric": "rubric.json",
+    "core": "core.snapshot.py",
+    "primary_results": "results.json",
+    "comparison": "comparison.csv",
+    "root_overlap": "root-overlap.csv",
+    "review_files": {
+      "reviews/group-1.json": {
+        "reviewer": "field_notes_runtime",
+        "count": 89
+      },
+      "reviews/group-2.json": {
+        "reviewer": "field_notes_pipeline",
+        "count": 77
+      },
+      "reviews/group-2-tail.json": {
+        "reviewer": "field_notes_runtime",
+        "count": 20
+      },
+      "reviews/group-3.json": {
+        "reviewer": "field_notes_site",
+        "count": 84
+      }
+    },
+    "root_review": "reviews/root-blind-sample.json"
+  },
+  "source": {
+    "repository": "OpenHands/software-agent-sdk",
+    "head": "bd5fff06c2fe79d6e0e5d192bbf22339482f2805",
+    "scope": "All open issues; pull requests excluded; titles and descriptions only; no comments or diffs",
+    "started_at": "2026-09-19T21:49:17.663153+00:00",
+    "completed_at": "2026-09-19T21:49:22.627821+00:00",
+    "snapshot_sha256": "2337804b17ab50c9c0ffc990106cd94130532292631be73c48e5d172d8fd6fa7",
+    "core_sha256": "c052b1a958676a112467de9bf5d51f0752c2153d208695b6d4fbf27555c69236",
+    "root_sample_sha256": "223189c87bb4269f36fda7fb098fd74653e2846cfa3f2d4c4567349ba1530184"
+  },
+  "counts": {
+    "issues": 270,
+    "primary_reviews": 270,
+    "root_double_reviews": 18,
+    "primary_attempts": 270,
+    "primary_status": {
+      "ok": 270
+    },
+    "primary_http_status": {
+      "200": 270
+    },
+    "primary_routes": {
+      "defer": 54,
+      "needs_info": 5,
+      "skip": 28,
+      "write": 183
+    },
+    "primary_route_reasons": {
+      "below_threshold": 28,
+      "incomplete_context": 2,
+      "insufficient_design_context": 5,
+      "relevant_with_substance": 183,
+      "uncertain_design_context": 52
+    },
+    "reviewer_actions": {
+      "insufficient_description": 2,
+      "investigate": 219,
+      "skip": 40,
+      "uncertain": 9
+    }
+  },
+  "coverage": {
+    "complete": 268,
+    "truncated_issues": [
+      4643,
+      5074
+    ],
+    "retrieval_incomplete_issues": []
+  },
+  "usage": {
+    "primary_attempts": {
+      "input_tokens": 516236,
+      "output_tokens": 28080
+    },
+    "primary_usage_records": 270,
+    "repeat_responses": {
+      "input_tokens": 29962,
+      "output_tokens": 2080
+    },
+    "repeat_usage_records": 20,
+    "total": {
+      "input_tokens": 546198,
+      "output_tokens": 30160
+    },
+    "primary_duration_seconds": 199.232
+  },
+  "agreement": {
+    "action_to_route": {
+      "investigate": "write",
+      "skip": "skip",
+      "uncertain": "defer",
+      "insufficient_description": "needs_info"
+    },
+    "confusion_orientation": "rows=reviewer, columns=Jev",
+    "all_input_routes": {
+      "compared": 270,
+      "agree": 196,
+      "agreement": 0.725925925925926,
+      "confusion": {
+        "write": {
+          "write": 169,
+          "skip": 8,
+          "defer": 42,
+          "needs_info": 0,
+          "error": 0
+        },
+        "skip": {
+          "write": 13,
+          "skip": 20,
+          "defer": 7,
+          "needs_info": 0,
+          "error": 0
+        },
+        "defer": {
+          "write": 1,
+          "skip": 0,
+          "defer": 5,
+          "needs_info": 3,
+          "error": 0
+        },
+        "needs_info": {
+          "write": 0,
+          "skip": 0,
+          "defer": 0,
+          "needs_info": 2,
+          "error": 0
+        },
+        "error": {
+          "write": 0,
+          "skip": 0,
+          "defer": 0,
+          "needs_info": 0,
+          "error": 0
+        }
+      }
+    },
+    "complete_input_routes": {
+      "compared": 268,
+      "agree": 195,
+      "agreement": 0.7276119402985075,
+      "confusion": {
+        "write": {
+          "write": 169,
+          "skip": 8,
+          "defer": 41,
+          "needs_info": 0,
+          "error": 0
+        },
+        "skip": {
+          "write": 13,
+          "skip": 20,
+          "defer": 7,
+          "needs_info": 0,
+          "error": 0
+        },
+        "defer": {
+          "write": 1,
+          "skip": 0,
+          "defer": 4,
+          "needs_info": 3,
+          "error": 0
+        },
+        "needs_info": {
+          "write": 0,
+          "skip": 0,
+          "defer": 0,
+          "needs_info": 2,
+          "error": 0
+        },
+        "error": {
+          "write": 0,
+          "skip": 0,
+          "defer": 0,
+          "needs_info": 0,
+          "error": 0
+        }
+      }
+    },
+    "categories": {
+      "design": {
+        "compared": 261,
+        "agree": 232,
+        "agreement": 0.8888888888888888,
+        "confusion": {
+          "yes": {
+            "yes": 208,
+            "no": 6
+          },
+          "no": {
+            "yes": 23,
+            "no": 24
+          }
+        },
+        "threshold": 0.65,
+        "reviewer_labels": {
+          "yes": 214,
+          "no": 47,
+          "unclear": 9
+        },
+        "model_labels": {
+          "yes": 236,
+          "no": 34
+        },
+        "reviewer_unclear_excluded": 9,
+        "model_unavailable_excluded": 0
+      },
+      "agent_behavior": {
+        "compared": 267,
+        "agree": 224,
+        "agreement": 0.8389513108614233,
+        "confusion": {
+          "yes": {
+            "yes": 159,
+            "no": 17
+          },
+          "no": {
+            "yes": 26,
+            "no": 65
+          }
+        },
+        "threshold": 0.65,
+        "reviewer_labels": {
+          "yes": 176,
+          "no": 91,
+          "unclear": 3
+        },
+        "model_labels": {
+          "yes": 186,
+          "no": 84
+        },
+        "reviewer_unclear_excluded": 3,
+        "model_unavailable_excluded": 0
+      },
+      "memory": {
+        "compared": 269,
+        "agree": 249,
+        "agreement": 0.9256505576208178,
+        "confusion": {
+          "yes": {
+            "yes": 39,
+            "no": 9
+          },
+          "no": {
+            "yes": 11,
+            "no": 210
+          }
+        },
+        "threshold": 0.65,
+        "reviewer_labels": {
+          "yes": 48,
+          "no": 221,
+          "unclear": 1
+        },
+        "model_labels": {
+          "yes": 50,
+          "no": 220
+        },
+        "reviewer_unclear_excluded": 1,
+        "model_unavailable_excluded": 0
+      },
+      "cross_repo": {
+        "compared": 261,
+        "agree": 216,
+        "agreement": 0.8275862068965517,
+        "confusion": {
+          "yes": {
+            "yes": 37,
+            "no": 21
+          },
+          "no": {
+            "yes": 24,
+            "no": 179
+          }
+        },
+        "threshold": 0.65,
+        "reviewer_labels": {
+          "no": 203,
+          "yes": 58,
+          "unclear": 9
+        },
+        "model_labels": {
+          "no": 206,
+          "yes": 64
+        },
+        "reviewer_unclear_excluded": 9,
+        "model_unavailable_excluded": 0
+      },
+      "substance": {
+        "compared": 260,
+        "agree": 228,
+        "agreement": 0.8769230769230769,
+        "confusion": {
+          "yes": {
+            "yes": 206,
+            "no": 14
+          },
+          "no": {
+            "yes": 18,
+            "no": 22
+          }
+        },
+        "threshold": 0.7,
+        "reviewer_labels": {
+          "yes": 220,
+          "no": 40,
+          "unclear": 10
+        },
+        "model_labels": {
+          "yes": 226,
+          "no": 44
+        },
+        "reviewer_unclear_excluded": 10,
+        "model_unavailable_excluded": 0
+      },
+      "design_context": {
+        "compared": 267,
+        "agree": 214,
+        "agreement": 0.8014981273408239,
+        "confusion": {
+          "yes": {
+            "yes": 212,
+            "no": 53
+          },
+          "no": {
+            "yes": 0,
+            "no": 2
+          }
+        },
+        "threshold": 0.7,
+        "reviewer_labels": {
+          "yes": 265,
+          "unclear": 3,
+          "no": 2
+        },
+        "model_labels": {
+          "yes": 212,
+          "no": 58
+        },
+        "reviewer_unclear_excluded": 3,
+        "model_unavailable_excluded": 0
+      }
+    }
+  },
+  "root_overlap": {
+    "count": 18,
+    "confusion_orientation": "rows=root, columns=comparator",
+    "root_routes": {
+      "defer": 2,
+      "needs_info": 1,
+      "skip": 1,
+      "write": 14
+    },
+    "assigned_routes": {
+      "defer": 2,
+      "skip": 1,
+      "write": 15
+    },
+    "jev_routes": {
+      "defer": 3,
+      "needs_info": 1,
+      "skip": 1,
+      "write": 13
+    },
+    "routes_vs_assigned": {
+      "compared": 18,
+      "agree": 16,
+      "agreement": 0.8888888888888888,
+      "confusion": {
+        "write": {
+          "write": 14,
+          "skip": 0,
+          "defer": 0,
+          "needs_info": 0,
+          "error": 0
+        },
+        "skip": {
+          "write": 0,
+          "skip": 1,
+          "defer": 0,
+          "needs_info": 0,
+          "error": 0
+        },
+        "defer": {
+          "write": 1,
+          "skip": 0,
+          "defer": 1,
+          "needs_info": 0,
+          "error": 0
+        },
+        "needs_info": {
+          "write": 0,
+          "skip": 0,
+          "defer": 1,
+          "needs_info": 0,
+          "error": 0
+        },
+        "error": {
+          "write": 0,
+          "skip": 0,
+          "defer": 0,
+          "needs_info": 0,
+          "error": 0
+        }
+      }
+    },
+    "routes_vs_jev": {
+      "compared": 18,
+      "agree": 13,
+      "agreement": 0.7222222222222222,
+      "confusion": {
+        "write": {
+          "write": 12,
+          "skip": 0,
+          "defer": 2,
+          "needs_info": 0,
+          "error": 0
+        },
+        "skip": {
+          "write": 0,
+          "skip": 1,
+          "defer": 0,
+          "needs_info": 0,
+          "error": 0
+        },
+        "defer": {
+          "write": 1,
+          "skip": 0,
+          "defer": 0,
+          "needs_info": 1,
+          "error": 0
+        },
+        "needs_info": {
+          "write": 0,
+          "skip": 0,
+          "defer": 1,
+          "needs_info": 0,
+          "error": 0
+        },
+        "error": {
+          "write": 0,
+          "skip": 0,
+          "defer": 0,
+          "needs_info": 0,
+          "error": 0
+        }
+      }
+    },
+    "categories_vs_assigned": {
+      "design": {
+        "compared": 16,
+        "agree": 16,
+        "agreement": 1.0,
+        "confusion": {
+          "yes": {
+            "yes": 15,
+            "no": 0
+          },
+          "no": {
+            "yes": 0,
+            "no": 1
+          }
+        },
+        "root_labels": {
+          "yes": 15,
+          "no": 1,
+          "unclear": 2
+        },
+        "assigned_labels": {
+          "yes": 15,
+          "no": 1,
+          "unclear": 2
+        },
+        "either_unclear_excluded": 2
+      },
+      "agent_behavior": {
+        "compared": 18,
+        "agree": 17,
+        "agreement": 0.9444444444444444,
+        "confusion": {
+          "yes": {
+            "yes": 13,
+            "no": 1
+          },
+          "no": {
+            "yes": 0,
+            "no": 4
+          }
+        },
+        "root_labels": {
+          "yes": 14,
+          "no": 4
+        },
+        "assigned_labels": {
+          "yes": 13,
+          "no": 5
+        },
+        "either_unclear_excluded": 0
+      },
+      "memory": {
+        "compared": 18,
+        "agree": 17,
+        "agreement": 0.9444444444444444,
+        "confusion": {
+          "yes": {
+            "yes": 4,
+            "no": 0
+          },
+          "no": {
+            "yes": 1,
+            "no": 13
+          }
+        },
+        "root_labels": {
+          "no": 14,
+          "yes": 4
+        },
+        "assigned_labels": {
+          "yes": 5,
+          "no": 13
+        },
+        "either_unclear_excluded": 0
+      },
+      "cross_repo": {
+        "compared": 17,
+        "agree": 17,
+        "agreement": 1.0,
+        "confusion": {
+          "yes": {
+            "yes": 5,
+            "no": 0
+          },
+          "no": {
+            "yes": 0,
+            "no": 12
+          }
+        },
+        "root_labels": {
+          "no": 12,
+          "yes": 5,
+          "unclear": 1
+        },
+        "assigned_labels": {
+          "no": 13,
+          "yes": 5
+        },
+        "either_unclear_excluded": 1
+      },
+      "substance": {
+        "compared": 16,
+        "agree": 16,
+        "agreement": 1.0,
+        "confusion": {
+          "yes": {
+            "yes": 15,
+            "no": 0
+          },
+          "no": {
+            "yes": 0,
+            "no": 1
+          }
+        },
+        "root_labels": {
+          "yes": 16,
+          "no": 1,
+          "unclear": 1
+        },
+        "assigned_labels": {
+          "yes": 15,
+          "no": 1,
+          "unclear": 2
+        },
+        "either_unclear_excluded": 2
+      },
+      "design_context": {
+        "compared": 17,
+        "agree": 16,
+        "agreement": 0.9411764705882353,
+        "confusion": {
+          "yes": {
+            "yes": 16,
+            "no": 0
+          },
+          "no": {
+            "yes": 1,
+            "no": 0
+          }
+        },
+        "root_labels": {
+          "yes": 16,
+          "unclear": 1,
+          "no": 1
+        },
+        "assigned_labels": {
+          "yes": 18
+        },
+        "either_unclear_excluded": 1
+      }
+    },
+    "categories_vs_jev": {
+      "design": {
+        "compared": 16,
+        "agree": 15,
+        "agreement": 0.9375,
+        "confusion": {
+          "yes": {
+            "yes": 15,
+            "no": 0
+          },
+          "no": {
+            "yes": 1,
+            "no": 0
+          }
+        },
+        "threshold": 0.65,
+        "reviewer_labels": {
+          "yes": 15,
+          "no": 1,
+          "unclear": 2
+        },
+        "model_labels": {
+          "yes": 17,
+          "no": 1
+        },
+        "reviewer_unclear_excluded": 2,
+        "model_unavailable_excluded": 0
+      },
+      "agent_behavior": {
+        "compared": 18,
+        "agree": 16,
+        "agreement": 0.8888888888888888,
+        "confusion": {
+          "yes": {
+            "yes": 13,
+            "no": 1
+          },
+          "no": {
+            "yes": 1,
+            "no": 3
+          }
+        },
+        "threshold": 0.65,
+        "reviewer_labels": {
+          "yes": 14,
+          "no": 4
+        },
+        "model_labels": {
+          "yes": 14,
+          "no": 4
+        },
+        "reviewer_unclear_excluded": 0,
+        "model_unavailable_excluded": 0
+      },
+      "memory": {
+        "compared": 18,
+        "agree": 15,
+        "agreement": 0.8333333333333334,
+        "confusion": {
+          "yes": {
+            "yes": 2,
+            "no": 2
+          },
+          "no": {
+            "yes": 1,
+            "no": 13
+          }
+        },
+        "threshold": 0.65,
+        "reviewer_labels": {
+          "no": 14,
+          "yes": 4
+        },
+        "model_labels": {
+          "yes": 3,
+          "no": 15
+        },
+        "reviewer_unclear_excluded": 0,
+        "model_unavailable_excluded": 0
+      },
+      "cross_repo": {
+        "compared": 17,
+        "agree": 13,
+        "agreement": 0.7647058823529411,
+        "confusion": {
+          "yes": {
+            "yes": 2,
+            "no": 3
+          },
+          "no": {
+            "yes": 1,
+            "no": 11
+          }
+        },
+        "threshold": 0.65,
+        "reviewer_labels": {
+          "no": 12,
+          "yes": 5,
+          "unclear": 1
+        },
+        "model_labels": {
+          "yes": 4,
+          "no": 14
+        },
+        "reviewer_unclear_excluded": 1,
+        "model_unavailable_excluded": 0
+      },
+      "substance": {
+        "compared": 17,
+        "agree": 16,
+        "agreement": 0.9411764705882353,
+        "confusion": {
+          "yes": {
+            "yes": 15,
+            "no": 1
+          },
+          "no": {
+            "yes": 0,
+            "no": 1
+          }
+        },
+        "threshold": 0.7,
+        "reviewer_labels": {
+          "yes": 16,
+          "no": 1,
+          "unclear": 1
+        },
+        "model_labels": {
+          "yes": 15,
+          "no": 3
+        },
+        "reviewer_unclear_excluded": 1,
+        "model_unavailable_excluded": 0
+      },
+      "design_context": {
+        "compared": 17,
+        "agree": 15,
+        "agreement": 0.8823529411764706,
+        "confusion": {
+          "yes": {
+            "yes": 14,
+            "no": 2
+          },
+          "no": {
+            "yes": 0,
+            "no": 1
+          }
+        },
+        "threshold": 0.7,
+        "reviewer_labels": {
+          "yes": 16,
+          "unclear": 1,
+          "no": 1
+        },
+        "model_labels": {
+          "yes": 14,
+          "no": 4
+        },
+        "reviewer_unclear_excluded": 1,
+        "model_unavailable_excluded": 0
+      }
+    }
+  },
+  "stability": {
+    "selection_method": "Ten cases nearest the 0.70 design_context boundary, chosen before repeats; exploratory, not a random sample.",
+    "plan_file": "stability/plan.json",
+    "results_file": "stability/results.json",
+    "cases": 10,
+    "repeats": 20,
+    "cases_with_route_flip": 5,
+    "repeat_route_flips_from_primary": 8,
+    "adjacent_route_transitions": 6,
+    "category_repeat_flips_from_primary": {
+      "design": 0,
+      "agent_behavior": 2,
+      "memory": 0,
+      "cross_repo": 0,
+      "substance": 0,
+      "design_context": 8
+    },
+    "case_results": [
+      {
+        "issue_number": 481,
+        "input_sha256": "e2a6a28a07511479f0944644b911264f6eb36dc5682f3f38acf1fc611f5d99a1",
+        "request_file": "requests/481.json",
+        "response_files": [
+          "responses/481/attempt-01.json",
+          "stability/481-repeat-1.json",
+          "stability/481-repeat-2.json"
+        ],
+        "routes": [
+          "write",
+          "defer",
+          "defer"
+        ],
+        "repeat_route_flips_from_primary": 2,
+        "adjacent_route_transitions": 1,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 0,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 2
+        },
+        "probability_ranges": {
+          "design": [
+            0.84,
+            0.86
+          ],
+          "agent_behavior": [
+            0.83,
+            0.85
+          ],
+          "memory": [
+            0.03,
+            0.03
+          ],
+          "cross_repo": [
+            0.23,
+            0.24
+          ],
+          "substance": [
+            0.8,
+            0.8
+          ],
+          "design_context": [
+            0.68,
+            0.7
+          ]
+        }
+      },
+      {
+        "issue_number": 4262,
+        "input_sha256": "b872f9192f6eb2aac21f586b68306779a88790604efb6b7e24b25a9d432fcaeb",
+        "request_file": "requests/4262.json",
+        "response_files": [
+          "responses/4262/attempt-01.json",
+          "stability/4262-repeat-1.json",
+          "stability/4262-repeat-2.json"
+        ],
+        "routes": [
+          "write",
+          "defer",
+          "defer"
+        ],
+        "repeat_route_flips_from_primary": 2,
+        "adjacent_route_transitions": 1,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 0,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 2
+        },
+        "probability_ranges": {
+          "design": [
+            0.89,
+            0.9
+          ],
+          "agent_behavior": [
+            0.91,
+            0.92
+          ],
+          "memory": [
+            0.09,
+            0.1
+          ],
+          "cross_repo": [
+            0.49,
+            0.53
+          ],
+          "substance": [
+            0.78,
+            0.79
+          ],
+          "design_context": [
+            0.68,
+            0.7
+          ]
+        }
+      },
+      {
+        "issue_number": 4762,
+        "input_sha256": "70947c2f94fdd59c198782bf602aea4efc20848112bf43f4e70b887d02e0c921",
+        "request_file": "requests/4762.json",
+        "response_files": [
+          "responses/4762/attempt-01.json",
+          "stability/4762-repeat-1.json",
+          "stability/4762-repeat-2.json"
+        ],
+        "routes": [
+          "skip",
+          "skip",
+          "skip"
+        ],
+        "repeat_route_flips_from_primary": 0,
+        "adjacent_route_transitions": 0,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 0,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 0
+        },
+        "probability_ranges": {
+          "design": [
+            0.82,
+            0.84
+          ],
+          "agent_behavior": [
+            0.16,
+            0.17
+          ],
+          "memory": [
+            0.04,
+            0.04
+          ],
+          "cross_repo": [
+            0.27,
+            0.3
+          ],
+          "substance": [
+            0.46,
+            0.47
+          ],
+          "design_context": [
+            0.7,
+            0.73
+          ]
+        }
+      },
+      {
+        "issue_number": 5096,
+        "input_sha256": "90cb428cae74d3c53d1013bdfe7fc2510bc8e6f95fe9b12f233a753d08ddd263",
+        "request_file": "requests/5096.json",
+        "response_files": [
+          "responses/5096/attempt-01.json",
+          "stability/5096-repeat-1.json",
+          "stability/5096-repeat-2.json"
+        ],
+        "routes": [
+          "write",
+          "write",
+          "write"
+        ],
+        "repeat_route_flips_from_primary": 0,
+        "adjacent_route_transitions": 0,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 2,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 0
+        },
+        "probability_ranges": {
+          "design": [
+            0.87,
+            0.87
+          ],
+          "agent_behavior": [
+            0.64,
+            0.67
+          ],
+          "memory": [
+            0.05,
+            0.05
+          ],
+          "cross_repo": [
+            0.29,
+            0.31
+          ],
+          "substance": [
+            0.85,
+            0.86
+          ],
+          "design_context": [
+            0.7,
+            0.71
+          ]
+        }
+      },
+      {
+        "issue_number": 3442,
+        "input_sha256": "902eb911a344fccceda8258fc2ce18935d0bfae7982a0fff0a79067f7ef275cb",
+        "request_file": "requests/3442.json",
+        "response_files": [
+          "responses/3442/attempt-01.json",
+          "stability/3442-repeat-1.json",
+          "stability/3442-repeat-2.json"
+        ],
+        "routes": [
+          "defer",
+          "defer",
+          "write"
+        ],
+        "repeat_route_flips_from_primary": 1,
+        "adjacent_route_transitions": 1,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 0,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 1
+        },
+        "probability_ranges": {
+          "design": [
+            0.95,
+            0.95
+          ],
+          "agent_behavior": [
+            0.93,
+            0.93
+          ],
+          "memory": [
+            0.37,
+            0.41
+          ],
+          "cross_repo": [
+            0.28,
+            0.29
+          ],
+          "substance": [
+            0.82,
+            0.83
+          ],
+          "design_context": [
+            0.69,
+            0.7
+          ]
+        }
+      },
+      {
+        "issue_number": 4338,
+        "input_sha256": "b69a7c338814b732b0e2e813734ad44e5068856447d511fdda6a173e0cf2d7a9",
+        "request_file": "requests/4338.json",
+        "response_files": [
+          "responses/4338/attempt-01.json",
+          "stability/4338-repeat-1.json",
+          "stability/4338-repeat-2.json"
+        ],
+        "routes": [
+          "write",
+          "write",
+          "write"
+        ],
+        "repeat_route_flips_from_primary": 0,
+        "adjacent_route_transitions": 0,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 0,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 0
+        },
+        "probability_ranges": {
+          "design": [
+            0.96,
+            0.96
+          ],
+          "agent_behavior": [
+            0.89,
+            0.89
+          ],
+          "memory": [
+            0.39,
+            0.41
+          ],
+          "cross_repo": [
+            0.67,
+            0.68
+          ],
+          "substance": [
+            0.91,
+            0.91
+          ],
+          "design_context": [
+            0.71,
+            0.73
+          ]
+        }
+      },
+      {
+        "issue_number": 4540,
+        "input_sha256": "8ebd0b38f11f816733657e2b3902586331a6e022e65e233bf17c9b6c55f13ee9",
+        "request_file": "requests/4540.json",
+        "response_files": [
+          "responses/4540/attempt-01.json",
+          "stability/4540-repeat-1.json",
+          "stability/4540-repeat-2.json"
+        ],
+        "routes": [
+          "defer",
+          "defer",
+          "defer"
+        ],
+        "repeat_route_flips_from_primary": 0,
+        "adjacent_route_transitions": 0,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 0,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 0
+        },
+        "probability_ranges": {
+          "design": [
+            0.65,
+            0.67
+          ],
+          "agent_behavior": [
+            0.95,
+            0.95
+          ],
+          "memory": [
+            0.04,
+            0.04
+          ],
+          "cross_repo": [
+            0.33,
+            0.35
+          ],
+          "substance": [
+            0.8,
+            0.82
+          ],
+          "design_context": [
+            0.66,
+            0.69
+          ]
+        }
+      },
+      {
+        "issue_number": 4555,
+        "input_sha256": "114b266c0a7136d5dc09c6493769277b712c1b0dce29cea18884d3059e73b21b",
+        "request_file": "requests/4555.json",
+        "response_files": [
+          "responses/4555/attempt-01.json",
+          "stability/4555-repeat-1.json",
+          "stability/4555-repeat-2.json"
+        ],
+        "routes": [
+          "defer",
+          "write",
+          "write"
+        ],
+        "repeat_route_flips_from_primary": 2,
+        "adjacent_route_transitions": 1,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 0,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 2
+        },
+        "probability_ranges": {
+          "design": [
+            0.88,
+            0.89
+          ],
+          "agent_behavior": [
+            0.71,
+            0.71
+          ],
+          "memory": [
+            0.91,
+            0.92
+          ],
+          "cross_repo": [
+            0.47,
+            0.52
+          ],
+          "substance": [
+            0.86,
+            0.86
+          ],
+          "design_context": [
+            0.69,
+            0.71
+          ]
+        }
+      },
+      {
+        "issue_number": 4627,
+        "input_sha256": "b1b212342fae554aab2f70c6e9dbe3e5992441a07d7d25c9817bef8d86cd141d",
+        "request_file": "requests/4627.json",
+        "response_files": [
+          "responses/4627/attempt-01.json",
+          "stability/4627-repeat-1.json",
+          "stability/4627-repeat-2.json"
+        ],
+        "routes": [
+          "write",
+          "write",
+          "write"
+        ],
+        "repeat_route_flips_from_primary": 0,
+        "adjacent_route_transitions": 0,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 0,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 0
+        },
+        "probability_ranges": {
+          "design": [
+            0.86,
+            0.86
+          ],
+          "agent_behavior": [
+            0.93,
+            0.94
+          ],
+          "memory": [
+            0.1,
+            0.11
+          ],
+          "cross_repo": [
+            0.83,
+            0.84
+          ],
+          "substance": [
+            0.75,
+            0.75
+          ],
+          "design_context": [
+            0.71,
+            0.73
+          ]
+        }
+      },
+      {
+        "issue_number": 4744,
+        "input_sha256": "c30063f801e2ef36dc1c385a7ebdcfb43c4c6200596e0a41a864d7c24db7349a",
+        "request_file": "requests/4744.json",
+        "response_files": [
+          "responses/4744/attempt-01.json",
+          "stability/4744-repeat-1.json",
+          "stability/4744-repeat-2.json"
+        ],
+        "routes": [
+          "defer",
+          "skip",
+          "defer"
+        ],
+        "repeat_route_flips_from_primary": 1,
+        "adjacent_route_transitions": 2,
+        "category_repeat_flips_from_primary": {
+          "design": 0,
+          "agent_behavior": 0,
+          "memory": 0,
+          "cross_repo": 0,
+          "substance": 0,
+          "design_context": 1
+        },
+        "probability_ranges": {
+          "design": [
+            0.23,
+            0.24
+          ],
+          "agent_behavior": [
+            0.08,
+            0.08
+          ],
+          "memory": [
+            0.03,
+            0.03
+          ],
+          "cross_repo": [
+            0.2,
+            0.2
+          ],
+          "substance": [
+            0.22,
+            0.24
+          ],
+          "design_context": [
+            0.69,
+            0.7
+          ]
+        }
+      }
+    ]
+  }
+}

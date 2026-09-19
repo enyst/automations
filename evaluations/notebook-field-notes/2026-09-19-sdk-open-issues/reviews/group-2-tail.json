@@ -1,0 +1,522 @@
+{
+  "reviewer": "field_notes_runtime",
+  "protocol_version": 1,
+  "records": [
+    {
+      "issue_number": 4990,
+      "input_sha256": "530de20aadbd8948f6df15ea5bad7e073f1c1d18db3a384d4c79dad396bbee56",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The issue exposes a consequential distinction between cooperative pause, actual subprocess cancellation and truthful state, with an explicit Canvas-to-SDK contract and observable workspace changes.",
+      "evidence": [
+        {
+          "text": "The reported `paused` state is not a safety property for ACP agents.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4237,
+      "input_sha256": "54dfbf5710a210fe9e7cbe006e048428953919dabb631de99f896fab9bafa72a",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Clear failures connect prompt action space to runtime capabilities. The proposed CLI-specific prompts raise useful design questions about capability-driven prompting and wasted agent actions.",
+      "evidence": [
+        {
+          "text": "The system prompt doesn't change based on runtime type",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4730,
+      "input_sha256": "8cb974c5ffb7ff3548a2e6b751060bb2c2f05cfdbf915d628eb1ec279371d793",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The public export shape couples maintenance duplication with consumer bundling behavior. That is a bounded but useful API-design tradeoff; the motivation is clear without needing a larger proposal.",
+      "evidence": [
+        {
+          "text": "Every API addition must be updated in 3 places: named export, re-import, default export object.",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4627,
+      "input_sha256": "b1b212342fae554aab2f70c6e9dbe3e5992441a07d7d25c9817bef8d86cd141d",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A substantive agent-evaluation design specifies fair paired comparisons, shared configuration, missing-data handling and confirmatory reruns. Its external benchmark/evaluation repositories do not establish the specified three-repository boundary.",
+      "evidence": [
+        {
+          "text": "Missing telemetry is incomplete, never zero.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": [
+        "incidental_keyword"
+      ]
+    },
+    {
+      "issue_number": 5173,
+      "input_sha256": "e61dc778b5cd630f953a0d6e1a18717ab98c417e9b5704e34fc34eb212b50fbd",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Concrete model-call failure exposes a general capability-inference and precedence contract: reasoning support does not imply support for every reasoning parameter. Clear symptom and acceptance criteria justify investigation.",
+      "evidence": [
+        {
+          "text": "Generic `supports_reasoning` alone never enables `reasoning_effort`.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "overlapping_issue"
+      ]
+    },
+    {
+      "issue_number": 4666,
+      "input_sha256": "d6f1f9d8524be63a77856c92fc85f76e4cd5a68defade40a32175fedb7bfc3ea",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Duplicate recording starts expose controller ownership, idempotency and background-task cleanup contracts. The reported event splitting and task leak provide enough context for a focused lifecycle explanation.",
+      "evidence": [
+        {
+          "text": "One browser session should have one authoritative recording controller and at most one active flush task.",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4983,
+      "input_sha256": "9c7b2ab12fc8590226141b0e2a8075d975bba36cd60685a209769f3396b202e4",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "A one-flag fix addresses a broader tool contract: fallback backends silently change regex meaning and give agents incorrect observations. The concrete positive and negative examples make the design question clear.",
+      "evidence": [
+        {
+          "text": "This silently loses valid matches and can also return the wrong files for escaped literal punctuation.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4080,
+      "input_sha256": "b0ace7c8e29e2b36ea58f57d90db015c3884a69b6f75e261691097b9d562f36f",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Persisted conversation recovery has an explicit strictness-versus-degradation tradeoff, including unknown plugin types and version compatibility. The description supports a substantial history/replay and failure-containment investigation.",
+      "evidence": [
+        {
+          "text": "One unknown event kind takes down the whole conversation.",
+          "supports": [
+            "design",
+            "memory",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4997,
+      "input_sha256": "a4c451698209b886cb55d287cf91ce292df1fa29eef60f908eb8b829736b58d6",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The described hung-stream symptom and missing progress establish a useful liveness, timeout and retry design question. Specific timeout-library claims still need later verification; that does not make this issue insufficient.",
+      "evidence": [
+        {
+          "text": "The conversation should never remain in `RUNNING` status indefinitely\n  with no events being produced.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4950,
+      "input_sha256": "22191cd981ea4eb1dcba166566241fa6fcf9f1208285dd77e18d2ff154915dc0",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "This is a substantive agent-review policy and handoff question: when automation may approve, what evidence a human needs, and how cleanup preserves that evidence. The requested risk-sensitive behavior is explicit.",
+      "evidence": [
+        {
+          "text": "an automated approval must not remove the only design artifact before a human maintainer has had the opportunity to review it.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "substance"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4245,
+      "input_sha256": "8e4d8ba022d82804c60ecb79e6d4b181f041ce3d6f6a8fddbbdf058fc2b0679e",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "yes",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The supplied symptoms establish a concrete Agent Server-to-OpenHands webhook boundary and a failure-containment question: delivery outages should not strand conversations. The asserted causal chain needs verification, but the desired behavior is clear.",
+      "evidence": [
+        {
+          "text": "Webhook failures should not crash conversations",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4244,
+      "input_sha256": "afc3bf9459f623a42f066a996818fce4c3bea1d4222d526d39ddd9f9017441eb",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "unclear",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Cloning trajectory and workspace raises substantive context reuse, snapshot consistency and runtime-sharing questions. The user scenarios suffice; the precise SDK/OpenHands implementation boundary is not assigned in this description.",
+      "evidence": [
+        {
+          "text": "Should we prompt the user if they'd like the new conversation to re-use the existing runtime?",
+          "supports": [
+            "design",
+            "memory",
+            "substance"
+          ]
+        }
+      ],
+      "flags": [
+        "ambiguous_repo_boundary"
+      ]
+    },
+    {
+      "issue_number": 3903,
+      "input_sha256": "08d3e4d3ccc14cc6b48669fdbbb82a7dbf4f5d255ac3633db5856f1349ef718b",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The issue clearly distinguishes durable full output from bounded model context and proposes selective retrieval. It supplies a useful memory, observation and reasoning-cost design question despite missing version fields.",
+      "evidence": [
+        {
+          "text": "Allow the LLM to request additional portions of the output on demand, loading them from the conversation log only when needed.",
+          "supports": [
+            "design",
+            "agent_behavior",
+            "memory"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 5002,
+      "input_sha256": "19c6cc4292bd00e3f9d52f30311e7a64fe47e191d4bcc23a9995fc9d672c20a2",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "unclear",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Although framed as cleanup, it exposes an authoritative-state and rollout-compatibility contract: missing runtime is not archived conversation. Cloud payload ownership across the named repositories is not explicit.",
+      "evidence": [
+        {
+          "text": "Explicit archive metadata is authoritative and avoids conflating a missing runtime with an archived conversation.",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "ambiguous_repo_boundary"
+      ]
+    },
+    {
+      "issue_number": 3176,
+      "input_sha256": "c2d1c0995525da21d1bf9f84f4ec0c500a4a6edaa7684b1001971d341249bd0d",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "yes",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The proposal offers concrete integration tradeoffs for agent threat detection: rule isolation, vendoring, detector IDs and telemetry compatibility. Its external rule project does not meet the specific three-repository cross-repo category.",
+      "evidence": [
+        {
+          "text": "are there detector ID naming conventions or telemetry contracts I should preserve so downstream consumers do not regress.",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "incidental_keyword"
+      ]
+    },
+    {
+      "issue_number": 4739,
+      "input_sha256": "7b9551e1c909bb6482a28bc5e9bc452ea60d26fb513fe334275be6fcba5f0e33",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Two emission paths expose incompatible public callback shapes. Mapping legacy messages and pause signals into a coherent typed event contract is a useful interface-design question, even though the issue calls it low impact.",
+      "evidence": [
+        {
+          "text": "Consumers receiving these events via callbacks get inconsistent shapes depending on which code path emitted them.",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4683,
+      "input_sha256": "f61fde798d72ad5063820daadc4990313ea1b43d424aad869ae1c0cc2684dbb8",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "yes",
+        "cross_repo": "unclear",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The description provides enough context for separating transient progress from events, preserving replay semantics and ordering a client migration. The client repositories are unspecified, so the precise cross-repository category remains unclear.",
+      "evidence": [
+        {
+          "text": "Remove the legacy `resend_mode` / `after_timestamp` replay parameters, superseded by the `after_seq` cursor.",
+          "supports": [
+            "design",
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "ambiguous_repo_boundary"
+      ]
+    },
+    {
+      "issue_number": 4974,
+      "input_sha256": "0c21289829ce19d884389d18466c5b590325eee5630ba0166c91cb55bcf1f3c4",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "yes",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "Explicit lifecycle capabilities replace dynamic probing across state persistence, cleanup and transcript access. The stated invariants and exclusions make a useful inheritance-versus-protocol design investigation possible without the parent issue.",
+      "evidence": [
+        {
+          "text": "Implementations use direct access without weakening frozen-model or persistence guarantees.",
+          "supports": [
+            "design",
+            "memory",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": []
+    },
+    {
+      "issue_number": 4756,
+      "input_sha256": "0ebdda0ceefc3208784d209a817976efbec5871119db79dff352837c04cc7f44",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The API coverage work raises concrete generated-contract, binary-response and browser-compatibility decisions. Historical TypeScript-client references do not establish a boundary between two of the three target repositories.",
+      "evidence": [
+        {
+          "text": "Use stable aliases derived from the generated Agent Server v1.38 contract; do not introduce duplicate handwritten request/response models.",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "incidental_keyword"
+      ]
+    },
+    {
+      "issue_number": 3988,
+      "input_sha256": "1eecdf9cdb8da72f6c5710aa4576295d80a45f1ba154e09290a4b19ad9a0531f",
+      "labels": {
+        "design": "yes",
+        "agent_behavior": "no",
+        "memory": "no",
+        "cross_repo": "no",
+        "substance": "yes",
+        "design_context": "yes"
+      },
+      "suggested_action": "investigate",
+      "reason": "The issue itself explains secret-reference storage versus encrypted serialization, including desktop and headless deployment tradeoffs. The linked design document is supplementary; ordinary credential storage is not agent memory.",
+      "evidence": [
+        {
+          "text": "Config/settings serialize the ref; the value never touches settings files.",
+          "supports": [
+            "design",
+            "substance",
+            "design_context"
+          ]
+        }
+      ],
+      "flags": [
+        "incidental_keyword"
+      ]
+    }
+  ]
+}

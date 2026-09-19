@@ -1,0 +1,9 @@
+{
+  "issue_number": 5134,
+  "input_sha256": "53735c08ea91fd45b08d4eab71586a33610a2e2d50d69b08bb2bf736493f407f",
+  "started_at": "2026-09-19T21:54:25.124855+00:00",
+  "completed_at": "2026-09-19T21:54:25.852958+00:00",
+  "duration_seconds": 0.728,
+  "http_status": 200,
+  "credential_redacted": false
+}
