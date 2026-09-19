@@ -1,0 +1,27 @@
+{
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "7f13d47b5d2aa13cd24e61310458fe78ef04275c94725ef78124e18c9f0e8865"
+  },
+  "definition_sha256": "a2ce905f9ff364d8714db87e1b82565768161aa324b86e4bdd7af39762501eb0",
+  "directory": "automation-623cc664-07c2-425e-bc99-8da3d43c4206",
+  "enabled": true,
+  "files": {
+    "RUBRIC.md": "674b41e56c71347bde94a98f543e14f6d1084abb3a6458016b352d800a5019b3",
+    "config.json": "aa3dc4b3fa5f1b72bedb528ffee6ef31f0e88cb33c20689f99c73ec11554a44c",
+    "core.py": "9e707989a94e2f4e02f2110bdce4253fbf836e22e5490dfba5a154bb871d7f84",
+    "main.py": "82e254c67109a37431df7abe67929fc2d5adeccb5ff81b2f747ff8c503b37e65",
+    "setup.sh": "41357c12d49e2784b8d981d5e446984d8f33f95ca9048c54a4c645d2695229fa",
+    "transport.py": "679510bc0a5f62c4e906197b19e1f53396b9e13c309665febf91f975b389ec5a",
+    "writer.py": "303d7d579875d8bafaff7849854d01c202675a8bbb502b937d1fa007efdc5b58"
+  },
+  "id": "623cc664-07c2-425e-bc99-8da3d43c4206",
+  "name": "Notebook Field Notes",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/778813b9-04c3-4351-a17e-36ac6abc8307",
+  "updated_at": "2026-09-19T20:50:21.384035Z",
+  "updated_at_after_download": "2026-09-19T20:50:21.384035Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

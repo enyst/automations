@@ -3,6 +3,33 @@
     {
       "bundle": {
         "kind": "cloud_download",
+        "sha256": "7f13d47b5d2aa13cd24e61310458fe78ef04275c94725ef78124e18c9f0e8865"
+      },
+      "definition_sha256": "a2ce905f9ff364d8714db87e1b82565768161aa324b86e4bdd7af39762501eb0",
+      "directory": "automation-623cc664-07c2-425e-bc99-8da3d43c4206",
+      "enabled": true,
+      "files": {
+        "RUBRIC.md": "674b41e56c71347bde94a98f543e14f6d1084abb3a6458016b352d800a5019b3",
+        "config.json": "aa3dc4b3fa5f1b72bedb528ffee6ef31f0e88cb33c20689f99c73ec11554a44c",
+        "core.py": "9e707989a94e2f4e02f2110bdce4253fbf836e22e5490dfba5a154bb871d7f84",
+        "main.py": "82e254c67109a37431df7abe67929fc2d5adeccb5ff81b2f747ff8c503b37e65",
+        "setup.sh": "41357c12d49e2784b8d981d5e446984d8f33f95ca9048c54a4c645d2695229fa",
+        "transport.py": "679510bc0a5f62c4e906197b19e1f53396b9e13c309665febf91f975b389ec5a",
+        "writer.py": "303d7d579875d8bafaff7849854d01c202675a8bbb502b937d1fa007efdc5b58"
+      },
+      "id": "623cc664-07c2-425e-bc99-8da3d43c4206",
+      "name": "Notebook Field Notes",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/778813b9-04c3-4351-a17e-36ac6abc8307",
+      "updated_at": "2026-09-19T20:50:21.384035Z",
+      "updated_at_after_download": "2026-09-19T20:50:21.384035Z",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "bundle": {
+        "kind": "cloud_download",
         "sha256": "c710dbcc7993cfc1d60279d98d451463cd5f444ca0ded0d1014498940c13eab7"
       },
       "definition_sha256": "31d64f7f05507c637f40b5e9e4ba49f4a927b58051002d7eeb42ae7c5b8db85b",
@@ -22,8 +49,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/17ed3fb6-a220-4415-97f6-0a693dc9fd60",
-      "updated_at": "2026-09-19T19:32:13.836967Z",
-      "updated_at_after_download": "2026-09-19T19:32:13.836967Z",
+      "updated_at": "2026-09-19T20:50:19.860057Z",
+      "updated_at_after_download": "2026-09-19T20:50:19.860057Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -60,8 +87,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/fa7b9525-f48d-4d2c-b3df-8983ea1ae1d6",
-      "updated_at": "2026-09-19T19:32:13.836967Z",
-      "updated_at_after_download": "2026-09-19T19:32:13.836967Z",
+      "updated_at": "2026-09-19T20:50:19.860057Z",
+      "updated_at_after_download": "2026-09-19T20:50:19.860057Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -98,8 +125,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/d25717ff-c045-40ee-b831-c9b2e582fe74",
-      "updated_at": "2026-09-19T19:32:13.836967Z",
-      "updated_at_after_download": "2026-09-19T19:32:13.836967Z",
+      "updated_at": "2026-09-19T20:50:19.860057Z",
+      "updated_at_after_download": "2026-09-19T20:50:19.860057Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -122,8 +149,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/813f9d00-d73a-40b6-baf0-1fcf2dbf8280",
-      "updated_at": "2026-09-19T19:32:07.513705Z",
-      "updated_at_after_download": "2026-09-19T19:32:07.513705Z",
+      "updated_at": "2026-09-19T20:50:13.301012Z",
+      "updated_at_after_download": "2026-09-19T20:50:13.301012Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -145,8 +172,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/cdf3d5ec-995c-49e9-ba0a-7077139eeb06",
-      "updated_at": "2026-09-19T19:32:44.850996Z",
-      "updated_at_after_download": "2026-09-19T19:32:44.850996Z",
+      "updated_at": "2026-09-19T20:50:51.408104Z",
+      "updated_at_after_download": "2026-09-19T20:50:51.408104Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -170,8 +197,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/88a0d229-cb07-4fbe-b887-9e4c261f1a02",
-      "updated_at": "2026-09-19T19:32:07.513705Z",
-      "updated_at_after_download": "2026-09-19T19:32:07.513705Z",
+      "updated_at": "2026-09-19T20:50:13.301012Z",
+      "updated_at_after_download": "2026-09-19T20:50:13.301012Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -195,8 +222,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/aeb2c3bc-f4c2-4c4f-9c68-16bb61cf4325",
-      "updated_at": "2026-09-19T19:32:37.549597Z",
-      "updated_at_after_download": "2026-09-19T19:32:37.549597Z",
+      "updated_at": "2026-09-19T20:50:43.337273Z",
+      "updated_at_after_download": "2026-09-19T20:50:43.337273Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -249,14 +276,14 @@
   ],
   "complete": true,
   "direction": "cloud_to_git_export_only",
-  "exported_owner_definitions": 9,
-  "generated_at": "2026-09-19T19:33:05.459624+00:00",
+  "exported_owner_definitions": 10,
+  "generated_at": "2026-09-19T20:51:09.253091+00:00",
   "identity": {
     "login": "enyst",
     "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
     "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
   },
-  "listed": 9,
+  "listed": 10,
   "not_in_current_listing_preserved": [],
   "schema": 1,
   "skipped_other_owners": 0,

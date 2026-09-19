@@ -20,7 +20,7 @@ deployment helper, described below.
 
 ## Snapshot index · September 19, 2026
 
-**14 definitions: 10 enabled and 4 disabled — nine Cloud and five local.**
+**15 definitions: 11 enabled and 4 disabled — ten Cloud and five local.**
 Local sync exported all five with source. The
 [Cloud manifest](cloud-automations/manifest.json) records the latest export's
 timestamps, completeness, and bundle hashes. Enabled means eligible for triggers,
@@ -39,6 +39,7 @@ not currently running.
 | Cloud | [Attention router - weekly SDK PRs and @enyst mentions](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/) | Enabled | Scores SDK PRs and recent @enyst mentions weekly, then updates Review Notebook notes. | [Source complete](cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/export-status.json) |
 | Cloud | [Issue Duplicate Checker - auto-close sweep](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/) | Enabled | Revisits marked duplicate issues for possible closure; deployed safeguards remain unverified. | [Source complete](cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/export-status.json) |
 | Cloud | [Issue Duplicate Checker - detect](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/) | Enabled | Checks newly opened issues for duplicates and marks candidates for later closure. | [Source complete](cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/export-status.json) |
+| Cloud | [Notebook Field Notes](sources/notebook-field-notes/) | Enabled | Selects and publishes public autonomous design investigations across three OpenHands repositories. | [Cloud export](cloud-automations/automation-623cc664-07c2-425e-bc99-8da3d43c4206/) |
 | Cloud | [Jev Fast Audit](sources/jev-fast-audit/) | Enabled | Polls four OpenHands repositories hourly and replaces its scorecard in eligible PR descriptions. | [Deployment definition](definitions/jev-fast-audit.json); [export manifest](cloud-automations/manifest.json) |
 | Cloud | [Roasted Code Review - OpenHands PRs (on behalf of @enyst)](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/) | Disabled | Historical PR reviewer posting COMMENT reviews and updating the public review log. | [Source complete](cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/export-status.json) |
 | Cloud | [Daily external PR security screen and review for OpenHands repos](cloud-automations/automation-e2ca316e-2896-4189-b1fc-fef6100d85f1/) | Disabled | Screens external contributors’ PR diffs for security concerns and reports findings. | [Source complete](cloud-automations/automation-e2ca316e-2896-4189-b1fc-fef6100d85f1/export-status.json) |
@@ -52,7 +53,7 @@ The initial partial export and Attention archive-recovery receipt remain in Git
 history; the current snapshot uses direct Cloud downloads throughout.
 
 The deleted TypeScript-client release maintainer is retired history and is not
-included in these fourteen definitions.
+included in these fifteen definitions.
 
 ## Jev Fast Audit
 
@@ -200,3 +201,29 @@ No content encryption layer is configured for these backups. Keep API keys, toke
 private keys, secret files and credential-bearing URLs out of definitions, bundled
 code, exports and Git history. Repository access can permit executable local
 configuration changes through the next sync.
+
+
+## Notebook Field Notes
+
+[Maintained source](sources/notebook-field-notes/) and the
+[deployment definition](definitions/notebook-field-notes.json) implement public,
+autonomous design investigations for Liberty Labs Notebook. They watch public
+PRs and issues across OpenHands, software-agent-sdk and automation.
+
+Deterministic gates run before Jev 1.13 classifies design, agent behavior,
+memory and cross-repository interest. A bounded OpenHands writer reads pinned
+public code; trusted code validates and creates a dated note in
+enyst/enyst.github.io/field-notes. Notes carry their autonomous byline and
+evidence. Existing notes are never overwritten by this automation.
+
+The desired hourly schedule allows at most two writing attempts per UTC day.
+Its state and lease use a dedicated branch of this private repository, because
+the current Cloud deployment does not advertise the KV capability.
+Liberty Labs imports new notes into local D1 separately and preserves all
+existing writing, visibility decisions and plate numbers. Website deployment
+remains a separate action.
+
+Use scripts/deploy_field_notes.py to stage, test, enable, inspect or pause this
+automation. After an explicit deployment, scripts/export_cloud.py refreshes the
+observed definition and exact runtime source under cloud-automations/.
+Pushing this repository alone does not update Cloud.

@@ -1,0 +1,12 @@
+{
+  "name": "Notebook Field Notes",
+  "trigger": {
+    "type": "cron",
+    "schedule": "15 * * * *",
+    "timezone": "UTC"
+  },
+  "entrypoint": ".venv/bin/python main.py --publish",
+  "setup_script_path": "setup.sh",
+  "timeout": 1800,
+  "keep_alive": false
+}
