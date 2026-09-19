@@ -237,8 +237,10 @@ UTC day. There is no persistent pending queue:
 unprocessed items are rediscovered oldest-update-first within the rolling
 seven-day window and can age out. The six probabilities are selection gates,
 not a score-based ranking.
-Its state and lease use a dedicated branch of this private repository, because
-the current Cloud deployment does not advertise the KV capability.
+Its state and lease use a dedicated branch of this repository, because
+Cloud did not advertise the KV capability when this was deployed. Public and
+private repository visibility are both supported; GitHub content SHAs protect
+concurrent state updates.
 Liberty Labs imports new notes into local D1 separately and preserves all
 existing writing, visibility decisions and plate numbers. Website deployment
 remains a separate action.

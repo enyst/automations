@@ -1,4 +1,4 @@
-"""Fixed-origin clients, a private Git lease, and create-only public publication."""
+"""Fixed-origin clients, a Git-backed lease, and create-only public publication."""
 from __future__ import annotations
 import base64
 import datetime as dt
@@ -86,7 +86,7 @@ def content_json(row):
     return value
 
 class GitState:
-    """CAS-protected state in a dedicated private branch; never local ephemeral files."""
+    """CAS-protected state in a dedicated branch of a public or private repository."""
     def __init__(self,gh,owner,*,now):
         self.gh,self.owner,self.now=gh,owner,now
         self.path=f"/repos/{STATE_REPO}/contents/{STATE_PATH}"
@@ -94,8 +94,10 @@ class GitState:
         self.value=None
     def verify(self):
         repo=self.gh.request(f"/repos/{STATE_REPO}")
-        if repo.get("full_name")!=STATE_REPO or repo.get("private") is not True:
-            raise FieldNotesError("state_repo_not_private")
+        if not isinstance(repo,dict) or repo.get("full_name")!=STATE_REPO:
+            raise FieldNotesError("wrong_state_repository")
+        if type(repo.get("private")) is not bool:
+            raise FieldNotesError("unknown_state_repository_visibility")
     def ensure_branch(self):
         try:
             self.gh.request(f"/repos/{STATE_REPO}/git/ref/heads/{STATE_BRANCH}")

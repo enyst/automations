@@ -25,10 +25,41 @@ class Boundaries(unittest.TestCase):
         gh.request.return_value={"full_name":"enyst/enyst.github.io","private":True,"default_branch":"main"}
         with self.assertRaises(FieldNotesError): Publisher(gh).verify()
 
-    def test_state_repo_must_be_private(self):
-        gh=Mock()
-        gh.request.return_value={"full_name":"enyst/automations","private":False,"default_branch":"main"}
-        with self.assertRaises(FieldNotesError): GitState(gh, "run", now=100).verify()
+    def test_state_repo_accepts_public_or_private(self):
+        for private in (True,False):
+            with self.subTest(private=private):
+                gh=Mock()
+                gh.request.return_value={"full_name":"enyst/automations","private":private}
+                GitState(gh,"run",now=100).verify()
+                gh.request.assert_called_once_with("/repos/enyst/automations")
+
+    def test_state_repo_rejects_wrong_identity(self):
+        for private in (True,False):
+            for name in ("other/automations","enyst/other",None):
+                with self.subTest(private=private,name=name):
+                    gh=Mock()
+                    gh.request.return_value={"full_name":name,"private":private}
+                    with self.assertRaisesRegex(FieldNotesError,"^wrong_state_repository$"):
+                        GitState(gh,"run",now=100).verify()
+
+    def test_state_repo_rejects_unknown_visibility(self):
+        rows=[{"full_name":"enyst/automations"}]
+        rows += [{"full_name":"enyst/automations","private":value}
+                 for value in (None,0,1,"false","true",[],{})]
+        for row in rows:
+            with self.subTest(row=row):
+                gh=Mock()
+                gh.request.return_value=row
+                with self.assertRaisesRegex(FieldNotesError,"^unknown_state_repository_visibility$"):
+                    GitState(gh,"run",now=100).verify()
+
+    def test_state_repo_rejects_malformed_metadata(self):
+        for row in (None,[],"enyst/automations",0):
+            with self.subTest(row=row):
+                gh=Mock()
+                gh.request.return_value=row
+                with self.assertRaisesRegex(FieldNotesError,"^wrong_state_repository$"):
+                    GitState(gh,"run",now=100).verify()
 
     def test_active_lease_is_not_stolen(self):
         gh=Mock()

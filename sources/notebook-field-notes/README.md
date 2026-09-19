@@ -89,9 +89,13 @@ An edit only to a linked issue does not bring an old PR back into that window.
 The daily writing cap does not promise eventual publication of every candidate.
 
 Cloud capabilities did not advertise kvStore on September 19. Durable run state
-therefore lives in the dedicated notebook-field-notes-state branch of the
-private enyst/automations repository, in state.json. GitHub's content SHA is the
-compare-and-swap guard for the lease and state updates. It does not modify main.
+therefore lives in state.json on the dedicated notebook-field-notes-state
+branch of enyst/automations. The repository may be public or private; verification
+requires that exact repository and an explicit visibility value from GitHub.
+GitHub's content SHA is the compare-and-swap guard for lease and state updates.
+It does not modify main. State contains public subject identifiers, fingerprints,
+status and timestamps, daily counters, comment receipts and an expiring lease;
+it contains no credentials, discussion text or generated drafts.
 Leases expire after 35 minutes, longer than the 30-minute Cloud run timeout.
 Daily reservations precede writing, and publication verifies the current lease.
 Completed public manifest entries remain duplicate guards after state pruning.
@@ -155,7 +159,7 @@ Classifier-only run ca196acd-d47c-4bd1-a0bc-fe34c47c88c5 completed without
 publication. Two subsequent trials failed model authentication before generating
 a note: Cloud had inherited a named evaluation profile. A minimal default-model
 completion passed; the runner now explicitly calls get_llm(profile_name=None).
-The failed attempts remain in the private audit state. One additional setup
+The failed attempts remain in the run state. One additional setup
 attempt was explicitly staged with a limit of three, then the limit was restored.
 
 Run 73517770-eb45-42a8-bdd1-ce9ec0e0aae8 completed the real chain: eight subjects
@@ -197,3 +201,20 @@ keep-alive disabled and the normal two-attempt writing limit. The final runtime
 bundle SHA-256 was
 612a59ba0e298e9304126f70f3ea72726e3de14ff1d74f0ab04ea56dac282d41,
 identical to the final classification-only trial's runtime bundle.
+
+
+## State visibility support · September 20, 2026
+
+The state repository may now be public or private. Verification still requires
+exactly enyst/automations and a Boolean visibility field; malformed metadata is
+rejected. The lease, content-SHA concurrency checks and public-only source and
+publication boundaries are unchanged.
+
+Validation passed 175 automation tests and 26 pure policy/artifact tests; four
+SDK integration tests were skipped because the SDK was unavailable in this test
+environment. The packaged guard passed synthetic public/private cases and a
+read-only GitHub metadata check. Cloud read-back confirmed that only transport.py
+changed, with the existing enabled hourly schedule and all other settings
+preserved. No publication run was dispatched for this change. The repository
+remained private. The deployed bundle SHA-256 was
+24cf3d28ba8eb9d89698be133568fd5473c90a35d0711909ac675a8cede6114b.
