@@ -278,6 +278,58 @@ class RunnerTests(unittest.TestCase):
         with self.assertRaisesRegex(r.AuditError, "incomplete_file_listing"):
             r.gather(Client(), "enyst/automations", original)
 
+    def test_max_tokens_error_is_detected_from_body(self):
+        error = r.AuditError("http_400")
+        error.http_body = '{"detail":{"error_type":"max_tokens_exceeded"}}'
+        self.assertTrue(r._is_max_tokens(error))
+        other = r.AuditError("http_400")
+        other.http_body = '{"detail":{"error_type":"bad_request"}}'
+        self.assertFalse(r._is_max_tokens(other))
+        self.assertFalse(r._is_max_tokens(r.AuditError("http_500")))
+
+    def test_classify_retries_at_reduced_budget_and_returns_first_success(self):
+        def classify(jev, state):
+            budget = state.get("budget")
+            if budget is None:
+                error = r.AuditError("http_400")
+                error.http_body = '{"detail":{"error_type":"max_tokens_exceeded"}}'
+                raise error
+            return ({"q": budget}, {"model": r.MODEL, "answers": {}}, 7)
+
+        with patch.object(r, "_build_state", side_effect=lambda clean, rows, contents, budget: {"budget": budget}) as build, \
+             patch.object(r, "classify", side_effect=classify):
+            state, questions, result, latency = r.classify_with_retry(None, {}, [], {})
+
+        self.assertEqual(state, {"budget": r.RETRY_BUDGETS[0]})
+        self.assertEqual(questions, {"q": r.RETRY_BUDGETS[0]})
+        self.assertEqual(build.call_count, 2)
+        budgets = [call.args[3] for call in build.call_args_list]
+        self.assertEqual(budgets, [None, r.RETRY_BUDGETS[0]])
+
+    def test_classify_does_not_retry_on_unrelated_400(self):
+        def classify(jev, state):
+            error = r.AuditError("http_400")
+            error.http_body = '{"detail":{"error_type":"other"}}'
+            raise error
+
+        with patch.object(r, "_build_state", return_value={"budget": None}) as build, \
+             patch.object(r, "classify", side_effect=classify):
+            with self.assertRaisesRegex(r.AuditError, "http_400"):
+                r.classify_with_retry(None, {}, [], {})
+        build.assert_called_once()
+
+    def test_classify_raises_last_error_when_all_budgets_exhausted(self):
+        def classify(jev, state):
+            error = r.AuditError("http_400")
+            error.http_body = '{"detail":{"error_type":"max_tokens_exceeded"}}'
+            raise error
+
+        with patch.object(r, "_build_state", side_effect=lambda clean, rows, contents, budget: {"budget": budget}) as build, \
+             patch.object(r, "classify", side_effect=classify):
+            with self.assertRaisesRegex(r.AuditError, "http_400"):
+                r.classify_with_retry(None, {}, [], {})
+        self.assertEqual(build.call_count, 1 + len(r.RETRY_BUDGETS))
+
 
 if __name__ == "__main__":
     unittest.main()

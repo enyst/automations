@@ -331,7 +331,7 @@ class QuestionsAndValidationTests(unittest.TestCase):
 
 
 class RenderTests(unittest.TestCase):
-    def test_five_visible_lines_all_scores_and_real_evidence_link(self):
+    def test_visible_lines_all_scores_and_real_evidence_link(self):
         state = simple_state()
         response = answers_for(state)
         response["answers"]["primaryConcernChoice"]["choice"] = "contractRegression"
@@ -339,13 +339,15 @@ class RenderTests(unittest.TestCase):
         response["answers"]["contractRegressionEvidence"]["choice"] = "F001H001"
         body = audit.render_summary(state, response, 321)
         visible = body.split("<details>")[0].strip()
-        self.assertEqual(len(visible.splitlines()), 5)
+        self.assertEqual(len(visible.splitlines()), 4)
         self.assertIn("72% estimated likelihood", visible)
         self.assertIn(f"/blob/{HEAD}/src/a.py#L1-L1", visible)
         self.assertIn("F001H001 · src/a.py:1", body)
         self.assertNotIn("contractRegression", body)
         self.assertNotIn("confidence", visible)
-        self.assertIn("tests were not run", visible)
+        self.assertIn("complete supplied coverage", visible)
+        self.assertNotIn("reduced context", visible)
+        self.assertNotIn("tests were not run", visible)
         for label, _ in audit.RISKS.values():
             self.assertIn("| " + label + " |", body)
         self.assertIn("All estimates and evidence", body)
@@ -354,6 +356,7 @@ class RenderTests(unittest.TestCase):
     def test_partial_and_no_primary_concern_are_not_approval(self):
         state = audit.build_context(pr(), [{"filename": "unknown.bin"}], {})
         body = audit.render_summary(state, answers_for(state), 1)
+        self.assertIn("reduced context", body)
         self.assertIn("partial coverage", body)
         self.assertIn("No primary concern selected", body)
         self.assertIn("missing patch", body)

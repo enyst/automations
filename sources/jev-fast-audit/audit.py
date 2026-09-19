@@ -662,9 +662,11 @@ def render_summary(state, response, latency_ms):
         lead = f"{RISKS[primary][0]} · {answers[primary]['noul']:.0%} estimated likelihood"
         direct = evidence(primary)
     coverage = state["coverage"]
-    scope = "complete supplied coverage" if coverage["complete"] else "partial coverage"
+    if coverage["complete"]:
+        coverage_text = f"complete supplied coverage; {coverage['hunks_included']}/{coverage['hunks_total']} hunks, {coverage['files_included']}/{coverage['files_total']} files"
+    else:
+        coverage_text = f"⚠️ reduced context — partial coverage; {coverage['hunks_included']}/{coverage['hunks_total']} hunks, {coverage['files_included']}/{coverage['files_total']} files"
     reasons = ", ".join(f"{key.replace('_', ' ')}: {count}" for key, count in coverage["reasons"].items())
-    coverage_text = f"{scope}; {coverage['hunks_included']}/{coverage['hunks_total']} hunks, {coverage['files_included']}/{coverage['files_total']} files"
     if reasons:
         coverage_text += f" ({reasons})"
     visible = [
@@ -672,7 +674,6 @@ def render_summary(state, response, latency_ms):
         f"**Strongest signal:** {lead}.",
         f"**Evidence:** {direct}.",
         f"**Coverage:** {coverage_text}.",
-        "**Limits:** Supplied code only; tests were not run. Probabilities are model estimates.",
     ]
     rows = ["| Estimate | Likelihood / value | Direct evidence |", "| --- | --- | --- |"]
     rows.extend(f"| {label} | {answers[key]['noul']:.1%} | {evidence(key)} |" for key, (label, _) in RISKS.items())
