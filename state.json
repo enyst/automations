@@ -1,0 +1,10 @@
+{
+  "attempts": 0,
+  "day": "",
+  "lease": {
+    "expires": 1789851204.472936,
+    "owner": "e1b92185-4fac-4e8e-9c42-e5d7242d8c6c"
+  },
+  "seen": {},
+  "version": 1
+}
