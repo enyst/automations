@@ -190,9 +190,14 @@ python3 -B scripts/deploy_jev.py install-secrets
 ### Credentials
 
 The helper uses `OPENHANDS_API_KEY` from Keychain service `openhands` for Cloud
-administration. Its local GitHub identity and repository-privacy checks use the
+administration. Its local GitHub account and repository identity checks use the
 local `ENYST_GH_TOKEN`; that token is never uploaded. `install-secrets` installs
 only a missing `TYPESAFE_API_KEY`, preserving all existing Cloud values.
+
+The backup repository must be exactly `enyst/automations`; either public or
+private visibility is supported. Preflight reports GitHub's current `private`
+boolean and fails if visibility metadata is missing or malformed. The helper
+does not change repository visibility.
 
 The runtime reads the Cloud integration's built-in **`github_token`** and the
 custom **`TYPESAFE_API_KEY`** through the sandbox-scoped endpoint:
@@ -218,7 +223,7 @@ OAuth refreshes do not trigger unnecessary audits.
 
 Supply a definition JSON file with `name: "Jev Fast Audit"`, the intended `trigger`,
 `entrypoint: "python3 main.py"`, and optional `timeout`/`keep_alive`. The helper adds
-the uploaded bundle reference. It validates identities, repository privacy,
+the uploaded bundle reference. It validates identities, repository metadata,
 syntax, archive limits, and credential-like content before applying the definition.
 
 ```sh
@@ -245,8 +250,8 @@ python3 -B scripts/export_cloud.py \
 ```
 
 The export command is GET-only and does not commit or push. Review its manifest
-and completeness before committing source and exported artifacts to this private
-repository.
+and completeness before committing source and exported artifacts to this
+repository. Review content and history before making a private backup public.
 
 ## References
 

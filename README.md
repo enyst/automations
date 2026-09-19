@@ -97,7 +97,9 @@ The maintained deployment definition is
 [`definitions/jev-fast-audit.json`](definitions/jev-fast-audit.json).
 Apply source or configuration changes explicitly using
 [`scripts/deploy_jev.py`](scripts/deploy_jev.py), after checking the definition's
-schedule and bundled configuration:
+schedule and bundled configuration. The helper accepts public or private
+`enyst/automations`, verifies the `enyst` GitHub identity and exact repository,
+and reports current visibility in preflight. It does not change visibility:
 
 ```sh
 python3 -B scripts/deploy_jev.py preflight
@@ -194,7 +196,7 @@ Git transport uses the host's SSH authentication. OpenHands API credentials rema
 in the runtime or macOS Keychain, including the `openhands` service; repository
 files may name credential references but must not contain values.
 
-No encryption layer is planned for this private repository. Keep API keys, tokens,
+No content encryption layer is configured for these backups. Keep API keys, tokens,
 private keys, secret files and credential-bearing URLs out of definitions, bundled
 code, exports and Git history. Repository access can permit executable local
 configuration changes through the next sync.

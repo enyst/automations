@@ -89,10 +89,18 @@ def github_identity() -> Client:
     github = Client("https://api.github.com", keychain("ENYST_GH_TOKEN"))
     if github.request("GET", "/user").get("login") != "enyst":
         raise DeploymentError("wrong_github_identity")
-    repo = github.request("GET", "/repos/enyst/automations")
-    if repo.get("full_name") != "enyst/automations" or repo.get("private") is not True:
-        raise DeploymentError("backup_repo_not_private")
+    github_repository(github)
     return github
+
+
+def github_repository(github: Client) -> dict:
+    """Validate the backup repository and return its observed visibility."""
+    repo = github.request("GET", "/repos/enyst/automations")
+    if not isinstance(repo, dict) or repo.get("full_name") != "enyst/automations":
+        raise DeploymentError("wrong_backup_repository")
+    if type(repo.get("private")) is not bool:
+        raise DeploymentError("unknown_backup_repository_visibility")
+    return repo
 
 
 def secret_names(cloud: Client) -> set[str]:
@@ -197,10 +205,11 @@ def main(argv=None) -> int:
     cloud = Client(CLOUD, keychain("OPENHANDS_API_KEY"))
     identity(cloud)
     if args.command == "preflight":
-        github_identity()
+        github = github_identity()
+        repo = github_repository(github)
         names = secret_names(cloud)
         capabilities = cloud.request("GET", API + "/capabilities")
-        print(json.dumps({"account": "enyst", "repo": "enyst/automations", "private": True,
+        print(json.dumps({"account": "enyst", "repo": repo["full_name"], "private": repo["private"],
             "required_secret_names": list(SECRETS), "missing_secret_names": sorted(set(SECRETS) - names),
             "ready": capabilities.get("ready"), "triggerKinds": capabilities.get("triggerKinds"),
             "eventSources": capabilities.get("eventSources"), "eventTypes": capabilities.get("eventTypes")}))
