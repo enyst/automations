@@ -74,10 +74,11 @@
       "status": "skip"
     },
     "openhands-software-agent-sdk-pr-4117": {
-      "at": 1789870589.699644,
-      "fingerprint": "04d33f230c6dba11567190e7b587c165a4b6f9e0c62fe9c9194f5d0ac6e9144a",
+      "at": 1789924557.235891,
+      "fingerprint": "f7514d78bbfff804539e2baa1c65ca3305856153417442c772bad7d735b4e426",
       "listing_fingerprint": "cc0cda513b1b5ef28907488126e73ce8aebd47bd2f14ab301e08a91c2a0ec92a",
-      "policy_version": 2,
+      "needs_info": false,
+      "policy_version": 3,
       "source_updated_at": "2026-09-18T01:49:00Z",
       "status": "skip"
     },
