@@ -6,6 +6,25 @@
     "owner": "99a50bf2-fc73-4fb3-bb78-e33c68476261"
   },
   "seen": {
+    "openhands-automation-issue-491": {
+      "at": 1789931760.627063,
+      "classifier": {
+        "model": "jev-1.13.0",
+        "probabilities": {
+          "agent_behavior": 0.58,
+          "design": 0.87,
+          "design_context": 0.91,
+          "memory": 0.03,
+          "substance": 0.89
+        }
+      },
+      "fingerprint": "641444f9f78d7d4ee32055bbf2db621e43da97ad72664cdc65c08c6248a9e722",
+      "listing_fingerprint": "60fbdf1fdf88509e013f21744689add0bdb2df49335805593aa40e46a0eaf3cb",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-18T12:28:40Z",
+      "status": "ready"
+    },
     "openhands-openhands-issue-16686": {
       "at": 1789928167.76565,
       "classifier": {
