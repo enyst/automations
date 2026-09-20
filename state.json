@@ -1,7 +1,10 @@
 {
   "attempts": 3,
   "day": "2026-09-19",
-  "lease": null,
+  "lease": {
+    "expires": 1789865478.82843,
+    "owner": "1a60c777-d97d-4f3e-be32-2963aae06dab"
+  },
   "seen": {
     "openhands-software-agent-sdk-issue-5157": {
       "at": 1789849104.472936,
