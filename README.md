@@ -1,6 +1,6 @@
 # OpenHands Automations
 
-Private configuration and source history for Engel's OpenHands Automations.
+Configuration and source history for Engel's OpenHands Automations.
 Repository: `enyst/automations`, branch `main`.
 
 ## Directory ownership
