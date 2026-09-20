@@ -1230,6 +1230,15 @@
       "policy_version": 3,
       "source_updated_at": "2026-09-18T14:54:52Z",
       "status": "skip"
+    },
+    "openhands-software-agent-sdk-pr-5176": {
+      "at": 1789946200.844836,
+      "fingerprint": "b562b056cfe059eef72e30684b1b0299b4d249bbea92d949ac375fe8685335fa",
+      "listing_fingerprint": "4a0472ab15aeac33737db78d4287ceacfb7b3ec183cc9f1e02df3ad1256faa95",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-18T17:56:45Z",
+      "status": "skip"
     }
   },
   "version": 1
