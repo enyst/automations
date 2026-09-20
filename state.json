@@ -1239,6 +1239,25 @@
       "policy_version": 3,
       "source_updated_at": "2026-09-18T17:56:45Z",
       "status": "skip"
+    },
+    "openhands-software-agent-sdk-pr-5178": {
+      "at": 1789946200.844836,
+      "classifier": {
+        "model": "jev-1.13.0",
+        "probabilities": {
+          "agent_behavior": 0.93,
+          "design": 0.45,
+          "design_context": 0.93,
+          "memory": 0.11,
+          "substance": 0.73
+        }
+      },
+      "fingerprint": "af279211da41c535a7bac7c0fc8152b516ba75e984d30f832a588fb31e7320ab",
+      "listing_fingerprint": "89a5ba980e670f5b1ddd7762c83c7e5f21a36c7df9acbb564c78a538540ddf84",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-18T18:07:52Z",
+      "status": "ready"
     }
   },
   "version": 1
