@@ -151,6 +151,15 @@
       "listing_fingerprint": "fc2c46e5e4503eeacdcf438ead5444281e49241bfcebaed1ea5ba75c1b640549",
       "source_updated_at": "2026-09-18T02:24:07Z",
       "status": "published"
+    },
+    "openhands-software-agent-sdk-pr-5166": {
+      "at": 1789924557.235891,
+      "fingerprint": "a6b3ae0e55b2ef8c5f8045c49dc07c39a29efe869848766d0cf7eb1ab097de58",
+      "listing_fingerprint": "1704528f02007943193c29f41d608a643c3efc064a7fc5439c9270e1a57218d1",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-18T02:54:47Z",
+      "status": "skip"
     }
   },
   "version": 1
