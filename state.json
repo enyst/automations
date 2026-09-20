@@ -58,10 +58,11 @@
       "status": "skip"
     },
     "openhands-software-agent-sdk-pr-3900": {
-      "at": 1789870589.699644,
-      "fingerprint": "28262829fb0db9b8fa381651384eceebf8762986df496a983ed3827a58dbd7e8",
+      "at": 1789924557.235891,
+      "fingerprint": "9a76ea152ccf47e891ba5bcfeaa1bb406b18a2c5daa50be2114fcfc3e16e18bd",
       "listing_fingerprint": "44b011ddb17c9e75c8be507aad6e1616c343a039de50c690748aa956010f3f8c",
-      "policy_version": 2,
+      "needs_info": false,
+      "policy_version": 3,
       "source_updated_at": "2026-09-18T01:49:13Z",
       "status": "skip"
     },
