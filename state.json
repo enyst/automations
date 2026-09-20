@@ -53,6 +53,25 @@
       "source_updated_at": "2026-09-18T15:00:59Z",
       "status": "skip"
     },
+    "openhands-automation-issue-121": {
+      "at": 1789942598.566592,
+      "classifier": {
+        "model": "jev-1.13.0",
+        "probabilities": {
+          "agent_behavior": 0.39,
+          "design": 0.96,
+          "design_context": 0.86,
+          "memory": 0.17,
+          "substance": 0.9
+        }
+      },
+      "fingerprint": "5da2f8c954a1028c8fc87d48619468a3056d0ec36a34f577f201014157be589a",
+      "listing_fingerprint": "9d86e82e36f328bbc228da9a2ddf7b89717e444d51f57d9327a320a43b850a5b",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-18T15:01:00Z",
+      "status": "ready"
+    },
     "openhands-automation-issue-491": {
       "at": 1789931760.627063,
       "classifier": {
