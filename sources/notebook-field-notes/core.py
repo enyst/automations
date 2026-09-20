@@ -16,7 +16,7 @@ from urllib.parse import unquote, urlsplit
 MODEL = "jev-1.13.0"
 TYPESAFE_ENDPOINT = "https://api.typesafe.ai/v1/systemone"
 SCHEMA_VERSION = 1
-POLICY_VERSION = 2
+POLICY_VERSION = 3
 REPOSITORIES = ("OpenHands/OpenHands", "OpenHands/software-agent-sdk", "OpenHands/automation")
 TOPIC_TAGS = ("architecture", "agent-behavior", "memory", "cross-repo", "agent-performance")
 MAX_CONTEXT_BYTES = 24_000  # Description-only transport budget, not a token count.
@@ -60,13 +60,6 @@ QUESTIONS = {
             "false": "Only RAM allocation, unrelated caching, or an incidental mention of memory is described.",
         },
     },
-    "cross_repo": {
-        "type": "noul", "instructions": _POLICY + "Does understanding the described change require an interaction between at least two listed repositories?",
-        "criteria": {
-            "true": "A concrete caller/callee contract, version, payload, lifecycle or responsibility spans the listed OpenHands repositories.",
-            "false": "Another repository is merely named, or a possible interaction has no described contract. Size alone does not qualify.",
-        },
-    },
     "substance": {
         "type": "noul", "instructions": _POLICY + "Would investigating the stated topic yield a useful standalone design explanation? Judge value separately from description completeness.",
         "criteria": {
@@ -75,14 +68,14 @@ QUESTIONS = {
         },
     },
     "design_context": {
-        "type": "noul", "instructions": _POLICY + "Do the supplied PR and linked issue descriptions explain the change sufficiently for its scope, without opening code?",
+        "type": "noul", "instructions": _POLICY + "Do the supplied issue and PR descriptions provide enough information to start implementing the stated change, for its scope?",
         "criteria": {
-            "true": "Intent, motivation and intended behavior are clear enough for this scope. A clear one-line routine fix can be sufficient; architecture documents are not required.",
-            "false": "The text is vague, empty or names a change without explaining what it should do or why. Do not confuse retrieval failure or omitted text with poor author context.",
+            "true": "The problem, affected components, expected behavior and relevant constraints are clear enough to proceed. A routine fix can be explained briefly; a complete design or an already chosen solution is not required.",
+            "false": "Required behavior, scope or constraints are unclear enough that implementation would require guessing. This may still be a valuable topic for a design note. Retrieval failures or omitted evidence are not failures by the author.",
         },
     },
 }
-_QUESTION_TAGS = {"design": "architecture", "agent_behavior": "agent-behavior", "memory": "memory", "cross_repo": "cross-repo"}
+_QUESTION_TAGS = {"design": "architecture", "agent_behavior": "agent-behavior", "memory": "memory"}
 
 
 class ValidationError(ValueError):
@@ -321,18 +314,17 @@ def validate_classification(response):
 
 
 def classify_decision(classifier, *, context_complete=True, category_threshold=0.65, substance_threshold=0.70,
-                      context_threshold=0.70, insufficient_threshold=0.30):
+                      insufficient_threshold=0.30):
     probabilities = _validated_probabilities(classifier)
     if not context_complete:
-        return {"decision": "defer", "reason": "incomplete_context", "tags": []}
-    if probabilities["design_context"] <= _probability(insufficient_threshold):
-        return {"decision": "needs_info", "reason": "insufficient_design_context", "tags": []}
-    if probabilities["design_context"] < _probability(context_threshold):
-        return {"decision": "defer", "reason": "uncertain_design_context", "tags": []}
+        return {"decision": "defer", "reason": "incomplete_context", "tags": [], "needs_info": False}
+    # Implementation readiness is a separate comment signal, never a research gate.
+    needs_info = probabilities["design_context"] <= _probability(insufficient_threshold)
     tags = [tag for key, tag in _QUESTION_TAGS.items() if probabilities[key] >= _probability(category_threshold)]
     if tags and probabilities["substance"] >= _probability(substance_threshold):
-        return {"decision": "write", "reason": "relevant_with_substance", "tags": ["field-notes", *tags]}
-    return {"decision": "skip", "reason": "below_threshold", "tags": []}
+        return {"decision": "write", "reason": "relevant_with_substance", "tags": ["field-notes", *tags],
+                "needs_info": needs_info}
+    return {"decision": "skip", "reason": "below_threshold", "tags": [], "needs_info": needs_info}
 
 
 def _validated_probabilities(classifier, *, allow_legacy=False):
@@ -341,7 +333,9 @@ def _validated_probabilities(classifier, *, allow_legacy=False):
     values = classifier.get("probabilities")
     allowed = [set(QUESTIONS)]
     if allow_legacy:
-        allowed.append(set(QUESTIONS) - {"design_context"})
+        # Historical provenance has exact key sets; it is not a live response.
+        policy_one = {"design", "agent_behavior", "memory", "cross_repo", "substance"}
+        allowed.extend([policy_one, policy_one | {"design_context"}])
     if not isinstance(values, dict) or set(values) not in allowed:
         raise ValidationError("classifier_answer_keys_mismatch")
     return {key: _probability(value) for key, value in values.items()}

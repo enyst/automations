@@ -1,4 +1,4 @@
-"""Fixed, at-most-once requests for missing design context on public open PRs.
+"""Fixed, at-most-once requests for missing implementation detail on public open PRs.
 
 The caller decides needs_info from complete descriptions. This boundary never
 uses model-written text and never retries an uncertain comment POST.
@@ -12,10 +12,13 @@ from core import canonical_repository
 from transport import FieldNotesError
 
 COMMENT_TEXT = (
-    "Notebook Field notes automation: I could not assess the intended code-design changes "
-    "from this PR description and its linked issue(s). Could you update the PR description or linked issue "
-    "with a short explanation of the problem, affected components, and intended approach or behavior? A few sentences "
-    "are enough. This check uses descriptions only; it does not review the diff."
+    "Notebook Field notes automation: this automatic check found insufficient information "
+    "in this PR description and its linked issue(s) to proceed with implementation. "
+    "Could you update the PR description or linked issue to clarify the problem, affected components, "
+    "expected behavior and relevant constraints? "
+    "A brief explanation is enough; a complete design is not required. "
+    "This check uses descriptions only; it does not review the diff or determine whether the topic "
+    "qualifies for a design note."
 )
 MARKER_PREFIX = "<!-- notebook-field-notes:design-context:v1:"
 _KEY = re.compile(r"openhands-(?:openhands|software-agent-sdk|automation)-pr-[1-9][0-9]*")

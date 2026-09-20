@@ -126,12 +126,13 @@ class JevPolicy(unittest.TestCase):
     def test_independent_pinned_noul_questions_and_multilabel_decision(self):
         request = core.classification_request(candidate())
         self.assertEqual(request["model"], "jev-1.13.0")
-        self.assertEqual(len(request["questions"]), 6)
+        self.assertEqual(set(request["questions"]), {"design", "agent_behavior", "memory", "substance", "design_context"})
         self.assertTrue(all(q["type"] == "noul" for q in request["questions"].values()))
-        decision = core.classify_decision(core.validate_classification(response(cross_repo=0.91)))
+        decision = core.classify_decision(core.validate_classification(response(design=0.91)))
         self.assertEqual(decision["decision"], "write")
         self.assertIn("memory", decision["tags"])
-        self.assertIn("cross-repo", decision["tags"])
+        self.assertIn("architecture", decision["tags"])
+        self.assertNotIn("cross-repo", decision["tags"])
 
     def test_invalid_answer_is_error_never_a_skipped_candidate(self):
         for invalid in [True, None, "0.9", -0.1, 1.1, float("nan"), float("inf")]:
@@ -197,16 +198,19 @@ class JevPolicy(unittest.TestCase):
         low = core.validate_classification(response(design_context=0.1))
         self.assertEqual(core.classify_decision(low, context_complete=complete)["decision"], "defer")
 
-    def test_vague_descriptions_request_information_even_when_topic_scores_are_low(self):
-        poor = core.validate_classification(response(design=0.1, agent_behavior=0.1, memory=0.1,
-                                                       cross_repo=0.1, substance=0.1, design_context=0.1))
-        self.assertEqual(core.classify_decision(poor)["decision"], "needs_info")
-        self.assertEqual(core.classify_decision(poor, context_complete=False)["decision"], "defer")
-        ambiguous = core.validate_classification(response(design_context=0.5))
-        self.assertEqual(core.classify_decision(ambiguous)["decision"], "defer")
-        routine = core.validate_classification(response(design=0.1, agent_behavior=0.1, memory=0.1,
-                                                          cross_repo=0.1, substance=0.1, design_context=0.95))
-        self.assertEqual(core.classify_decision(routine)["decision"], "skip")
+    def test_implementation_context_controls_only_the_separate_comment_signal(self):
+        for probability in [0, 0.30, 0.31, 0.69, 0.70, 1]:
+            with self.subTest(context=probability):
+                interesting = core.validate_classification(response(design_context=probability))
+                routine = core.validate_classification(response(design=0.1, agent_behavior=0.1,
+                    memory=0.1, substance=0.1, design_context=probability))
+                for judged, expected in [(interesting, "write"), (routine, "skip")]:
+                    decision = core.classify_decision(judged)
+                    self.assertEqual(decision["decision"], expected)
+                    self.assertEqual(decision["needs_info"], probability <= 0.30)
+                    incomplete = core.classify_decision(judged, context_complete=False)
+                    self.assertEqual(incomplete["decision"], "defer")
+                    self.assertFalse(incomplete["needs_info"])
 
     def test_missing_retrieval_and_extra_linked_issues_are_not_authors_missing_context(self):
         linked = [{"url": f"https://github.com/OpenHands/automation/issues/{n}", "title": "Related design", "body": ""}
@@ -225,26 +229,53 @@ class JevPolicy(unittest.TestCase):
         first = candidate(linked_issues=[linked])
         normalized = core.normalize_candidate(first)
         self.assertEqual(normalized["linked_issues"][0]["body"], "Initial question")
-        self.assertEqual(core.POLICY_VERSION, 2)
+        self.assertEqual(core.POLICY_VERSION, 3)
         self.assertNotEqual(core.fingerprint(first), core.fingerprint(candidate(linked_issues=[{**linked, "body": "Explained design"}])))
         self.assertEqual(core.fingerprint(first), core.fingerprint(candidate(linked_issues=[{**linked, "updated_at": "2026-09-20T00:00:00Z"}])))
 
-    def test_live_classifier_requires_sixth_answer(self):
-        legacy = response()
-        del legacy["answers"]["design_context"]
-        with self.assertRaises(core.ValidationError): core.validate_classification(legacy)
+    def test_live_classifier_rejects_legacy_answers_and_missing_current_answers(self):
+        current = response()
+        for omitted in core.QUESTIONS:
+            incomplete = copy.deepcopy(current)
+            del incomplete["answers"][omitted]
+            with self.subTest(omitted=omitted), self.assertRaises(core.ValidationError):
+                core.validate_classification(incomplete)
+        policy_two = copy.deepcopy(current)
+        policy_two["answers"]["cross_repo"] = {"type": "noul", "noul": 0.99}
+        policy_one = copy.deepcopy(policy_two)
+        del policy_one["answers"]["design_context"]
+        for legacy in [policy_one, policy_two]:
+            with self.subTest(keys=set(legacy["answers"])), self.assertRaises(core.ValidationError):
+                core.validate_classification(legacy)
 
 
 class PublicationPolicy(unittest.TestCase):
-    def test_new_artifact_retains_sixth_probability_and_legacy_five_stays_valid(self):
+    def test_artifact_preserves_exact_current_and_two_historical_score_sets(self):
         modern = note()
+        self.assertEqual(set(modern["classifier"]["probabilities"]),
+                         {"design", "agent_behavior", "memory", "substance", "design_context"})
         self.assertEqual(modern["classifier"]["probabilities"]["design_context"], 0.9)
-        legacy = copy.deepcopy(modern["classifier"])
-        del legacy["probabilities"]["design_context"]
-        preserved = core.build_note(candidate(), generated(), generated_at="2026-09-19T17:00:00Z", writer_model="example/model",
-                                   examined_commits=[{"repository": "OpenHands/software-agent-sdk", "sha": SHA}], classifier=legacy)
-        self.assertEqual(preserved["classifier"], legacy)
-        self.assertNotIn("design_context", preserved["classifier"]["probabilities"])
+        policy_two = copy.deepcopy(modern["classifier"])
+        policy_two["probabilities"]["cross_repo"] = 0.8
+        policy_one = copy.deepcopy(policy_two)
+        del policy_one["probabilities"]["design_context"]
+        for classifier in [modern["classifier"], policy_one, policy_two]:
+            with self.subTest(keys=set(classifier["probabilities"])):
+                preserved = core.build_note(candidate(), generated(), generated_at="2026-09-19T17:00:00Z",
+                    writer_model="example/model",
+                    examined_commits=[{"repository": "OpenHands/software-agent-sdk", "sha": SHA}],
+                    classifier=classifier)
+                self.assertEqual(preserved["classifier"], classifier)
+        invalid = copy.deepcopy(modern["classifier"])
+        del invalid["probabilities"]["design_context"]
+        extra = copy.deepcopy(modern["classifier"])
+        extra["probabilities"]["unexpected"] = 0.5
+        for classifier in [invalid, extra]:
+            with self.assertRaises(core.ValidationError):
+                core.build_note(candidate(), generated(), generated_at="2026-09-19T17:00:00Z",
+                    writer_model="example/model",
+                    examined_commits=[{"repository": "OpenHands/software-agent-sdk", "sha": SHA}],
+                    classifier=classifier)
 
     def test_script_owns_identity_provenance_tags_and_public_visibility(self):
         result = note()

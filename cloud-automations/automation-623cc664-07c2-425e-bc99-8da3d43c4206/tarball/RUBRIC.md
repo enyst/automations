@@ -1,4 +1,7 @@
-# Notebook Field Notes selection · September 19, 2026
+# Notebook Field Notes selection · September 20, 2026
+
+This describes maintained source policy **3**. It does not establish that policy
+3 has been deployed; dated deployment evidence remains in README.md.
 
 This automation selects its own investigations from public changes in
 `OpenHands/OpenHands`, `OpenHands/software-agent-sdk`, and `OpenHands/automation`.
@@ -10,7 +13,7 @@ allowlisted name alone is not proof that fetched material is public.
 
 Treat an issue and a pull request as distinct subjects. A subject has one stable
 identifier, for example `field-note-openhands-software-agent-sdk-pr-321`.
-Policy version **2** uses descriptions for triage. Version fingerprints include
+Policy version **3** uses descriptions for triage. Version fingerprints include
 that policy version, the title, description, linked issue descriptions, source
 identity and coverage flags. Updating a timestamp or the fully delimited Jev Fast
 Audit scorecard alone does not count as a material change. Human text following
@@ -23,18 +26,20 @@ and optional `updated_at`, plus `description_complete` and
 or additional omitted issues make coverage incomplete. An empty description
 successfully fetched from GitHub is distinct from a failed fetch.
 
-The initial screen excludes draft PRs, already-published subjects and completed
-fingerprints. Recently active merged PRs and closed issues remain eligible.
-Failed or deferred work must never be added to completed fingerprints. A
-candidate becomes completed only after a valid explicit selection result, or
-after its publication artifact is durably committed.
+The initial screen excludes draft PRs and already-published subjects. Recently
+active merged PRs and closed issues remain eligible. Failed or deferred
+investigations have a 24-hour retry cooldown. Selected topics waiting only for a
+writing slot can use their cached judgment sooner when a slot opens, after fresh
+source and policy checks. Policy 3 invalidates older decision
+caches; durable publication remains the permanent duplicate guard. Failed or
+deferred work must not be recorded as successfully published.
 
 There is no minimum patch size, and design documents are eligible. The current
 collector does not retrieve changed-file patches for triage. The older optional
 mechanical screen still requires complete file evidence and never sends it to
 Jev; it does not apply to the new description-only candidates.
 
-## Six independent Jev questions
+## Five independent Jev questions
 
 The pinned classifier is `jev-1.13.0`, using TypeSafe's
 `https://api.typesafe.ai/v1/systemone`. The existing Cloud secret name is
@@ -46,35 +51,44 @@ an estimated probability, not measured confidence or a statement of fact.
 | Design | Interfaces, state, lifecycle, ownership, architecture or tradeoffs | Large diff size alone |
 | Agent behavior/performance | Tool loops, reasoning, observations, recovery, evaluation, latency or cost | An incidental mention of AI |
 | Memory | Retention, retrieval, compaction, replay or context trust boundaries | Ordinary RAM allocation alone |
-| Cross-repository | A concrete contract spanning at least two allowed repositories | Merely naming another repository |
 | Substance | An explainable mechanism, failure or unresolved question worth investigating | Routine administrative work, even if fully described |
-| Design context | Intent, motivation and intended behavior are clear enough for this change's scope | Vague or empty text that does not explain what changes or why |
+| Design context | Problem, affected components and intended behavior are clear enough to begin implementation at this scope | Topic interest alone, or text that names a change without explaining what it should do or why |
 
 The exact short questions and positive/negative criteria live in `core.py`.
-Design context measures description sufficiency, separately from whether the
-topic is interesting. A clear one-line routine fix can have sufficient context;
-the rubric does not demand architecture documents for every change.
+Their exact keys are `design`, `agent_behavior`, `memory`, `substance` and
+`design_context`. Cross-repository interaction is no longer a separate classifier
+question or selection criterion. It can still be described in a note and tagged
+`cross-repo`.
 
-Decisions are evaluated in this order:
+Design context measures implementation readiness, separately from whether the
+topic is interesting. A clear one-line routine fix can have sufficient context.
+An author need not solve the design question or know a bug's cause first; a clear
+problem and intended behavior can be enough to begin investigating implementation.
 
-1. Incomplete retrieval or any truncated description: **defer**, regardless of
-   probabilities. The automation's missing input must not be blamed on an author.
-2. Design context at or below 0.30: **needs information**, even when the interest
-   probabilities are low. Vague text must not disappear into the uninteresting
-   bucket merely because its purpose cannot be understood.
-3. Design context below 0.70: **defer** the ambiguous case.
-4. Otherwise, at least one of the four topic probabilities at or above 0.65 and
-   substance at or above 0.70: **write**; a clearly described, uninteresting topic
-   is **skipped**.
+Incomplete retrieval or any truncated description produces **defer**, regardless
+of probabilities, and never requests author clarification. With complete,
+untruncated input, the policy makes two independent decisions:
+
+1. **Note selection:** at least one of `design`, `agent_behavior` or `memory` at
+   or above 0.65, and `substance` at or above 0.70, selects **write**. Otherwise,
+   select **skip**. `design_context` does not affect this decision.
+2. **Clarification:** `design_context` at or below 0.30 sets a separate
+   `needs_info` Boolean. It is a comment signal, not a note-selection bucket.
+   Higher context values do not trigger automatic clarification or deferral.
 
 These thresholds are estimated probability gates, not rankings or calibrated
-quality scores. Multiple topic categories can pass. The runtime separately
-controls whether a needs-information decision may produce one bounded comment
-on an open PR; the core itself performs no external writes.
+quality scores. Multiple topic categories can pass. A subject can qualify for
+both writing and a clarification request. The runtime permits at most one
+automatic comment attempt per open, nondraft PR, and two attempts per UTC day.
+The fixed comment asks the author to update the PR description or linked issue;
+discussion comments are not classifier input. Writing budgets do not stop these
+checks, including after the invocation's one writing investigation has run.
+The core itself performs no external writes.
 
 Invalid model identity, missing answers, nonnumeric probabilities and values
 outside `[0, 1]` raise errors. They are not negative classifications. Live
-responses must include all six answers. If selected, the writing agent performs
+responses must contain exactly the five policy 3 answers, with no missing or
+extra keys. If selected, the writing agent performs
 the deeper investigation using pinned source through its restricted public
 evidence tool. Selection itself is not a code review or security audit.
 
@@ -104,12 +118,18 @@ An artifact has `schema_version: 1`, `id`, `subject_id`, `title`, `summary`,
 version `fingerprint`. The `source` carries repository, PR/issue kind and number,
 canonical URL, timestamp and immutable `head_sha` (the default branch's inspected
 commit for an issue), optional `base_sha`, and optional `linked_subjects`.
-New artifacts preserve all six classifier probabilities, including
-`design_context`. Legacy artifacts with the original five probabilities remain
-valid and are not rewritten; they are never treated as new six-question live
-responses. The artifact's schema version remains 1.
+New artifacts preserve the five policy 3 classifier probabilities, including
+`design_context`. Artifact validators accept exactly these historical key sets:
 
-Only the following subject tags are accepted: `architecture`, `agent-behavior`,
+- Policy 1: `design`, `agent_behavior`, `memory`, `cross_repo`, `substance`.
+- Policy 2: the policy 1 keys plus `design_context`.
+- Policy 3: `design`, `agent_behavior`, `memory`, `substance`, `design_context`.
+
+Other missing or extra score sets are invalid. Historical artifacts and tags
+remain intact; accepting their stored provenance does not make the older answer
+schemas valid for live classification. The artifact's schema version remains 1.
+
+Only the following descriptive subject tags are accepted: `architecture`, `agent-behavior`,
 `agent-performance`, `memory` and `cross-repo`. Trusted code adds `field-notes`.
 Publication writes `field-notes/<id>.json` and `field-notes/<id>.html`. The manifest
 is `{schema_version: 1, notes: [{id, path, sha256}]}`, with JSON paths fixed as
@@ -140,6 +160,6 @@ python3 -B -m unittest discover -s sources/notebook-field-notes -p test_core.py
 These tests run without network access, credentials, model calls or publication.
 They cover alias deduplication, material-change identity, public destinations,
 small behavioral changes, description-only classifier inputs, Unicode truncation,
-missing-context decisions, legacy five-score artifacts, structured answer validation,
+independent note/comment decisions, all three artifact score schemas, structured answer validation,
 source provenance, model attempts to choose metadata, reference exclusion and
 inert rendering.

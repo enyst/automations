@@ -117,4 +117,5 @@ def gather(gh,repository,kind,number,pins):
 def still_current(gh,candidate):
     pins=[{"repository":candidate["repository"],"sha":candidate["head_sha"]}]
     fresh=gather(gh,candidate["repository"],candidate["kind"],candidate["number"],pins)
-    return fresh["description_complete"] and fresh["updated_at"]==candidate["updated_at"] and fingerprint(fresh)==fingerprint(candidate)
+    # Our own comment can change updated_at without changing the evidence.
+    return fresh["description_complete"] and fingerprint(fresh)==fingerprint(candidate)

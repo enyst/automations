@@ -3,20 +3,20 @@
     {
       "bundle": {
         "kind": "cloud_download",
-        "sha256": "24cf3d28ba8eb9d89698be133568fd5473c90a35d0711909ac675a8cede6114b"
+        "sha256": "06c3bb3e75ecee1ed68850554e36afd07c53901f758b989471b72e77f1a9c1f9"
       },
       "definition_sha256": "a2ce905f9ff364d8714db87e1b82565768161aa324b86e4bdd7af39762501eb0",
       "directory": "automation-623cc664-07c2-425e-bc99-8da3d43c4206",
       "enabled": true,
       "files": {
-        "RUBRIC.md": "c47ec5ef4b100f61ec499e55b610ba7bef45f6273929c5a6d09950174d0bbe47",
-        "comments.py": "b140daf5a593e42b3d754e217ece0c7727acffb06fbf368e4a6a84bbd20cffdc",
+        "RUBRIC.md": "e8bd2b6aab8d1c83aef9cd43b0a85207c6c9c1e43982acf550dfcfe876889db8",
+        "comments.py": "feddd00d0ec0ac71a12a44df21f620a06b3b030edda35173aca589636e39f365",
         "config.json": "ad2fbe1207d122d69ff4d6c0c88bc48ac512e928daf9f68a9843d08befed5a35",
-        "core.py": "c052b1a958676a112467de9bf5d51f0752c2153d208695b6d4fbf27555c69236",
-        "descriptions.py": "51daec6f661e3fe3317a7f3bab46246fa2b2ea58f1848c8d77f18455f5a42825",
-        "main.py": "7db68a4f349a02d261b685c8833cad796ef1de1eaf5f86b4b586c42681b70da3",
+        "core.py": "fb955db38a6d5851ece0a1bc33565ebc6b3b10fdc926e57b179b590e3be441d2",
+        "descriptions.py": "af3cb4e14ddc3cb4c689f49a5c57d008b5bcd18627ab85508d0f34a3d659904f",
+        "main.py": "0565f42158871ac15324463ef62e242731252772e318ceaa54c21b4eb4937f51",
         "setup.sh": "41357c12d49e2784b8d981d5e446984d8f33f95ca9048c54a4c645d2695229fa",
-        "transport.py": "75a6f40e9285863feda76df7c91f3ff302ceb22f620a37a96b80990761d98b73",
+        "transport.py": "d49224cc6b96407e2ec316f18619cff60ca8748ecd2f2c1fb47b2c30552d9c22",
         "writer.py": "3b8ae7c7ae9ddf383d49b9bb1b2e8026077456aac55cc5fa10f4063985cbda44"
       },
       "id": "623cc664-07c2-425e-bc99-8da3d43c4206",
@@ -24,9 +24,9 @@
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
       "status": "complete",
-      "tarball_path": "oh-internal://uploads/978a87e7-572d-4ebd-9802-ba760ec1bcac",
-      "updated_at": "2026-09-19T22:09:30.434081Z",
-      "updated_at_after_download": "2026-09-19T22:09:30.434081Z",
+      "tarball_path": "oh-internal://uploads/9e964186-e170-4291-a6b5-479edebc7b33",
+      "updated_at": "2026-09-20T17:08:16.468317Z",
+      "updated_at_after_download": "2026-09-20T17:08:16.468317Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -284,6 +284,10 @@
     "login": "enyst",
     "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
     "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+  },
+  "last_targeted_refresh": {
+    "automation_id": "623cc664-07c2-425e-bc99-8da3d43c4206",
+    "observed_at": "2026-09-20T17:08:42.439803+00:00"
   },
   "listed": 10,
   "not_in_current_listing_preserved": [],

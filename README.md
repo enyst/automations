@@ -210,20 +210,35 @@ configuration changes through the next sync.
 autonomous design investigations for Liberty Labs Notebook. They watch public
 PRs and issues across OpenHands, software-agent-sdk and automation.
 
-Deterministic gates run before `jev-1.13.0` answers six independent questions:
-design, agent behavior/performance, memory, cross-repository interaction,
-explanatory substance and sufficient design context. Classifier policy 2 uses
+Policy **3** is deployed. Its classification-only trial and deployment read-back
+are recorded in the source README. Later source edits still require a separate
+verified Cloud update.
+
+Deterministic gates run before `jev-1.13.0` answers five independent questions:
+`design`, `agent_behavior`, `memory`, `substance` and `design_context`. Policy 3 uses
 only PR/issue titles and descriptions plus up to four linked issue descriptions;
 it sends no diffs, fetched source or discussion comments. The classifier state
-has a **24,000-byte UTF-8 transport bound**, not a model token limit. Policy 2
+has a **24,000-byte UTF-8 transport bound**, not a model token limit. Policy 3
 invalidates cached decisions from the earlier classifier policy.
 
-Insufficient design context is its own bucket, independent of topic interest.
-Only complete, untruncated input can lead to a fixed request for more context:
+With complete, untruncated input, note selection requires any of the first three
+topic probabilities at least 0.65 and substance at least 0.70, regardless of
+context. `cross_repo` is no longer a classifier criterion; `cross-repo` remains
+a valid descriptive tag on new and historical notes.
+
+Design context is an independent implementation-readiness check, not a topic
+interest score or a demand that the author solve the design first. At or below
+0.30 it sets a separate `needs_info` flag. Only complete, untruncated input can
+lead to a fixed request to update the PR description or linked issue:
 at most one automatic comment attempt per open, nondraft PR and two attempts
 per UTC day. Missing retrieval or truncated input defers without an author-facing
 comment. Descriptions, including linked issue improvements, can be assessed
 again after the 24-hour cooldown; an existing request is not posted again.
+
+Live classification requires exactly the five current keys. Stored artifact
+validators also accept the exact policy 1 five-score set (with `cross_repo`,
+without `design_context`) and policy 2 six-score set (both). Other missing or extra
+score keys remain invalid; historical artifacts are not rewritten.
 
 After selection, a bounded OpenHands writer still reads pinned public code;
 trusted code validates and creates a dated note in
@@ -231,12 +246,12 @@ enyst/enyst.github.io/field-notes. Notes carry their autonomous byline and
 evidence. Existing notes are never overwritten by this automation.
 
 The desired hourly schedule allows at most two writing attempts per UTC day.
-The comment counter is separate, but exhausting the writing allowance still
-stops the whole run, including discovery and clarification checks, until a later
-UTC day. There is no persistent pending queue:
+The comment counter and processing are independent: description triage and
+clarification checks continue after the writing allowance is exhausted or the
+invocation's one writing investigation has run. There is no persistent pending queue:
 unprocessed items are rediscovered oldest-update-first within the rolling
-seven-day window and can age out. The six probabilities are selection gates,
-not a score-based ranking.
+seven-day window and can age out. The topic/substance probabilities select notes;
+context is used only for clarification. None forms a score-based ranking.
 Its state and lease use a dedicated branch of this repository, because
 Cloud did not advertise the KV capability when this was deployed. Public and
 private repository visibility are both supported; GitHub content SHAs protect

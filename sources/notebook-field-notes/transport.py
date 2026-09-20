@@ -18,11 +18,28 @@ PUBLIC_REPO = "enyst/enyst.github.io"
 STATE_REPO = "enyst/automations"
 STATE_BRANCH = "notebook-field-notes-state"
 STATE_PATH = "state.json"
+STATE_BYTE_LIMIT = 240_000
+# Leave room for lease/comment updates; only regenerable seen receipts are evicted.
+STATE_CACHE_TARGET = STATE_BYTE_LIMIT - 20_000
 
 class FieldNotesError(Exception):
     def __init__(self, code, *, status=None):
         super().__init__(code)
         self.status=status
+
+def ready_classifier(value):
+    """Only current validated selection scores may enter the small ready cache."""
+    from core import MODEL, ValidationError, classify_decision
+    if not isinstance(value, dict) or set(value) != {"model", "probabilities"}:
+        raise FieldNotesError("invalid_cached_classifier")
+    try:
+        selected = classify_decision(value)["decision"] == "write"
+    except ValidationError:
+        raise FieldNotesError("invalid_cached_classifier") from None
+    if not selected:
+        raise FieldNotesError("invalid_cached_classifier")
+    return {"model": MODEL, "probabilities": {key: float(score) for key, score in value["probabilities"].items()}}
+
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs): return None
@@ -124,9 +141,17 @@ class GitState:
             or not isinstance(value.get("attempts"),int)):
             raise FieldNotesError("invalid_persisted_state")
         self.value=value
-    def save(self):
+    def save(self, *, preserve_seen=None):
+        seen=self.value["seen"]
         body=json_bytes(self.value)
-        if len(body)>240000: raise FieldNotesError("state_budget_exceeded")
+        # Scores make receipt sizes variable. Bound the actual encoded cache on
+        # every write, including comment reconciliation and lease acquisition.
+        oldest=sorted((key for key in seen if key != preserve_seen),key=lambda key:seen[key].get("at",0))
+        for key in oldest:
+            if len(seen)<=500 and len(body)<=STATE_CACHE_TARGET:break
+            del seen[key]
+            body=json_bytes(self.value)
+        if len(body)>STATE_BYTE_LIMIT: raise FieldNotesError("state_budget_exceeded")
         payload={"message":"Update Notebook Field notes run state","branch":STATE_BRANCH,
                  "content":base64.b64encode(body).decode()}
         if self.sha: payload["sha"]=self.sha
@@ -162,17 +187,22 @@ class GitState:
         self.value["attempts"]+=1
         self.save()
         return True
-    def remember(self,key,fingerprint,status,*,source_updated_at=None,listing_fingerprint=None,policy_version=None):
+    def remember(self,key,fingerprint,status,*,source_updated_at=None,listing_fingerprint=None,policy_version=None,
+                 needs_info=False,classifier=None):
         self.assert_owned()
-        self.value["seen"][key]={"fingerprint":fingerprint,"status":status,"at":self.now}
+        if type(needs_info) is not bool:
+            raise FieldNotesError("invalid_info_comment_flag")
+        cached = ready_classifier(classifier) if status == "ready" else None
+        if classifier is not None and status != "ready":
+            raise FieldNotesError("unexpected_cached_classifier")
+        self.value["seen"][key]={"fingerprint":fingerprint,"status":status,"at":self.now,"needs_info":needs_info}
+        if cached is not None:self.value["seen"][key]["classifier"]=cached
         if source_updated_at is not None:self.value["seen"][key]["source_updated_at"]=source_updated_at
         if listing_fingerprint is not None:self.value["seen"][key]["listing_fingerprint"]=listing_fingerprint
         if policy_version is not None:self.value["seen"][key]["policy_version"]=policy_version
-        # Published subjects remain deduplicated by the public manifest after pruning.
-        if len(self.value["seen"])>500:
-            keep=sorted(self.value["seen"],key=lambda k:self.value["seen"][k]["at"],reverse=True)[:500]
-            self.value["seen"]={k:self.value["seen"][k] for k in keep}
-        self.save()
+        # The manifest deduplicates publication after old seen receipts expire.
+        # Independent comment receipts are never evicted with this cache.
+        self.save(preserve_seen=key)
     def release(self):
         self.assert_owned()
         self.value["lease"]=None

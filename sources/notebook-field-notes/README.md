@@ -13,7 +13,7 @@ references.
    automation. Normalize the agent-sdk alias. Consider open, merged and closed
    subjects, excluding draft PRs and recent activity still settling.
 2. Apply deterministic scope, quiet-period, duplicate and budget checks.
-3. Ask pinned Jev `jev-1.13.0` six independent questions using only the PR/issue
+3. Ask pinned Jev `jev-1.13.0` five independent questions using only the PR/issue
    title and description plus up to four linked issue titles and descriptions.
    No diffs, fetched code or discussion comments enter this classifier. Its
    state is capped at 24,000 UTF-8 bytes; this is a transport bound, not a model
@@ -34,29 +34,35 @@ interpretations, not endorsements or claims of executed tests. Evidence links
 are checked against examined repository/commit pins; this is not a semantic
 proof of every cited statement.
 
-## Description triage · policy 2
+## Description triage · policy 3
 
-The six questions cover design, agent behavior/performance, memory,
-cross-repository interaction, explanatory substance and sufficient design
-context. The context question is independent of interest: a vague description
-must not disappear as "uninteresting" because its purpose cannot be understood.
-A clear explanation of a small routine fix can be sufficient; architecture
-documents are not required for every change.
+Policy 3 is deployed; the dated validation section below records its Cloud trial
+and read-back. Earlier validation sections retain the observed history.
 
-With complete, untruncated input, design context at or below 0.30 enters the
-**needs-information** bucket; values between 0.30 and 0.70 defer. With context
-at least 0.70, writing requires at least one topic probability at least 0.65 and
-substance at least 0.70. Otherwise the clearly described topic is skipped.
+The five exact keys are `design`, `agent_behavior`, `memory`, `substance` and
+`design_context`. With complete, untruncated input, writing requires any of the
+first three topic probabilities at least 0.65 and substance at least 0.70.
+Otherwise the topic is skipped. Context does not gate note selection.
+Cross-repository interaction is no longer a separate score, but `cross-repo`
+remains a valid descriptive note tag.
+
+Separately, `design_context` at or below 0.30 sets a `needs_info` Boolean. It asks
+whether the description is ready enough to begin implementation, not whether the
+topic is interesting. A clear routine fix can be ready; the author need not solve
+an open design question or identify a bug's cause first. Higher context values
+do not cause a clarification request or defer an otherwise selected note.
 These are independent estimated probabilities, not an overall score or a
 ranking. Exact questions and examples live in [RUBRIC.md](RUBRIC.md).
 
-A needs-information result may produce one fixed, transparently attributed
-comment asking for a brief explanation of the problem, affected components and
-intended behavior. Comments are limited to **one automatic attempt per open,
+The independent needs-information flag may produce one fixed, transparently
+attributed comment asking the author to update the PR description or linked
+issue with the problem, affected components and intended behavior. Comments
+are limited to **one automatic attempt per open,
 nondraft PR**, and **two comment attempts per UTC day**, separately from the
-writing budget. The existing whole-run daily cap still stops discovery and
-comments once the writing allowance is exhausted; they resume on a later UTC
-day. Issues and closed or merged PRs do not receive these comments.
+writing budget. Description triage and comment checks continue when the writing
+allowance is exhausted and after the invocation's one writing investigation.
+Issues and closed or merged PRs do not receive these comments. A selected PR
+may receive a note and a clarification request independently.
 The script checks current descriptions and the source revision again before
 posting. It persists a reservation first, and never repeats an uncertain POST.
 
@@ -64,19 +70,28 @@ Failed or incomplete retrieval and truncated input always **defer**, even when
 Jev's probabilities are high. They cannot trigger a request blaming an author
 for missing context. Descriptions can be evaluated again after the 24-hour
 cooldown, including improvements in linked issue descriptions; this does not
-authorize another comment on a PR already asked. Classifier policy version 2
+authorize another comment on a PR already asked. Classifier policy version 3
 invalidates old decision-cache entries. Fully delimited Jev Fast Audit
 scorecards are excluded from classifier input to avoid feeding prior scores
 back into the model, while original descriptions remain intact.
+
+Live classification accepts exactly the five policy 3 keys. Artifact validation
+also accepts the exact policy 1 set (`design`, `agent_behavior`, `memory`,
+`cross_repo`, `substance`) and the policy 2 set (those five plus `design_context`).
+No other missing or extra score keys are accepted. Existing artifacts and
+`cross-repo` tags are preserved.
 
 ## Bounds and state
 
 The desired schedule is hourly at minute 15 UTC. At most 12 candidates are
 considered in a run, one writing investigation runs per invocation, and two
-writing attempts are allowed per UTC day. A failed investigation after budget
+writing attempts are allowed per UTC day. These writing caps do not consume or
+stop the separate comment allowance. A failed investigation after budget
 reservation consumes that day's allowance; technical writer initialization
-checks run before reservation. Unchanged unfinished candidates retry after
-24 hours.
+checks run before reservation. Failed or deferred investigations retry after
+24 hours. A selected topic waiting only for a writing slot retains its validated
+Jev scores in the bounded state cache. When a slot opens, fresh unchanged source
+can use that judgment without another Jev call or an extra day's delay.
 The SDK writer is limited to 16 turns, 24 public source requests and a $2 budget.
 It still investigates pinned public source after selection; the description-only
 restriction applies to Jev's initial triage.
@@ -94,7 +109,8 @@ branch of enyst/automations. The repository may be public or private; verificati
 requires that exact repository and an explicit visibility value from GitHub.
 GitHub's content SHA is the compare-and-swap guard for lease and state updates.
 It does not modify main. State contains public subject identifiers, fingerprints,
-status and timestamps, daily counters, comment receipts and an expiring lease;
+status and timestamps, bounded cached selection scores, daily counters, comment
+receipts and an expiring lease;
 it contains no credentials, discussion text or generated drafts.
 Leases expire after 35 minutes, longer than the 30-minute Cloud run timeout.
 Daily reservations precede writing, and publication verifies the current lease.
@@ -218,3 +234,36 @@ changed, with the existing enabled hourly schedule and all other settings
 preserved. No publication run was dispatched for this change. The repository
 remained private. The deployed bundle SHA-256 was
 24cf3d28ba8eb9d89698be133568fd5473c90a35d0711909ac675a8cede6114b.
+
+
+## Policy 3 validation · September 20, 2026
+
+Removed cross-repository interaction from Jev's selection questions. Note
+selection now depends only on design, agent behavior or memory, plus explanatory
+substance. Implementation readiness produces a separate clarification flag;
+a selected topic can receive a note and an explanatory comment independently.
+
+All 204 automation tests and 26 pure policy/artifact tests passed with the pinned
+SDK available. Red/green coverage includes low-context research and comments,
+independent budgets, next-hour reuse of waiting selections, immutable publication
+receipts after collection failures, material freshness after our own comments,
+and bounded cache size without evicting comment receipts. An independent review
+found and verified the fixes for these retry and state interactions.
+
+Classification-only Cloud run 278f2c30-46bc-4787-bd53-2d7c84044333 completed with
+exit code zero: 12 subjects considered, six classified, four selected, one
+deferred and one skipped. Output contained exactly the five policy 3 scores.
+No item triggered the clarification threshold in this sample; low-context
+behavior is covered by the synthetic tests, not a live author comment.
+The trial wrote no notes, posted no comments and changed no durable run state.
+
+The same runtime bundle was staged in publication mode and the hourly schedule
+read back enabled, with keep-alive disabled and the existing limits preserved.
+Its SHA-256 is
+06c3bb3e75ecee1ed68850554e36afd07c53901f758b989471b72e77f1a9c1f9.
+
+Liberty Labs' importer passed all 268 tests, build, type check and Wrangler dry
+run. It accepts the exact policy 1, 2 and 3 provenance sets, preserving existing
+tags and artifacts. The frozen 270-issue evaluation still validates unchanged;
+this policy update does not revise its historical results or measure the new
+rubric's editorial accuracy. No Cloudflare website deployment occurred.
