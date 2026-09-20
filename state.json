@@ -7,12 +7,23 @@
   },
   "seen": {
     "openhands-software-agent-sdk-issue-5157": {
-      "at": 1789863378.82843,
-      "fingerprint": "449b05ce02a878a22cf39537c2207d9bd4068e5a677163db08d306e7fb9593b7",
+      "at": 1789924557.235891,
+      "classifier": {
+        "model": "jev-1.13.0",
+        "probabilities": {
+          "agent_behavior": 0.94,
+          "design": 0.89,
+          "design_context": 0.91,
+          "memory": 0.03,
+          "substance": 0.83
+        }
+      },
+      "fingerprint": "020263ae0290800b9bc223d5a207c89a0c1ae740224165c101c5d401030e7b25",
       "listing_fingerprint": "21513f8bd68920a3c136b4f7099da02edaad14073a7deacafad8020e5171795e",
-      "policy_version": 2,
+      "needs_info": false,
+      "policy_version": 3,
       "source_updated_at": "2026-09-18T00:10:33Z",
-      "status": "writing"
+      "status": "ready"
     },
     "openhands-software-agent-sdk-issue-5163": {
       "at": 1789870589.699644,
