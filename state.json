@@ -2543,6 +2543,15 @@
       "source_updated_at": "2026-09-21T01:00:25Z",
       "status": "ready"
     },
+    "openhands-software-agent-sdk-pr-2657": {
+      "at": 1790010979.111169,
+      "fingerprint": "741d344f0af3f7b71e763b5d18f975178fbc56518c4abec47195b3730c5259fc",
+      "listing_fingerprint": "24ed2e3aa22602b30c3a6905380946399e414bf87d1c37ca2bb0e14719e410f7",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-21T01:55:35Z",
+      "status": "skip"
+    },
     "openhands-software-agent-sdk-pr-2694": {
       "at": 1790010979.111169,
       "classifier": {
