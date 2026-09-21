@@ -2007,6 +2007,25 @@
       "source_updated_at": "2026-09-18T01:49:10Z",
       "status": "skip"
     },
+    "openhands-software-agent-sdk-pr-4028": {
+      "at": 1789985800.617465,
+      "classifier": {
+        "model": "jev-1.13.0",
+        "probabilities": {
+          "agent_behavior": 0.94,
+          "design": 0.86,
+          "design_context": 0.92,
+          "memory": 0.92,
+          "substance": 0.86
+        }
+      },
+      "fingerprint": "b04d6276db4b8a9edd9226fb3b71cfa829b8db8a10ea409981132cb065304fa0",
+      "listing_fingerprint": "2b558b92343e460d21bbf8cd199d60820773819828ebb17193ab06a925dc6017",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-20T01:51:00Z",
+      "status": "ready"
+    },
     "openhands-software-agent-sdk-pr-4053": {
       "at": 1789985800.617465,
       "fingerprint": "b4665f65cf33669f218c7e8e64f12e1ecb15d3904c62fe86fb6c322bec9d5560",
