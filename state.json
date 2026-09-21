@@ -2007,6 +2007,15 @@
       "source_updated_at": "2026-09-18T01:49:10Z",
       "status": "skip"
     },
+    "openhands-software-agent-sdk-pr-3939": {
+      "at": 1789985800.617465,
+      "fingerprint": "b12f853fb0c296cf7925551ecb44718b5fddb37b9b8c06505d89a456a437be78",
+      "listing_fingerprint": "9ba98fe5df07b6b21325aac6024c0d7ea6710e97363a2344241d0fce03e0ec1f",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-20T01:51:06Z",
+      "status": "skip"
+    },
     "openhands-software-agent-sdk-pr-3947": {
       "at": 1789985800.617465,
       "fingerprint": "038b949774eb7ecb8f6a844450ab85d42b607d9a98c1e0cccc048a392116445d",
