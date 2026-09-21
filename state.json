@@ -976,23 +976,13 @@
       "status": "writing"
     },
     "openhands-software-agent-sdk-issue-5163": {
-      "at": 1789924557.235891,
-      "classifier": {
-        "model": "jev-1.13.0",
-        "probabilities": {
-          "agent_behavior": 0.37,
-          "design": 0.78,
-          "design_context": 0.84,
-          "memory": 0.03,
-          "substance": 0.8
-        }
-      },
-      "fingerprint": "fa72b33de3e1ba35477818f81f83f4c5ecffe278ed59e19e8f87dcd73d6c1bb3",
+      "at": 1789953350.949567,
+      "fingerprint": "dbae3133703571e7c5a3eb3ad4f8445a582930d1c93af62f11910d996808a29f",
       "listing_fingerprint": "c2843cd412fab574f49d5dbd18cdb1fa438c817e246e03cc2e02e45eb788e65c",
       "needs_info": false,
       "policy_version": 3,
       "source_updated_at": "2026-09-18T02:24:07Z",
-      "status": "ready"
+      "status": "writing"
     },
     "openhands-software-agent-sdk-issue-5167": {
       "at": 1789928167.76565,
