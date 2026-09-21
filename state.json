@@ -2016,6 +2016,15 @@
       "source_updated_at": "2026-09-18T01:49:00Z",
       "status": "skip"
     },
+    "openhands-software-agent-sdk-pr-4122": {
+      "at": 1789985800.617465,
+      "fingerprint": "313075c74d5029e02b9c437c45ca04bfa40d01a66176dc26d941c8a5623c3524",
+      "listing_fingerprint": "5dae482027e7cf361cfc369ef61582f5efb2012bfa241b748f949ebc8d8b945f",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-20T01:50:49Z",
+      "status": "skip"
+    },
     "openhands-software-agent-sdk-pr-4131": {
       "at": 1789985800.617465,
       "fingerprint": "d401c30eff5a10dc4fa2a941c80bf051cc7de036a6a3260d0448f1d3714fb114",
