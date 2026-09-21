@@ -1736,6 +1736,25 @@
       "source_updated_at": "2026-09-18T15:00:41Z",
       "status": "ready"
     },
+    "openhands-software-agent-sdk-issue-4405": {
+      "at": 1789992950.539502,
+      "classifier": {
+        "model": "jev-1.13.0",
+        "probabilities": {
+          "agent_behavior": 0.61,
+          "design": 0.96,
+          "design_context": 0.64,
+          "memory": 0.22,
+          "substance": 0.9
+        }
+      },
+      "fingerprint": "9a0a266f57677be4dc2396997380ffee406e91b4941af09fe770ec572f697f59",
+      "listing_fingerprint": "fd6d5d784221299632d13eb0fda2b70f23f4b44f18e96b79f564419316430d67",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-20T12:07:21Z",
+      "status": "ready"
+    },
     "openhands-software-agent-sdk-issue-4443": {
       "at": 1789935380.28222,
       "classifier": {
