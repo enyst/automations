@@ -176,6 +176,15 @@
       "source_updated_at": "2026-09-18T15:15:47Z",
       "status": "defer"
     },
+    "openhands-automation-pr-439": {
+      "at": 1789956956.246679,
+      "fingerprint": "a387ce3f79f9de2705282747032d453b16f93547d785326d6fe924299f68ce43",
+      "listing_fingerprint": "26f3934104dd59248f29dbb73d893223f7a6744557ee00de566e4832ec9c2d1c",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-18T19:54:19Z",
+      "status": "defer"
+    },
     "openhands-automation-pr-490": {
       "at": 1789931760.627063,
       "classifier": {
