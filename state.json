@@ -298,6 +298,15 @@
       "source_updated_at": "2026-09-19T05:17:11Z",
       "status": "ready"
     },
+    "openhands-openhands-issue-15483": {
+      "at": 1789964170.726393,
+      "fingerprint": "f6a94c4ef47522c9de3230f881b2bf5281ca896e8aea2d306e8c9fdf111ff997",
+      "listing_fingerprint": "7bc8f18c3fd25a5d786f7791869caea91c9033924424e6dd06b8a95d6cdf1432",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-19T05:17:15Z",
+      "status": "skip"
+    },
     "openhands-openhands-issue-15487": {
       "at": 1789960563.875156,
       "classifier": {
