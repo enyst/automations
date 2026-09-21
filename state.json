@@ -354,6 +354,15 @@
       "source_updated_at": "2026-09-19T05:17:14Z",
       "status": "ready"
     },
+    "openhands-openhands-issue-15489": {
+      "at": 1789964170.726393,
+      "fingerprint": "825ba78b054ab091844a21be76c5739352be5b81c053d965b2285da07365f11a",
+      "listing_fingerprint": "8db8bc8e346c576256b4a9b5306291241f5325efd56f12422015b349fa925cb6",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-19T05:17:17Z",
+      "status": "skip"
+    },
     "openhands-openhands-issue-15533": {
       "at": 1789964170.726393,
       "classifier": {
