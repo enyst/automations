@@ -1,10 +1,7 @@
 {
   "attempts": 2,
   "day": "2026-09-21",
-  "lease": {
-    "expires": 1789991441.451289,
-    "owner": "1bafe574-3376-42ee-9abb-f8fabdd24da8"
-  },
+  "lease": null,
   "seen": {
     "openhands-automation-issue-105": {
       "at": 1789942598.566592,
