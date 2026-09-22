@@ -1226,6 +1226,25 @@
       "source_updated_at": "2026-09-18T18:31:24Z",
       "status": "defer"
     },
+    "openhands-openhands-pr-16216": {
+      "at": 1790072142.679606,
+      "classifier": {
+        "model": "jev-1.13.0",
+        "probabilities": {
+          "agent_behavior": 0.42,
+          "design": 0.71,
+          "design_context": 0.9,
+          "memory": 0.02,
+          "substance": 0.82
+        }
+      },
+      "fingerprint": "c98759d66697081bd400e60aa3be4f34ccf62c6ea79228c1f6935644b9ec7a75",
+      "listing_fingerprint": "18d68b52c777920662a6f40d33fd398b3972938b17682fc91e75277b96d07c65",
+      "needs_info": false,
+      "policy_version": 3,
+      "source_updated_at": "2026-09-21T03:55:50Z",
+      "status": "ready"
+    },
     "openhands-openhands-pr-16407": {
       "at": 1790064991.560926,
       "fingerprint": "58893fdf79adaf7f6bc9a88931a7dd0f45b75fde69f80920a27768c6cac630a0",
