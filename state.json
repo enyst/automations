@@ -2549,18 +2549,18 @@
       "status": "ready"
     },
     "openhands-software-agent-sdk-issue-4469": {
-      "at": 1790028946.426988,
+      "at": 1790115352.480234,
       "classifier": {
         "model": "jev-1.13.0",
         "probabilities": {
-          "agent_behavior": 0.81,
-          "design": 0.38,
-          "design_context": 0.95,
+          "agent_behavior": 0.8,
+          "design": 0.37,
+          "design_context": 0.94,
           "memory": 0.4,
-          "substance": 0.77
+          "substance": 0.75
         }
       },
-      "fingerprint": "cefbcb0816216bcc6de053a9e118f490a3f41bbf273c2aac60aa56d01aa21d43",
+      "fingerprint": "c7412e135391951933cd397db48435a6ebec959b265ec71be6ab091a4fca6e7d",
       "listing_fingerprint": "51422dbc5d7018f25c5f6ea328b7014204a55049bbf284980111cf4a647165e2",
       "needs_info": false,
       "policy_version": 3,
