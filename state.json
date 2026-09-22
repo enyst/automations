@@ -7,7 +7,7 @@
   },
   "seen": {
     "openhands-automation-issue-105": {
-      "at": 1790032552.204243,
+      "at": 1790118962.451778,
       "classifier": {
         "model": "jev-1.13.0",
         "probabilities": {
@@ -18,7 +18,7 @@
           "substance": 0.91
         }
       },
-      "fingerprint": "916852ffa6d1a39b19f73d2eb386e890969fd18ea68bb3d43021ed39e7f948c0",
+      "fingerprint": "82849fb11b6d550ea777f4a92cd38f28331f3b78c660213c163ef69c2dd014dc",
       "listing_fingerprint": "6112e59c9225f09e30c9b8f526415e29bebcb5c8cde8e1e41b79c51016d464b1",
       "needs_info": false,
       "policy_version": 3,
