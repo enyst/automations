@@ -796,18 +796,18 @@
       "status": "ready"
     },
     "openhands-openhands-issue-17263": {
-      "at": 1789996555.254879,
+      "at": 1790082960.491461,
       "classifier": {
         "model": "jev-1.13.0",
         "probabilities": {
-          "agent_behavior": 0.79,
+          "agent_behavior": 0.78,
           "design": 0.87,
-          "design_context": 0.9,
+          "design_context": 0.91,
           "memory": 0.96,
           "substance": 0.88
         }
       },
-      "fingerprint": "a2276800aac2b4a8a8d242053c917d5e0171a8e7932c6f1512fd1a2fa0bfeb62",
+      "fingerprint": "7aceedc1d03d85c54b8323e1657bc017bf78833bd5cee1d03549979b960ae8cf",
       "listing_fingerprint": "68e4fd503ea22a66566212fbc012e6efaaad5e847fccc9765fc8d56113a12a7c",
       "needs_info": false,
       "policy_version": 3,
