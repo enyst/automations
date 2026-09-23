@@ -2662,18 +2662,18 @@
       "status": "ready"
     },
     "openhands-software-agent-sdk-issue-5004": {
-      "at": 1790104594.816869,
+      "at": 1790198140.621936,
       "classifier": {
         "model": "jev-1.13.0",
         "probabilities": {
-          "agent_behavior": 0.46,
+          "agent_behavior": 0.45,
           "design": 0.92,
-          "design_context": 0.56,
+          "design_context": 0.57,
           "memory": 0.88,
-          "substance": 0.77
+          "substance": 0.76
         }
       },
-      "fingerprint": "026b8bd1c1e35e4b61c2e53991c0e0f430ca0ee4650b10e0930c31ce3fab7b65",
+      "fingerprint": "98a7e13f48432191da056ff3446793db0730f7b1c978788eac2c8163a5ed5eca",
       "listing_fingerprint": "bfcb15d6833b199e8ea423a432ff987a3b9384d68a1b56c22630ebe89a54aad0",
       "needs_info": false,
       "policy_version": 3,
