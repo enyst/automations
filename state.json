@@ -92,18 +92,18 @@
       "status": "ready"
     },
     "openhands-automation-issue-492": {
-      "at": 1790108195.323426,
+      "at": 1790201744.243584,
       "classifier": {
         "model": "jev-1.13.0",
         "probabilities": {
-          "agent_behavior": 0.65,
+          "agent_behavior": 0.64,
           "design": 0.86,
-          "design_context": 0.8,
-          "memory": 0.06,
-          "substance": 0.78
+          "design_context": 0.81,
+          "memory": 0.07,
+          "substance": 0.76
         }
       },
-      "fingerprint": "4a05a5583f365ac3d3355119abd6d4de376b254543b3ec40639f1a008d57c803",
+      "fingerprint": "506c66fa42cb4ba483fab184553a9aa488ef0a5f4349e4b4bb0e69e97438cc05",
       "listing_fingerprint": "fc11c4702fb55ffdfe5a147fb02f7e07d141c57ea4ce28f20b3cae8d55fe9170",
       "needs_info": false,
       "policy_version": 3,
