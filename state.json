@@ -975,8 +975,8 @@
       "status": "skip"
     },
     "openhands-openhands-issue-17528": {
-      "at": 1790118962.451778,
-      "fingerprint": "80d9de88b5c62f0f977648278de9db05cab3f98f312085f71a81a2b5ed121d50",
+      "at": 1790216208.587733,
+      "fingerprint": "d3f908af1ff4eba90d56acba3746cbfdc80c09f8502ab94fc593be31fbbe2475",
       "listing_fingerprint": "b0c5525b123f6a5e11d3ebf8cedd9c624d5585cdbc1fc4264578405fc4f8b32a",
       "needs_info": false,
       "policy_version": 3,
