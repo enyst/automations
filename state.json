@@ -486,8 +486,8 @@
       "status": "skip"
     },
     "openhands-openhands-issue-15532": {
-      "at": 1790068632.833531,
-      "fingerprint": "2d593c99b8915fd39673030052791c42f320a79d20f390988c2651ff2591be8e",
+      "at": 1790230523.791753,
+      "fingerprint": "6014956b1b2be3aadaa0c6d8709c42c9521c1b9f18dc3b3b7268f5dfd422b9e5",
       "listing_fingerprint": "08b57266307cbda11222439586e744a696b765ba524871dbc655a16affc3f1d9",
       "needs_info": false,
       "policy_version": 3,
