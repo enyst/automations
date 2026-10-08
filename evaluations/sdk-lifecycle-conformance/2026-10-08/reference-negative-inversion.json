@@ -1,0 +1,630 @@
+{
+  "schema_version": 1,
+  "subject": {
+    "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "artifact_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "bundle": {
+    "id": "sdk-lifecycle-conformance-v1",
+    "sha256": "8b056aa0ce087466982b94967ce5b6a0b7bc855c28a569d4cfdd6a319f545aca"
+  },
+  "configuration_sha256": "d0e8a0470d21b9592ea8aeaef93fa18140b6fd11ebac5a17f1c5b39112cd44cd",
+  "binding_receipt": "test-reference-unattested",
+  "scenarios": [
+    {
+      "id": "WS-REPLAY-001",
+      "status": "fail",
+      "details": {
+        "code": "live_cursor_gap_or_duplicate:expected=4:actual=5"
+      }
+    },
+    {
+      "id": "WS-RESTART-001",
+      "status": "fail",
+      "details": {
+        "code": "live_cursor_gap_or_duplicate:expected=6:actual=7"
+      }
+    },
+    {
+      "id": "LEGACY-EVENTS-001",
+      "status": "pass",
+      "details": {
+        "persisted_events": 8,
+        "scope": "legacy transport smoke only"
+      }
+    }
+  ],
+  "conversation_id": "00000000-0000-4000-8000-000000000001",
+  "provider_nonce_sha256": "1dcd5c73440d07abe6f3f1a271b565b9b310ae54a86c518b7138136c8546fdd1",
+  "error_frame_observed": {
+    "type": "error",
+    "code": "ValidationError",
+    "detail": "reference invalid role"
+  },
+  "restart_baseline": {
+    "frames": [
+      {
+        "type": "durable",
+        "seq": 0,
+        "event": {
+          "id": "9c6085cf-64f1-41ca-8f94-51621961e26e",
+          "kind": "SystemPromptEvent",
+          "source": "agent",
+          "text": "reference fixture"
+        }
+      },
+      {
+        "type": "durable",
+        "seq": 1,
+        "event": {
+          "id": "5aa69c1c-0cf6-4bba-92d2-e7651d90e5af",
+          "kind": "MessageEvent",
+          "source": "user",
+          "llm_message": {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "complete conformance e2cb353250d444429799d31149d4ceb3"
+              }
+            ],
+            "run": false
+          }
+        }
+      },
+      {
+        "type": "durable",
+        "seq": 2,
+        "event": {
+          "id": "e2f2266c-9bfc-4d07-a201-5a675842ccbf",
+          "kind": "ConversationStateUpdateEvent",
+          "source": "environment",
+          "key": "last_user_message_id",
+          "value": "reference"
+        }
+      },
+      {
+        "type": "durable",
+        "seq": 3,
+        "event": {
+          "id": "4054480c-168f-47d9-a952-8b323592b268",
+          "kind": "ActionEvent",
+          "source": "agent",
+          "action": {
+            "kind": "FinishAction",
+            "message": "conformance fixture completed"
+          }
+        }
+      },
+      {
+        "type": "durable",
+        "seq": 4,
+        "event": {
+          "id": "4949e7ef-0e53-49ce-bc5e-8b75c20d1678",
+          "kind": "MessageEvent",
+          "source": "user",
+          "llm_message": {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "live continuation e2cb353250d444429799d31149d4ceb3"
+              }
+            ],
+            "run": false
+          }
+        }
+      },
+      {
+        "type": "durable",
+        "seq": 5,
+        "event": {
+          "id": "1e55dc48-a789-44db-8a23-77056cdb31e0",
+          "kind": "ConversationStateUpdateEvent",
+          "source": "environment",
+          "key": "last_user_message_id",
+          "value": "reference"
+        }
+      }
+    ],
+    "rest_history": [
+      {
+        "id": "9c6085cf-64f1-41ca-8f94-51621961e26e",
+        "kind": "SystemPromptEvent",
+        "source": "agent",
+        "text": "reference fixture"
+      },
+      {
+        "id": "5aa69c1c-0cf6-4bba-92d2-e7651d90e5af",
+        "kind": "MessageEvent",
+        "source": "user",
+        "llm_message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "complete conformance e2cb353250d444429799d31149d4ceb3"
+            }
+          ],
+          "run": false
+        }
+      },
+      {
+        "id": "e2f2266c-9bfc-4d07-a201-5a675842ccbf",
+        "kind": "ConversationStateUpdateEvent",
+        "source": "environment",
+        "key": "last_user_message_id",
+        "value": "reference"
+      },
+      {
+        "id": "4054480c-168f-47d9-a952-8b323592b268",
+        "kind": "ActionEvent",
+        "source": "agent",
+        "action": {
+          "kind": "FinishAction",
+          "message": "conformance fixture completed"
+        }
+      },
+      {
+        "id": "4949e7ef-0e53-49ce-bc5e-8b75c20d1678",
+        "kind": "MessageEvent",
+        "source": "user",
+        "llm_message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "live continuation e2cb353250d444429799d31149d4ceb3"
+            }
+          ],
+          "run": false
+        }
+      },
+      {
+        "id": "1e55dc48-a789-44db-8a23-77056cdb31e0",
+        "kind": "ConversationStateUpdateEvent",
+        "source": "environment",
+        "key": "last_user_message_id",
+        "value": "reference"
+      }
+    ]
+  },
+  "restart_observed": {
+    "storage_preserved": true,
+    "rest_history_equal": true,
+    "replay_frames_equal": true,
+    "durable_events_restored": 6
+  },
+  "verdict": "fail",
+  "identity_source": "trusted coordinator input; not candidate self-report",
+  "ws_received": [
+    {
+      "type": "sync",
+      "from_seq": -1,
+      "through_seq": 3
+    },
+    {
+      "type": "durable",
+      "seq": 0,
+      "event": {
+        "id": "9c6085cf-64f1-41ca-8f94-51621961e26e",
+        "kind": "SystemPromptEvent",
+        "source": "agent",
+        "text": "reference fixture"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 1,
+      "event": {
+        "id": "5aa69c1c-0cf6-4bba-92d2-e7651d90e5af",
+        "kind": "MessageEvent",
+        "source": "user",
+        "llm_message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "complete conformance e2cb353250d444429799d31149d4ceb3"
+            }
+          ],
+          "run": false
+        }
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 2,
+      "event": {
+        "id": "e2f2266c-9bfc-4d07-a201-5a675842ccbf",
+        "kind": "ConversationStateUpdateEvent",
+        "source": "environment",
+        "key": "last_user_message_id",
+        "value": "reference"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 3,
+      "event": {
+        "id": "4054480c-168f-47d9-a952-8b323592b268",
+        "kind": "ActionEvent",
+        "source": "agent",
+        "action": {
+          "kind": "FinishAction",
+          "message": "conformance fixture completed"
+        }
+      }
+    },
+    {
+      "type": "transient",
+      "event": {
+        "id": "c9c2172c-773e-40a4-b1ee-fc3b73f270f2",
+        "kind": "ConversationStateUpdateEvent",
+        "key": "full_state"
+      }
+    },
+    {
+      "type": "error",
+      "code": "ValidationError",
+      "detail": "reference invalid role"
+    },
+    {
+      "type": "sync",
+      "from_seq": 2,
+      "through_seq": 3
+    },
+    {
+      "type": "durable",
+      "seq": 3,
+      "event": {
+        "id": "4054480c-168f-47d9-a952-8b323592b268",
+        "kind": "ActionEvent",
+        "source": "agent",
+        "action": {
+          "kind": "FinishAction",
+          "message": "conformance fixture completed"
+        }
+      }
+    },
+    {
+      "type": "transient",
+      "event": {
+        "id": "ea82f6dc-fed4-4447-8577-106ea7d28e79",
+        "kind": "ConversationStateUpdateEvent",
+        "key": "full_state"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 5,
+      "event": {
+        "id": "1e55dc48-a789-44db-8a23-77056cdb31e0",
+        "kind": "ConversationStateUpdateEvent",
+        "source": "environment",
+        "key": "last_user_message_id",
+        "value": "reference"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 4,
+      "event": {
+        "id": "4949e7ef-0e53-49ce-bc5e-8b75c20d1678",
+        "kind": "MessageEvent",
+        "source": "user",
+        "llm_message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "live continuation e2cb353250d444429799d31149d4ceb3"
+            }
+          ],
+          "run": false
+        }
+      }
+    },
+    {
+      "type": "sync",
+      "from_seq": -1,
+      "through_seq": 5
+    },
+    {
+      "type": "durable",
+      "seq": 0,
+      "event": {
+        "id": "9c6085cf-64f1-41ca-8f94-51621961e26e",
+        "kind": "SystemPromptEvent",
+        "source": "agent",
+        "text": "reference fixture"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 1,
+      "event": {
+        "id": "5aa69c1c-0cf6-4bba-92d2-e7651d90e5af",
+        "kind": "MessageEvent",
+        "source": "user",
+        "llm_message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "complete conformance e2cb353250d444429799d31149d4ceb3"
+            }
+          ],
+          "run": false
+        }
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 2,
+      "event": {
+        "id": "e2f2266c-9bfc-4d07-a201-5a675842ccbf",
+        "kind": "ConversationStateUpdateEvent",
+        "source": "environment",
+        "key": "last_user_message_id",
+        "value": "reference"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 3,
+      "event": {
+        "id": "4054480c-168f-47d9-a952-8b323592b268",
+        "kind": "ActionEvent",
+        "source": "agent",
+        "action": {
+          "kind": "FinishAction",
+          "message": "conformance fixture completed"
+        }
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 4,
+      "event": {
+        "id": "4949e7ef-0e53-49ce-bc5e-8b75c20d1678",
+        "kind": "MessageEvent",
+        "source": "user",
+        "llm_message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "live continuation e2cb353250d444429799d31149d4ceb3"
+            }
+          ],
+          "run": false
+        }
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 5,
+      "event": {
+        "id": "1e55dc48-a789-44db-8a23-77056cdb31e0",
+        "kind": "ConversationStateUpdateEvent",
+        "source": "environment",
+        "key": "last_user_message_id",
+        "value": "reference"
+      }
+    },
+    {
+      "type": "sync",
+      "from_seq": -1,
+      "through_seq": 5
+    },
+    {
+      "type": "durable",
+      "seq": 0,
+      "event": {
+        "id": "9c6085cf-64f1-41ca-8f94-51621961e26e",
+        "kind": "SystemPromptEvent",
+        "source": "agent",
+        "text": "reference fixture"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 1,
+      "event": {
+        "id": "5aa69c1c-0cf6-4bba-92d2-e7651d90e5af",
+        "kind": "MessageEvent",
+        "source": "user",
+        "llm_message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "complete conformance e2cb353250d444429799d31149d4ceb3"
+            }
+          ],
+          "run": false
+        }
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 2,
+      "event": {
+        "id": "e2f2266c-9bfc-4d07-a201-5a675842ccbf",
+        "kind": "ConversationStateUpdateEvent",
+        "source": "environment",
+        "key": "last_user_message_id",
+        "value": "reference"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 3,
+      "event": {
+        "id": "4054480c-168f-47d9-a952-8b323592b268",
+        "kind": "ActionEvent",
+        "source": "agent",
+        "action": {
+          "kind": "FinishAction",
+          "message": "conformance fixture completed"
+        }
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 4,
+      "event": {
+        "id": "4949e7ef-0e53-49ce-bc5e-8b75c20d1678",
+        "kind": "MessageEvent",
+        "source": "user",
+        "llm_message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "live continuation e2cb353250d444429799d31149d4ceb3"
+            }
+          ],
+          "run": false
+        }
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 5,
+      "event": {
+        "id": "1e55dc48-a789-44db-8a23-77056cdb31e0",
+        "kind": "ConversationStateUpdateEvent",
+        "source": "environment",
+        "key": "last_user_message_id",
+        "value": "reference"
+      }
+    },
+    {
+      "type": "transient",
+      "event": {
+        "id": "5bb18145-f3f5-4f17-a6f4-3601086def06",
+        "kind": "ConversationStateUpdateEvent",
+        "key": "full_state"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 7,
+      "event": {
+        "id": "ec612317-91d6-4734-88bd-3373268fc28d",
+        "kind": "ConversationStateUpdateEvent",
+        "source": "environment",
+        "key": "last_user_message_id",
+        "value": "reference"
+      }
+    },
+    {
+      "type": "durable",
+      "seq": 6,
+      "event": {
+        "id": "fdf57cd8-a86a-4031-8f33-873ff0804f41",
+        "kind": "MessageEvent",
+        "source": "user",
+        "llm_message": {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "post-restart continuation"
+            }
+          ],
+          "run": false
+        }
+      }
+    },
+    {
+      "id": "d5b16457-2cba-428c-872b-656ca6dff71e",
+      "kind": "ConversationStateUpdateEvent",
+      "key": "full_state"
+    },
+    {
+      "id": "9c6085cf-64f1-41ca-8f94-51621961e26e",
+      "kind": "SystemPromptEvent",
+      "source": "agent",
+      "text": "reference fixture"
+    },
+    {
+      "id": "5aa69c1c-0cf6-4bba-92d2-e7651d90e5af",
+      "kind": "MessageEvent",
+      "source": "user",
+      "llm_message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "complete conformance e2cb353250d444429799d31149d4ceb3"
+          }
+        ],
+        "run": false
+      }
+    },
+    {
+      "id": "e2f2266c-9bfc-4d07-a201-5a675842ccbf",
+      "kind": "ConversationStateUpdateEvent",
+      "source": "environment",
+      "key": "last_user_message_id",
+      "value": "reference"
+    },
+    {
+      "id": "4054480c-168f-47d9-a952-8b323592b268",
+      "kind": "ActionEvent",
+      "source": "agent",
+      "action": {
+        "kind": "FinishAction",
+        "message": "conformance fixture completed"
+      }
+    },
+    {
+      "id": "4949e7ef-0e53-49ce-bc5e-8b75c20d1678",
+      "kind": "MessageEvent",
+      "source": "user",
+      "llm_message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "live continuation e2cb353250d444429799d31149d4ceb3"
+          }
+        ],
+        "run": false
+      }
+    },
+    {
+      "id": "1e55dc48-a789-44db-8a23-77056cdb31e0",
+      "kind": "ConversationStateUpdateEvent",
+      "source": "environment",
+      "key": "last_user_message_id",
+      "value": "reference"
+    },
+    {
+      "id": "fdf57cd8-a86a-4031-8f33-873ff0804f41",
+      "kind": "MessageEvent",
+      "source": "user",
+      "llm_message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "post-restart continuation"
+          }
+        ],
+        "run": false
+      }
+    },
+    {
+      "id": "ec612317-91d6-4734-88bd-3373268fc28d",
+      "kind": "ConversationStateUpdateEvent",
+      "source": "environment",
+      "key": "last_user_message_id",
+      "value": "reference"
+    }
+  ],
+  "execution_mode": "test-only real-wire reference peer qualification; not SDK candidate evidence"
+}

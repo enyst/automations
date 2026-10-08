@@ -1,0 +1,11 @@
+{
+  "id": "sdk-lifecycle-conformance-v1",
+  "version": 1,
+  "activation_status": "proposed; independent approval required",
+  "durable_live_order": "Proposed predicate: committed durable frames arrive in persisted sequence order. This does not impose a total order on transient frames or open streaming items and needs an explicit public-contract activation decision.",
+  "scenarios": [
+    {"id": "WS-REPLAY-001", "requirement": "A real run reaches the scripted provider and persists its final result. Full session replay equals REST history; reconnect returns the exclusive durable suffix and accepts subsequent committed live durable frames in persisted sequence order (proposed predicate awaiting activation). Socket error frames have no durable cursor and are absent from replay. No total order is imposed on transient frames or open streaming items."},
+    {"id": "WS-RESTART-001", "requirement": "After independently controlled process restart with preserved storage, REST history and session replay retain exactly the same durable events and sequence positions; the resumed conversation accepts another message whose committed durable frames arrive in persisted sequence order (proposed predicate awaiting activation). No total order is imposed on transient frames or open streaming items."},
+    {"id": "LEGACY-EVENTS-001", "requirement": "The separate legacy /sockets/events endpoint with resend_mode=all returns the persisted events as unwrapped events. This is a transport smoke check, not released TypeScript/OpenHands application conformance."}
+  ]
+}

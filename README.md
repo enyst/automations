@@ -119,6 +119,16 @@ Git Sync continues to use only `local-automations/`.
 
 ## Planned automations
 
+- [SDK external lifecycle conformance](sources/sdk-lifecycle-conformance/) —
+  deterministic external REST/WS verifier with a scripted provider, reconnect and
+  process-restart scenarios, a separate legacy transport smoke, and explicit
+  pass/fail/blocked evidence. The [definition](definitions/sdk-lifecycle-conformance.json)
+  is inactive; [registration/dispatch](scripts/deploy_sdk_conformance.py) is explicit.
+  Cloud verification needs a separately isolated and authenticated candidate
+  deployment, externally reachable fixture, trusted restart control and durable
+  evidence export. Neither registration nor a Git push provisions a PR candidate.
+  No Cloud deployment or schedule activation has been performed by this change.
+
 - [Jev release security triage](plans/jev-release-security.md) — planned September
   19, 2026, starting with SDK release PRs. Move the current scan into OpenHands
   Cloud, retain exact integrity/dependency checks, and add Jev judgments for
