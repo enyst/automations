@@ -421,7 +421,7 @@ def run(config, restart=None):
             url = valid_url(config["restart_control_url"], allow_path=True)
             parts = urllib.parse.urlsplit(url)
             origin = urllib.parse.urlunsplit((parts.scheme, parts.netloc, "", "", ""))
-            control = HTTP(origin, "X-Restart-Control-Key", os.environ.get("CONFORMANCE_RESTART_CONTROL_KEY", ""))
+            control = HTTP(origin, "X-Restart-Control-Key", os.environ.get("CONFORMANCE_RESTART_CONTROL_KEY", ""), timeout=config["timeout_seconds"])
             restart = lambda: control.request("POST", parts.path, {"revision": config["candidate_revision"], "artifact_sha256": config["candidate_artifact_sha256"]})
         remaining = bounded_timeout(VERIFIER_BUDGET_SECONDS)
         asyncio.run(asyncio.wait_for(
