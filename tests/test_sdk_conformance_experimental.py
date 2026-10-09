@@ -64,12 +64,22 @@ class ExperimentalSetupTests(unittest.TestCase):
               patch.object(prepare, "subprocess") as process):
             process.run.return_value.returncode = 0
             process.run.return_value.stdout = b""
-            prepare.run_command(["sh", "setup.sh"])
+            prepare.run_command([sys.executable, "-m", "venv", ".verifier-venv"])
             environment = process.run.call_args.kwargs["env"]
         self.assertFalse(set(environment) & {"OPENHANDS_API_KEY", "SESSION_API_KEY",
                                              "AUTOMATION_CALLBACK_URL"})
         self.assertEqual(environment["HTTPS_PROXY"], "http://trusted-proxy.invalid:8080")
         self.assertEqual(environment["SSL_CERT_FILE"], "/trusted/ca.pem")
+
+    def test_verifier_setup_uses_sanitized_commands_without_setup_sh(self):
+        with patch.object(prepare, "run_command") as command:
+            prepare.install_verifier()
+        self.assertEqual(command.call_args_list[0].args[0],
+                         [sys.executable, "-m", "venv", ".verifier-venv"])
+        self.assertEqual(command.call_args_list[1].args[0],
+                         [".verifier-venv/bin/python", "-m", "pip", "install",
+                          "--disable-pip-version-check", "-r", "requirements.txt"])
+        self.assertEqual(command.call_count, 2)
 
     def test_loopback_ports_are_distinct(self):
         reserved = set()
@@ -133,6 +143,8 @@ class ExperimentalSetupTests(unittest.TestCase):
             self.assertEqual(evidence["configuration_sha256"], expected)
             self.assertIn("self_contained.py", evidence["bundle"]["files"])
             self.assertIn("setup_experimental.sh", evidence["bundle"]["files"])
+            self.assertIn("run_experimental.sh", evidence["bundle"]["files"])
+            self.assertNotIn("setup.sh", evidence["bundle"]["files"])
             self.assertEqual(evidence["bundle"]["sha256"],
                              experimental.verifier.bundle_digest(experimental.EXPERIMENTAL_FILES))
 
@@ -143,13 +155,41 @@ class ExperimentalSetupTests(unittest.TestCase):
                 shutil.copyfile(SOURCE / name, root / name)
             with patch.object(experimental.verifier, "ROOT", root):
                 original = experimental.verifier.bundle_digest(experimental.EXPERIMENTAL_FILES)
-                for name in ("prepare_experimental.py", "setup_experimental.sh", "self_contained.py"):
+                for name in ("prepare_experimental.py", "setup_experimental.sh",
+                             "run_experimental.sh", "self_contained.py"):
                     path = root / name
                     content = path.read_bytes()
                     path.write_bytes(content + b"\n# changed\n")
                     self.assertNotEqual(experimental.verifier.bundle_digest(
                         experimental.EXPERIMENTAL_FILES), original)
                     path.write_bytes(content)
+
+    def test_dispatcher_command_skips_missing_setup_and_runs_wrapper(self):
+        definition = json.loads((SOURCE.parents[1] /
+            "definitions/sdk-lifecycle-conformance-experimental.json").read_text())
+        self.assertIsNone(definition["setup_script_path"])
+        self.assertEqual(definition["entrypoint"], "sh run_experimental.sh")
+        self.assertNotIn("setup.sh", experimental.EXPERIMENTAL_FILES)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for name in ("run_experimental.sh", "setup_experimental.sh"):
+                shutil.copyfile(SOURCE / name, root / name)
+            (root / "prepare_experimental.py").write_text(
+                "from pathlib import Path\n"
+                "import os, sys\n"
+                "Path('.verifier-venv/bin').mkdir(parents=True)\n"
+                "os.symlink(sys.executable, '.verifier-venv/bin/python')\n"
+                "Path('prepared.marker').write_text('ready')\n")
+            (root / "self_contained.py").write_text(
+                "from pathlib import Path\n"
+                "assert Path('prepared.marker').read_text() == 'ready'\n"
+                "Path('ran.marker').write_text('passed')\n")
+            command = "([ ! -f setup.sh ] || bash setup.sh) && " + definition["entrypoint"]
+            result = subprocess.run(["bash", "-c", command], cwd=root,
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    check=False)
+            self.assertEqual(result.returncode, 0, result.stderr.decode())
+            self.assertEqual((root / "ran.marker").read_text(), "passed")
 
 
 if __name__ == "__main__":

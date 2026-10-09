@@ -285,7 +285,9 @@ merge gate or establish cryptographic candidate deployment attestation.
 ## Co-located experimental positive control
 
 The separate experimental definition is disabled and has an inert cron.
-Its `setup_experimental.sh` fetches the exact SDK commit
+The Cloud dispatcher runs `setup.sh` only when that file exists. The experimental
+bundle omits it. Its entrypoint, `run_experimental.sh`, invokes
+`setup_experimental.sh` and then the verifier. The setup fetches the exact SDK commit
 `9f47d471ee6f91ba1d140d10d34f3b26d5ac2427` from the public repository.
 It checks the Git archive SHA256
 `5ef7a4c11ecd6c8a0a0f47e3bed0da5ce9fc0be05d5d5446d5a930c1d9440909`

@@ -113,6 +113,14 @@ def uv_executable():
     return str(bootstrap / "bin/uv")
 
 
+def install_verifier():
+    run_command([sys.executable, "-m", "venv", ".verifier-venv"],
+                code="verifier_venv_install_failed")
+    run_command([".verifier-venv/bin/python", "-m", "pip", "install",
+                 "--disable-pip-version-check", "-r", "requirements.txt"],
+                code="verifier_dependency_install_failed")
+
+
 def install_agent_server(repository, uv=None):
     command = uv or uv_executable()
     run_command([command, "sync", "--frozen", "--no-dev", "--package",
@@ -126,7 +134,7 @@ def install_agent_server(repository, uv=None):
 
 def main():
     try:
-        run_command(["sh", "setup.sh"], code="verifier_dependency_install_failed")
+        install_verifier()
         identity = fetch_checkout(CHECKOUT)
         install_agent_server(CHECKOUT)
     except PreparationError as exc:

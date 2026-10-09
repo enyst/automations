@@ -23,8 +23,10 @@ from prepare_experimental import (CHECKOUT, SDK_ARCHIVE_SHA256, SDK_REVISION,
                                   PreparationError, attest_checkout)
 
 
-EXPERIMENTAL_FILES = verifier.BUNDLE_FILES + (
-    "prepare_experimental.py", "setup_experimental.sh", "self_contained.py")
+EXPERIMENTAL_FILES = (
+    "main.py", "fixture.py", "contracts.json", "requirements.txt",
+    "prepare_experimental.py", "setup_experimental.sh", "run_experimental.sh",
+    "self_contained.py")
 EXECUTION_MODE = "co_located_positive_control"
 IMPORT_ROOTS = {
     "openhands.agent_server": "openhands-agent-server",
