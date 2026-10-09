@@ -117,17 +117,20 @@ and runs, then refresh the Cloud export. **Pushing this repository does not appl
 Cloud changes.** Exported files remain observations and backups; local native
 Git Sync continues to use only `local-automations/`.
 
-## Planned automations
+## Experimental and planned automations
 
 - [SDK external lifecycle conformance](sources/sdk-lifecycle-conformance/) —
   deterministic external REST/WS verifier with a scripted provider, reconnect and
   process-restart scenarios, a separate legacy transport smoke, and explicit
   pass/fail/blocked evidence. The [definition](definitions/sdk-lifecycle-conformance.json)
-  is inactive; [registration/dispatch](scripts/deploy_sdk_conformance.py) is explicit.
+  is registered in Cloud but disabled; [registration/dispatch](scripts/deploy_sdk_conformance.py)
+  remains explicit. The [October 9 manual Cloud evaluation](evaluations/sdk-lifecycle-conformance/2026-10-09-cloud/)
+  retained the exact evidence: the pinned SDK candidate failed the proposed
+  live-order predicate in replay and restart, while legacy transport passed.
   Cloud verification needs a separately isolated and authenticated candidate
   deployment, externally reachable fixture, trusted restart control and durable
   evidence export. Neither registration nor a Git push provisions a PR candidate.
-  No Cloud deployment or schedule activation has been performed by this change.
+  No schedule activation or merge-admission publishing has been performed.
 
 - [Jev release security triage](plans/jev-release-security.md) — planned September
   19, 2026, starting with SDK release PRs. Move the current scan into OpenHands
