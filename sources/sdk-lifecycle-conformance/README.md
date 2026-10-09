@@ -60,7 +60,10 @@ Exit codes are `0 = pass`, `1 = fail`, `2 = blocked`. Every required scenario ha
 one explicit status. Overall pass requires the complete roster to pass. Missing
 identity, unreachable endpoints, dependencies, credentials or restart controls
 cannot become a pass. A REST/WS observation that violates a predicate produces a
-fail; infrastructure inability produces blocked. Unexpected harness errors also
+fail (including a 404 for a conversation already created and observed);
+infrastructure inability produces blocked. A history snapshot that changes
+while collecting live frames is blocked as an unstable baseline rather than
+misattributed to the reconnect implementation. Unexpected harness errors also
 produce blocked, with a closed error code.
 
 `evidence.json` includes revision/artifact/bundle/config digests, the required
@@ -68,8 +71,16 @@ roster, received WS frames and REST/restart baselines. Only structured summaries
 are printed; candidate event bodies stay in the evidence file. Known runtime
 credentials are redacted before evidence is written. Request bodies and history
 pages are bounded, WS frames are bounded to 4 MiB, the frame journal to 16 MiB,
-and scenario waiting is bounded. These are verifier budgets, not general Agent
-Server performance promises.
+and each verifier invocation has a 200-second budget within Cloud's
+300-second job timeout. Remaining time is applied to blocking HTTP and WebSocket
+operations; unfinished scenarios become `blocked / verifier_deadline_exceeded`
+in the written evidence. Cloud setup, abrupt process termination and slow-drip
+socket reads remain outside that guarantee. These are verifier budgets, not
+general Agent Server performance promises.
+
+Callback delivery errors are logged separately without changing the already
+saved conformance verdict or the command's exit status. A callback receipt is
+not evidence that the server passed the scenarios.
 
 Cloud's transport run state has `COMPLETED`/`FAILED`, not a distinct blocked state:
 both fail and blocked use the `FAILED` callback, while retained evidence preserves
@@ -193,12 +204,14 @@ candidate origin, exact revision/artifact digest, externally authenticated bindi
 receipt reference, reachable fixture origin, trusted restart-control URL and a
 dedicated candidate working directory. Do not place credential values in it.
 
-Provide these three run capabilities through the Cloud account's secure secret
+Provide these run capabilities through the Cloud account's secure secret
 configuration (or narrowly scoped environment injection by a trusted operator):
 
 - `CONFORMANCE_CANDIDATE_SESSION_KEY`: access to this candidate only.
 - `CONFORMANCE_FIXTURE_CONTROL_KEY`: read-only request witness on the fixture.
-- `CONFORMANCE_RESTART_CONTROL_KEY`: restart this candidate only.
+- `CONFORMANCE_RESTART_CONTROL_KEY`: restart this candidate only, required
+  only when `restart_control_url` is configured. Without it, replay can still
+  execute and the independent restart scenario remains blocked.
 
 The runner fetches **only those names** using its hosting sandbox's session key
 at the exact Cloud origin. It never forwards a Cloud account bearer to candidate
