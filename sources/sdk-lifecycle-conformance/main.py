@@ -472,8 +472,11 @@ def load_cloud_credentials(config):
             with opener.open(request, timeout=bounded_timeout(20)) as response:
                 data = response.read(16385)
             if not data or len(data) > 16384:
-                raise Blocked("run_capability_unavailable")
-            os.environ[name] = data.decode().strip()
+                raise OSError("run_capability_unavailable")
+            value = data.decode().strip()
+            if not value or "\0" in value:
+                raise OSError("run_capability_unavailable")
+            os.environ[name] = value
         except (OSError, UnicodeError, urllib.error.URLError):
             if name == "CONFORMANCE_RESTART_CONTROL_KEY":
                 # Restart is an independent scenario: continue replay and legacy

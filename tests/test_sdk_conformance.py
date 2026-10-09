@@ -143,6 +143,78 @@ class OracleTests(unittest.TestCase):
             )
             self.assertNotIn("CONFORMANCE_RESTART_CONTROL_KEY", os.environ)
 
+    def test_malformed_restart_secret_does_not_block_other_capabilities(self):
+        for body in (b"", b" \n\t", b"x" * 16385, b"\x00"):
+            response = MagicMock()
+            response.__enter__.return_value.read.return_value = body
+            opener = MagicMock()
+            opener.open.return_value = response
+            with (
+                self.subTest(response_bytes=len(body)),
+                patch.dict(
+                    os.environ,
+                    {
+                        "SANDBOX_ID": "synthetic",
+                        "SESSION_API_KEY": "synthetic-session-key",
+                        "CONFORMANCE_CANDIDATE_SESSION_KEY": "synthetic-candidate-key",
+                        "CONFORMANCE_FIXTURE_CONTROL_KEY": "synthetic-fixture-key",
+                    },
+                    clear=True,
+                ),
+                patch("urllib.request.build_opener", return_value=opener),
+            ):
+                verifier.load_cloud_credentials(
+                    {"restart_control_url": "https://control.example.invalid/restart"}
+                )
+                self.assertNotIn("CONFORMANCE_RESTART_CONTROL_KEY", os.environ)
+                self.assertEqual(os.environ["CONFORMANCE_CANDIDATE_SESSION_KEY"], "synthetic-candidate-key")
+                self.assertEqual(os.environ["CONFORMANCE_FIXTURE_CONTROL_KEY"], "synthetic-fixture-key")
+
+    def test_malformed_required_cloud_secret_remains_blocked(self):
+        for name in ("CONFORMANCE_CANDIDATE_SESSION_KEY", "CONFORMANCE_FIXTURE_CONTROL_KEY"):
+            for body in (b"", b" \n\t", b"x" * 16385, b"\x00"):
+                response = MagicMock()
+                response.__enter__.return_value.read.return_value = body
+                opener = MagicMock()
+                opener.open.return_value = response
+                env = {
+                    "SANDBOX_ID": "synthetic",
+                    "SESSION_API_KEY": "synthetic-session-key",
+                    "CONFORMANCE_CANDIDATE_SESSION_KEY": "synthetic-candidate-key",
+                    "CONFORMANCE_FIXTURE_CONTROL_KEY": "synthetic-fixture-key",
+                }
+                del env[name]
+                with (
+                    self.subTest(capability=name, response_bytes=len(body)),
+                    patch.dict(os.environ, env, clear=True),
+                    patch("urllib.request.build_opener", return_value=opener),
+                ):
+                    with self.assertRaisesRegex(verifier.Blocked, "run_capability_unavailable:" + name):
+                        verifier.load_cloud_credentials({"restart_control_url": ""})
+                    self.assertNotIn(name, os.environ)
+
+    def test_restart_secret_fetch_preserves_invocation_deadline(self):
+        opener = MagicMock()
+        with (
+            patch.dict(
+                os.environ,
+                {
+                    "SANDBOX_ID": "synthetic",
+                    "SESSION_API_KEY": "synthetic-session-key",
+                    "CONFORMANCE_CANDIDATE_SESSION_KEY": "synthetic-candidate-key",
+                    "CONFORMANCE_FIXTURE_CONTROL_KEY": "synthetic-fixture-key",
+                },
+                clear=True,
+            ),
+            patch("urllib.request.build_opener", return_value=opener),
+            patch.object(verifier, "bounded_timeout", side_effect=verifier.Blocked("verifier_deadline_exceeded")),
+        ):
+            with self.assertRaisesRegex(verifier.Blocked, "verifier_deadline_exceeded"):
+                verifier.load_cloud_credentials(
+                    {"restart_control_url": "https://control.example.invalid/restart"}
+                )
+            opener.open.assert_not_called()
+
     def test_run_deadline_preserves_blocked_roster(self):
         async def slow(*args):
             await asyncio.sleep(0.2)
