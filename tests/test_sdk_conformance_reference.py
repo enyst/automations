@@ -1,8 +1,8 @@
 """Real loopback reference-peer qualification; never SDK candidate evidence.
 
-This minimal test-only protocol server implements the approved test transcript
-over actual HTTP and RFC6455. It qualifies the verifier's entire roster and its
-ordering negative control, while the separate SDK smoke exercises production.
+This minimal test-only protocol server implements the test transcript over actual
+HTTP and RFC6455. It qualifies recovery when live frames are missed or reordered
+and rejects broken replay, while the separate SDK smoke exercises production.
 """
 import base64
 import hashlib
@@ -48,9 +48,15 @@ class ReferenceServer(ThreadingHTTPServer):
     daemon_threads = True
     allow_reuse_address = True
 
-    def __init__(self, address, storage, fixture_url, invert=False, lost=False):
+    def __init__(self, address, storage, fixture_url, invert=False, lost=False,
+                 drop_live=False, replay_fault=None, replay_fault_after=3,
+                 persist_invalid=False, reject_replay_after=None):
         super().__init__(address, Handler)
         self.storage, self.fixture_url, self.invert, self.lost = storage, fixture_url, invert, lost
+        self.drop_live, self.replay_fault = drop_live, replay_fault
+        self.replay_fault_after = replay_fault_after
+        self.persist_invalid = persist_invalid
+        self.reject_replay_after = reject_replay_after
         self.events = json.loads(storage.read_text()) if storage.exists() else []
         self.lock = threading.RLock()
         self.subscribers = []
@@ -63,6 +69,8 @@ class ReferenceServer(ThreadingHTTPServer):
             frames = [{"type": "durable", "seq": start + i, "event": e} for i, e in enumerate(events)]
             if self.invert and len(frames) == 2:
                 frames.reverse()
+            if self.drop_live:
+                frames = []
             for subscriber in list(self.subscribers):
                 try:
                     for frame in frames:
@@ -124,6 +132,10 @@ class Handler(BaseHTTPRequestHandler):
         self.reply(404, {})
 
     def websocket(self):
+        if "/session/" in self.path and self.server.reject_replay_after is not None:
+            after = int(self.path.split("after_seq=")[1])
+            if after == self.server.reject_replay_after:
+                return self.reply(404, {})
         key = self.headers["Sec-WebSocket-Key"]
         accepted = base64.b64encode(hashlib.sha1((key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").encode()).digest()).decode()
         self.send_response(101)
@@ -136,8 +148,19 @@ class Handler(BaseHTTPRequestHandler):
             if "/session/" in self.path:
                 after = int(self.path.split("after_seq=")[1])
                 send_frame(connection, {"type": "sync", "from_seq": after, "through_seq": len(self.server.events) - 1})
-                for seq in range(after + 1, len(self.server.events)):
-                    send_frame(connection, {"type": "durable", "seq": seq, "event": self.server.events[seq]})
+                replay = [{"type": "durable", "seq": seq, "event": self.server.events[seq]}
+                          for seq in range(after + 1, len(self.server.events))]
+                # Initial full replay ends at 3. Fault only a chosen
+                # continuation recovery cursor in negative tests.
+                if after == self.server.replay_fault_after and self.server.replay_fault and len(replay) >= 2:
+                    if self.server.replay_fault == "gap":
+                        replay.pop(0)
+                    elif self.server.replay_fault == "duplicate":
+                        replay[1]["seq"] = replay[0]["seq"]
+                    elif self.server.replay_fault == "payload":
+                        replay[0]["event"] = dict(replay[0]["event"], text="corrupt")
+                for frame in replay:
+                    send_frame(connection, frame)
                 send_frame(connection, {"type": "transient", "event": event("ConversationStateUpdateEvent", key="full_state")})
                 self.server.subscribers.append(connection)
             else:
@@ -156,6 +179,8 @@ class Handler(BaseHTTPRequestHandler):
                 if first & 15 == 8:
                     send_frame(connection, body, opcode=8)
                     return
+                if self.server.persist_invalid:
+                    self.server.append([event("MessageEvent", source="user", llm_message=json.loads(body))])
                 send_frame(connection, {"type": "error", "code": "ValidationError", "detail": "reference invalid role"})
         except (OSError, EOFError):
             pass
@@ -166,12 +191,18 @@ class Handler(BaseHTTPRequestHandler):
 
 
 class ReferenceQualification(unittest.TestCase):
-    def qualify(self, invert, lose_on_restart=False):
+    def qualify(self, invert=False, lose_on_restart=False, drop_live=False,
+                replay_fault=None, replay_fault_after=3, persist_invalid=False,
+                reject_replay_after=None):
         with tempfile.TemporaryDirectory() as work:
             peer = fixture.FixtureServer(("127.0.0.1", 0))
             threading.Thread(target=peer.serve_forever, daemon=True).start()
             peer_url = "http://127.0.0.1:" + str(peer.server_port)
-            server = ReferenceServer(("127.0.0.1", 0), Path(work) / "history.json", peer_url, invert)
+            server = ReferenceServer(("127.0.0.1", 0), Path(work) / "history.json", peer_url,
+                                     invert, drop_live=drop_live, replay_fault=replay_fault,
+                                     replay_fault_after=replay_fault_after,
+                                     persist_invalid=persist_invalid,
+                                     reject_replay_after=reject_replay_after)
             target_port = server.server_port
             threading.Thread(target=server.serve_forever, daemon=True).start()
             servers = [server]
@@ -180,7 +211,12 @@ class ReferenceQualification(unittest.TestCase):
                 servers[-1].server_close()
                 if lose_on_restart:
                     (Path(work) / "history.json").unlink(missing_ok=True)
-                replacement = ReferenceServer(("127.0.0.1", target_port), Path(work) / "history.json", peer_url, invert, lost=lose_on_restart)
+                replacement = ReferenceServer(("127.0.0.1", target_port), Path(work) / "history.json",
+                                              peer_url, invert, lost=lose_on_restart,
+                                              drop_live=drop_live, replay_fault=replay_fault,
+                                              replay_fault_after=replay_fault_after,
+                                              persist_invalid=persist_invalid,
+                                              reject_replay_after=reject_replay_after)
                 servers.append(replacement)
                 threading.Thread(target=replacement.serve_forever, daemon=True).start()
                 return {"restarted": True, "storage_preserved": True}
@@ -198,23 +234,61 @@ class ReferenceQualification(unittest.TestCase):
                 peer.server_close()
 
     def test_full_roster_positive_reference(self):
-        result = self.qualify(False)
+        result = self.qualify()
         self.assertEqual(result["verdict"], "pass", result["scenarios"])
         self.assertTrue(all(s["status"] == "pass" for s in result["scenarios"]))
+        self.assertTrue(result["restart_observed"]["post_restart_replay_equal"])
+        self.assertEqual(result["restart_observed"]["post_restart_replayed_events"], 2)
 
     def test_restart_lost_conversation_is_failed_observation(self):
-        result = self.qualify(False, lose_on_restart=True)
+        result = self.qualify(lose_on_restart=True)
         self.assertEqual(result["verdict"], "fail", result["scenarios"])
         self.assertEqual(result["scenarios"][0]["status"], "pass")
         self.assertEqual(result["scenarios"][1]["status"], "fail")
         self.assertEqual(result["scenarios"][1]["details"]["code"], "restart_conversation_lost")
         self.assertEqual(result["scenarios"][2]["status"], "fail")
 
-    def test_live_inversion_negative_reference(self):
-        result = self.qualify(True)
+    def test_live_inversion_recovers_from_replay(self):
+        result = self.qualify(invert=True)
+        self.assertEqual(result["verdict"], "pass", result["scenarios"])
+        self.assertTrue(result["restart_observed"]["post_restart_replay_equal"])
+
+    def test_missing_live_frames_recover_from_replay(self):
+        result = self.qualify(drop_live=True)
+        self.assertEqual(result["verdict"], "pass", result["scenarios"])
+        self.assertTrue(result["restart_observed"]["post_restart_replay_equal"])
+
+    def test_continuation_replay_faults_fail(self):
+        for fault in ("gap", "duplicate", "payload"):
+            with self.subTest(fault=fault):
+                result = self.qualify(replay_fault=fault)
+                self.assertEqual(result["verdict"], "fail", result["scenarios"])
+                self.assertEqual(result["scenarios"][0]["status"], "fail")
+                self.assertIn(result["scenarios"][0]["details"]["code"],
+                              {"replay_suffix_gap_duplicate_or_progress",
+                               "replayed_continuation_history_mismatch"})
+
+    def test_post_restart_replay_fault_fails_restart_scenario(self):
+        result = self.qualify(replay_fault="payload", replay_fault_after=5)
         self.assertEqual(result["verdict"], "fail", result["scenarios"])
-        self.assertIn("live_cursor_gap_or_duplicate", result["scenarios"][0]["details"]["code"])
-        self.assertTrue(result["restart_observed"]["replay_frames_equal"])
+        self.assertEqual(result["scenarios"][0]["status"], "pass")
+        self.assertEqual(result["scenarios"][1]["status"], "fail")
+        self.assertEqual(result["scenarios"][1]["details"]["code"],
+                         "replayed_continuation_history_mismatch")
+
+    def test_invalid_socket_message_persistence_fails(self):
+        result = self.qualify(persist_invalid=True)
+        self.assertEqual(result["verdict"], "fail", result["scenarios"])
+        self.assertEqual(result["scenarios"][0]["status"], "fail")
+        self.assertEqual(result["scenarios"][0]["details"]["code"], "socket_error_persisted")
+
+    def test_observed_post_restart_session_socket_404_fails(self):
+        result = self.qualify(reject_replay_after=5)
+        self.assertEqual(result["verdict"], "fail", result["scenarios"])
+        self.assertEqual(result["scenarios"][0]["status"], "pass")
+        self.assertEqual(result["scenarios"][1]["status"], "fail")
+        self.assertEqual(result["scenarios"][1]["details"]["code"],
+                         "observed_session_socket_missing")
 
     def test_unrelated_provider_traffic_does_not_qualify_run(self):
         peer = fixture.FixtureServer(("127.0.0.1", 0))

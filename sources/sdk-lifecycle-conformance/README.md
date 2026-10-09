@@ -8,22 +8,29 @@ provider calls and no repair agent or GitHub publishing credential in this bundl
 
 ## Scope and contract authority
 
-`contracts.json` creates the required roster **before** execution. This first
-bundle covers full durable replay, exclusive reconnect suffix, live continuation,
+`contracts.json` creates the required roster **before** execution. This
+bundle covers full durable replay, exclusive reconnect suffix, continuation recovery,
 non-durable socket errors, process-crash recovery with preserved storage, and a
 separate legacy event transport smoke. It does not certify the released
 TypeScript client or OpenHands application, run ownership, cancellation,
 confirmation, secret delivery, streaming chunk reconciliation, or storage-failure
 guarantees.
 
-The live continuation predicate currently requires persisted sequence order. This
-is an explicit **proposed** contract, motivated by the session implementation's
-description of an ordered channel and resumable durable cursor. Its activation
-requires a decision about the intended public guarantee. The initial evaluation
-records out-of-order live delivery on pinned main; it must not be relabeled a pass
-by silently sorting arrival order. Transient `full_state` snapshots are allowed,
-have no `seq`, and do not enter the durable history. The legacy endpoint's single
-synthetic `full_state` event is likewise separate from replayed persisted events.
+Version 2 records the owner's **2026-10-09** decision: a live subscriber may
+miss events, and reconnect replay must recover them. This is an experimental
+oracle. It is not an active merge gate. The earlier version 1 evidence remains
+unchanged so its proposed live-order failures keep their original meaning.
+
+Live delivery can omit or reorder durable frames. A subscriber keeps its last
+confirmed durable cursor and reconnects to recover every later committed event.
+The verifier checks that replayed suffix in persisted sequence order against REST
+history after each continuation, including after restart. It does not sort live
+frames to manufacture a pass. The first Cloud evaluation records an out-of-order
+live gap and an ordered replay that recovered it. The old oracle stopped before
+checking recovery of the post-restart gap, so a new run is needed for that claim.
+Transient `full_state` snapshots are allowed, have no `seq`, and do not enter
+the durable history. The legacy endpoint's single synthetic `full_state` event
+is likewise separate from replayed persisted events.
 
 Implementation agents may propose amendments, but may not activate a weaker
 bundle to accept their own changes. Before using this as admission, an independent
@@ -41,7 +48,9 @@ The account key injected into the Cloud runner makes this condition concrete;
 placing the verifier in another repository or sandbox does not enforce it.
 
 `bundle.sha256` hashes the named verifier/peer/contract/dependency/setup files
-using filename, length and bytes. `configuration_sha256` hashes the effective
+using filename, length and bytes. The co-located experimental mode also includes
+its preparer, setup script, and launcher in a distinct bundle digest.
+`configuration_sha256` hashes the effective
 input. The subject contains an exact source revision and artifact SHA256 supplied
 by a trusted coordinator; neither endpoint auth nor `/server_info` establishes
 that the deployed artifact matches that subject. A receipt string is an evidence
@@ -104,7 +113,7 @@ Cloud can upload a custom tarball, validate and register its definition, manuall
 dispatch it, and expose its run history. Each automation run gets a fresh sandbox.
 This is suitable for the **trusted verifier**. Cloud injects the user's
 `OPENHANDS_API_KEY` and sandbox `SESSION_API_KEY` into the automation runtime.
-The candidate must therefore run in a **different isolated environment** that
+For independent admission, the candidate must run in a **different isolated environment** that
 cannot read the verifier filesystem/environment, its Cloud credentials, GitHub
 credentials, control endpoints or artifact store.
 
@@ -118,7 +127,7 @@ provide the target URL and run-scoped target key. Same-host subprocesses, a shar
 Docker socket, or a separate conversation in the verifier's sandbox do not create
 that isolation boundary.
 
-The candidate's LLM `base_url` must reach an **externally reachable scripted peer**.
+In external mode, the candidate's LLM `base_url` must reach an **externally reachable scripted peer**.
 `127.0.0.1` refers to the candidate's host, not the Cloud verifier. `fixture.py`
 can be hosted behind a dedicated TLS reverse proxy, or a trusted coordinator can
 bridge the fixture service. Give the candidate access only to `/v1/*`; protect
@@ -190,8 +199,8 @@ Oracle negative controls and actual HTTP/WS redirect probes:
 
 The test-only reference protocol server qualifies the full roster over real
 loopback HTTP/WebSocket traffic and a real request to the scripted provider.
-Its positive history passes every scenario; its deliberately inverted live
-sequence fails the ordered-delivery predicate. It is an oracle qualification
+Its positive history passes every scenario even when live frames are inverted or
+omitted. Faults in replayed cursors or payloads fail the oracle. It is an oracle qualification
 fixture, not an alternate SDK implementation or evidence that a product candidate
 passes. The actual Agent Server smoke remains separate and can fail the same
 unchanged verifier.
@@ -249,13 +258,16 @@ not establish which backend version is deployed.
 
 `keep_alive: true` preserves the sandbox so the operator can retrieve
 `evidence.json` before its runtime TTL expires. **That is not durable archival.**
-Before scheduling unattended runs, a trusted coordinator must export the exact
-evidence and its digest to durable storage and authenticate the result publisher.
-The initial PR retains evaluation evidence; it does not implement Cloud archive
-retention or silently claim that run status proves conformance.
+Advisory experimental runs can use the separate verifier context. To make
+unattended results reviewable, a coordinator must export exact evidence and its
+digest before that sandbox expires. An admission gate would also need an
+authenticated result publisher. The initial PR retains evaluation evidence;
+it does not implement Cloud archive retention or claim that run status proves
+conformance.
 
-After those prerequisites and contract activation, daily verification at 09:00
-Europe/Stockholm is a reasonable maintenance cadence. Each run must receive an
+Once a coordinator provisions the candidate, fixture, restart control, and
+evidence export, daily advisory verification at 09:00 Europe/Stockholm is a
+reasonable maintenance cadence. Each run must receive an
 independently pinned main/release artifact; this bundle does not follow moving
 `main` or attest a deployment itself. Weekly exploration and repair should use the
 same approved contracts and retained incident corpus. The shipped staging cron
@@ -264,6 +276,51 @@ and disabled state leave activation entirely explicit.
 The first manual Cloud execution on **2026-10-09** is recorded in the
 [evaluation evidence](../../evaluations/sdk-lifecycle-conformance/2026-10-09-cloud/).
 The automation remains disabled. Against pinned SDK main, the complete Cloud run
-failed the **proposed** persisted live-order predicate in replay and restart;
-the legacy transport smoke passed. This manual evaluation did not activate a
+failed the former **proposed** persisted live-order predicate in replay and restart;
+the legacy transport smoke passed. The retained trace shows ordered replay of
+the first out-of-order live gap. The old oracle did not check post-restart
+continuation replay. This manual evaluation did not activate a
 merge gate or establish cryptographic candidate deployment attestation.
+
+## Co-located experimental positive control
+
+The separate experimental definition is disabled and has an inert cron.
+The Cloud dispatcher runs the root `setup.sh` before the entrypoint. The
+experimental bundle packages the safe `setup_experimental.sh` source under
+that root name. The external bundle keeps its existing `setup.sh` bytes.
+The experimental setup fetches the exact SDK commit
+`9f47d471ee6f91ba1d140d10d34f3b26d5ac2427` from the public repository.
+It checks the Git archive SHA256
+`5ef7a4c11ecd6c8a0a0f47e3bed0da5ce9fc0be05d5d5446d5a930c1d9440909`
+before it installs the Agent Server with the pinned lockfile. The setup also
+installs the verifier's pinned WebSocket dependency. The 1800-second Cloud job
+timeout covers setup; the verifier keeps its separate 200-second run budget.
+
+The setup runs Git, pip, uv, and build hooks with an explicit environment. It
+keeps network proxy and CA settings but omits Cloud account, session, and
+callback credentials. A setup failure stops the Cloud job before the entrypoint
+can write `evidence.json`. Inspect the Cloud setup log and treat that run as
+operationally blocked, not as a verifier verdict.
+
+`self_contained.py` rechecks the source digest and verifies that all four
+OpenHands imports resolve inside that checkout. It starts the Agent Server and
+scripted provider on loopback with synthetic keys. It kills and restarts the
+Agent Server process while preserving storage. The candidate child gets an
+explicit environment without account, GitHub, or provider credentials.
+
+The evidence marks `execution_mode: co_located_positive_control`. It contains
+the full nonsecret effective configuration, its canonical hash, the pinned
+Git source archive verification, and a distinct digest that covers the experimental setup
+and launcher. The run directory and server log remain in the kept Cloud sandbox
+for review until its runtime TTL expires. The launcher writes `evidence.json`
+before it sends the completion callback.
+
+This mode checks a trusted pinned SDK build in a context separate from agents
+that edit code repositories. Its candidate and verifier share one Cloud sandbox.
+The child environment limits accidental credential delivery, but it is not a
+security boundary against malicious candidate code. Treat its result as an
+advisory positive control, not an independent admission verdict or merge gate.
+The subject hash attests the Git source archive, not the installed executable
+or its dependencies.
+The original external-mode definition, API, and historical evidence remain
+available for an independent run later.

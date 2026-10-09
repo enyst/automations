@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 import threading
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, AsyncMock, MagicMock
 
 SOURCE = Path(__file__).parents[1] / "sources/sdk-lifecycle-conformance"
 SPEC = importlib.util.spec_from_file_location("sdk_lifecycle_verifier", SOURCE / "main.py")
@@ -70,35 +70,56 @@ class OracleTests(unittest.TestCase):
         with self.assertRaisesRegex(verifier.Violation, "non_durable_cursor"):
             asyncio.run(verifier.next_kind(ws, "durable", 5))
 
-    def test_live_history_race_blocks_instead_of_false_failure(self):
+    def test_continuation_retries_when_rest_advances_past_replay_snapshot(self):
         first = {"id": "old", "source": "agent"}
         added = {"id": "new", "source": "user", "text": "live continuation"}
         late = {"id": "late", "source": "environment"}
+        snapshots = [[first], [first, added], [first, added, late],
+                     [first, added, late], [first, added, late]]
+        attempts = iter([
+            (AsyncMock(), [{"type": "durable", "seq": 1, "event": added}], 1),
+            (AsyncMock(), [{"type": "durable", "seq": 1, "event": added},
+                           {"type": "durable", "seq": 2, "event": late}], 2),
+        ])
 
-        async def durable(*args):
-            return {"type": "durable", "seq": 1, "event": added}
+        async def recovered(*args):
+            return next(attempts)
 
         with (
-            patch.object(
-                verifier,
-                "history",
-                side_effect=[[first], [first, added], [first, added, late]],
-            ),
-            patch.object(verifier, "next_kind", durable),
+            patch.object(verifier, "history", side_effect=snapshots),
+            patch.object(verifier, "replay", recovered),
         ):
-            with self.assertRaisesRegex(
-                verifier.Blocked, "live_history_changed_during_collection"
-            ):
-                asyncio.run(
-                    verifier.live_message(
-                        {"timeout_seconds": 5},
-                        MagicMock(),
-                        "conversation",
-                        object(),
-                        "live continuation",
-                        0,
-                    )
-                )
+            frames, rows = asyncio.run(verifier.replayed_message(
+                {"timeout_seconds": 5}, MagicMock(), "conversation",
+                AsyncMock(), "live continuation", 0,
+            ))
+        self.assertEqual([frame["seq"] for frame in frames], [1, 2])
+        self.assertEqual(rows, [first, added, late])
+
+    def test_full_replay_snapshot_retries_late_committed_event(self):
+        first = {"id": "first"}
+        late = {"id": "late"}
+        snapshots = [[first], [first, late], [first, late], [first, late]]
+        stale_socket, current_socket = AsyncMock(), AsyncMock()
+        attempts = iter([
+            (stale_socket, [{"type": "durable", "seq": 0, "event": first}], 0),
+            (current_socket, [{"type": "durable", "seq": 0, "event": first},
+                              {"type": "durable", "seq": 1, "event": late}], 1),
+        ])
+
+        async def replay(*args):
+            return next(attempts)
+
+        with (patch.object(verifier, "history", side_effect=snapshots),
+              patch.object(verifier, "replay", replay)):
+            socket, frames, through, rows = asyncio.run(verifier.full_replay_snapshot(
+                {"timeout_seconds": 5}, MagicMock(), "conversation",
+            ))
+        stale_socket.close.assert_awaited_once()
+        current_socket.close.assert_not_awaited()
+        self.assertIs(socket, current_socket)
+        self.assertEqual(through, 1)
+        self.assertEqual([frame["event"] for frame in frames], rows)
 
     def test_cloud_does_not_demand_unused_restart_secret(self):
         class NoNetwork:

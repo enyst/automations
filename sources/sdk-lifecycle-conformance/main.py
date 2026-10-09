@@ -103,9 +103,9 @@ class HTTP:
             raise Violation("invalid_json_response") from None
 
 
-def bundle_digest():
+def bundle_digest(files=BUNDLE_FILES):
     digest = hashlib.sha256()
-    for name in BUNDLE_FILES:
+    for name in files:
         data = (ROOT / name).read_bytes()
         digest.update(name.encode() + b"\0" + len(data).to_bytes(8, "big") + data)
     return digest.hexdigest()
@@ -163,7 +163,12 @@ async def connect(config, identifier, path):
             return exc
     try:
         return await ExactOriginConnection(url, additional_headers=headers, open_timeout=bounded_timeout(10), close_timeout=2, max_size=MAX_BODY, max_queue=32, proxy=None)
-    except Exception:
+    except Exception as exc:
+        from websockets.exceptions import InvalidStatus
+        if isinstance(exc, InvalidStatus) and exc.response.status_code == 404:
+            # REST already observed this conversation. A missing session socket
+            # is a candidate observation, not a missing setup capability.
+            raise Violation("observed_session_socket_missing") from None
         raise Blocked("websocket_unavailable") from None
 
 
@@ -188,12 +193,18 @@ async def recv(ws, timeout):
     return frame
 
 
-async def next_kind(ws, kind, timeout):
+async def next_kind(ws, kind, timeout, allow_live_durable=False):
     deadline = time.monotonic() + timeout
     for _ in range(64):
         frame = await recv(ws, max(0.01, deadline - time.monotonic()))
         if frame.get("type") == kind:
             return frame
+        if allow_live_durable and frame.get("type") == "durable":
+            # Another committed event may arrive before the requested error.
+            # Live order and completeness are not part of the recovery contract.
+            require(type(frame.get("seq")) is int and isinstance(frame.get("event"), dict),
+                    "invalid_live_durable_frame")
+            continue
         require(frame.get("type") in ("transient", "item_started", "delta", "item_aborted") and "seq" not in frame, "unexpected_frame_or_non_durable_cursor")
     raise Violation("non_durable_frame_budget_exceeded")
 
@@ -218,27 +229,62 @@ async def replay(config, identifier, after):
         raise
 
 
-async def live_message(config, http, identifier, ws, text, previous):
+async def full_replay_snapshot(config, http, identifier):
+    """Read one stable REST/replay snapshot while retaining its live socket."""
+    deadline = time.monotonic() + config["timeout_seconds"]
+    while True:
+        before = history(http, identifier)
+        ws, frames, through = await replay(config, identifier, -1)
+        try:
+            after = history(http, identifier)
+            if before == after and through == len(after) - 1:
+                assert_history(frames, after)
+                return ws, frames, through, after
+        except BaseException:
+            await ws.close()
+            raise
+        await ws.close()
+        if time.monotonic() >= deadline:
+            if before != after:
+                raise Blocked("history_unstable_during_replay")
+            raise Violation("replay_committed_history_missing")
+        await asyncio.sleep(0.1)
+
+
+async def replayed_message(config, http, identifier, ws, text, previous):
     before = len(history(http, identifier))
-    http.request("POST", f"/api/conversations/{identifier}/events", {"role": "user", "content": [{"type": "text", "text": text}], "run": False})
-    rows = history(http, identifier)
-    # Sending after FINISHED can also persist an IDLE state transition.
-    # Observe all committed events; do not assume one request means one event.
-    require(before < len(rows) <= before + 8, "live_message_event_budget_exceeded")
-    frames = []
-    for index in range(len(rows) - before):
-        frame = await next_kind(ws, "durable", config["timeout_seconds"])
-        frames.append(frame)
-    # The first REST snapshot can race a subsequent committed state event.
-    # Do not misattribute that unstable baseline to replay.
-    if history(http, identifier) != rows:
-        raise Blocked("live_history_changed_during_collection")
-    for index, frame in enumerate(frames):
-        require(frame.get("seq") == previous + index + 1, "live_cursor_gap_or_duplicate:expected=" + str(previous + index + 1) + ":actual=" + str(frame.get("seq")))
-    require(sum(f.get("event", {}).get("source") == "user" and text in json.dumps(f["event"]) for f in frames) == 1, "live_message_not_persisted_once")
-    rest = {r["id"]: r for r in rows}
-    require(all(rest.get(f["event"]["id"]) == f["event"] for f in frames), "live_rest_payload_mismatch")
-    return frames
+    try:
+        http.request("POST", f"/api/conversations/{identifier}/events", {"role": "user", "content": [{"type": "text", "text": text}], "run": False})
+    finally:
+        # An active subscriber may miss or reorder live frames. Reconnect from
+        # the last confirmed durable cursor instead of assigning a live verdict.
+        await ws.close()
+
+    deadline = time.monotonic() + config["timeout_seconds"]
+    while True:
+        rows = history(http, identifier)
+        # Sending after FINISHED can also persist an IDLE state transition.
+        require(len(rows) <= before + 8, "continuation_event_budget_exceeded")
+        new_rows = rows[before:]
+        user_events = sum(row.get("source") == "user" and text in json.dumps(row) for row in new_rows)
+        require(user_events <= 1, "continuation_message_persisted_twice")
+        if user_events == 1:
+            recovery_ws, recovered, through = await replay(config, identifier, previous)
+            await recovery_ws.close()
+            latest = history(http, identifier)
+            if latest == rows and through == len(rows) - 1:
+                require([frame["event"] for frame in recovered] == rows[previous + 1:],
+                        "replayed_continuation_history_mismatch")
+                require(sum(frame["event"].get("source") == "user" and text in json.dumps(frame["event"])
+                            for frame in recovered) == 1, "continuation_message_not_replayed_once")
+                return recovered, rows
+        if time.monotonic() >= deadline:
+            if user_events == 0:
+                raise Violation("continuation_message_not_persisted")
+            if latest != rows:
+                raise Blocked("continuation_history_unstable")
+            raise Violation("replay_committed_suffix_missing")
+        await asyncio.sleep(0.1)
 
 
 async def lifecycle(config, http, fixture, evidence, restart=None):
@@ -270,49 +316,65 @@ async def lifecycle(config, http, fixture, evidence, restart=None):
             raise Violation("scripted_run_did_not_complete")
         require(fixture.request("GET", witness_path)["nonce_calls"] > calls_before, "scripted_provider_not_reached_for_run_nonce")
         evidence["provider_nonce_sha256"] = nonce_hash
-        ws, frames, through = await replay(config, identifier, -1)
+        ws, frames, through, rows = await full_replay_snapshot(config, http, identifier)
         try:
-            assert_history(frames, rows)
             # Deliberately invalid inbound message exercises a real non-durable
             # error frame. Processing acknowledgment avoids time-based guessing.
-            await ws.send('{"role":"invalid-role","content":[]}')
-            error = await next_kind(ws, "error", config["timeout_seconds"])
+            invalid_role = "invalid-role-" + uuid.uuid4().hex
+            await ws.send(json.dumps({"role": invalid_role, "content": []}))
+            error = await next_kind(ws, "error", config["timeout_seconds"], allow_live_durable=True)
             evidence["error_frame_observed"] = error
             require(error.get("type") == "error" and "seq" not in error, "socket_error_advanced_durable_cursor")
-            require(history(http, identifier) == rows, "socket_error_persisted")
         finally:
             await ws.close()
+        # The error is a transport frame, not a durable event. Other state
+        # events may commit while this probe runs, so compare a fresh snapshot.
+        ws, after_error, after_error_through, after_error_rows = await full_replay_snapshot(config, http, identifier)
+        await ws.close()
+        require(after_error[:len(frames)] == frames, "socket_error_changed_prior_history")
+        require(all(invalid_role not in json.dumps(row) for row in after_error_rows),
+                "socket_error_persisted")
+        frames, through, rows = after_error, after_error_through, after_error_rows
         cursor = frames[len(frames) // 2]["seq"]
         ws, suffix, upper = await replay(config, identifier, cursor)
         try:
-            require(suffix == [f for f in frames if f["seq"] > cursor], "reconnect_suffix_mismatch")
-            require(upper == through, "reconnect_upper_bound_changed")
-            live = await live_message(config, http, identifier, ws, "live continuation " + nonce, through)
-            frames.extend(live)
+            expected = [f for f in frames if f["seq"] > cursor]
+            require(suffix[:len(expected)] == expected, "reconnect_suffix_mismatch")
+            require(type(upper) is int and upper >= through, "reconnect_upper_bound_regressed")
+            if upper > through:
+                # A state event may commit after the first replay snapshot.
+                # Its suffix is valid if REST confirms that same prefix.
+                latest = history(http, identifier)
+                if len(latest) < upper + 1:
+                    raise Blocked("reconnect_rest_history_lag")
+                frames.extend(suffix[len(expected):])
+                assert_history(frames, latest[:upper + 1])
+                through = upper
+            recovered, rows = await replayed_message(config, http, identifier, ws, "live continuation " + nonce, through)
+            frames.extend(recovered)
         finally:
             await ws.close()
-        rows = history(http, identifier)
-        ws, all_frames, _ = await replay(config, identifier, -1)
-        await ws.close()
-        require(all_frames == frames, "reconnect_full_history_mismatch")
         assert_history(frames, rows)
-        results[0].update(status="pass", details={"durable_events": len(frames), "reconnect_after_seq": cursor, "provider_calls_observed": True, "socket_error_non_durable": True})
+        ws, all_frames, _, rows = await full_replay_snapshot(config, http, identifier)
+        await ws.close()
+        require(all_frames[:len(frames)] == frames, "reconnect_full_history_mismatch")
+        frames = all_frames
+        results[0].update(status="pass", details={"durable_events": len(frames), "reconnect_after_seq": cursor,
+                                                  "continuation_replayed_events": len(recovered),
+                                                  "provider_calls_observed": True, "socket_error_non_durable": True})
         evidence["observations"] = {"frames": frames, "rest_history": rows}
     except (Blocked, Violation) as exc:
         results[0].update(status="blocked" if isinstance(exc, Blocked) else "fail", details={"code": str(exc)})
     except Exception:
         results[0].update(status="blocked", details={"code": "unexpected_harness_error"})
 
-    # Restart and legacy are independent obligations. An observed live-order
-    # failure must not prevent us from exercising them against the same real
-    # conversation. Obtain a fresh quiescent history over the public API.
+    # Restart and legacy are independent obligations. Obtain a fresh quiescent
+    # history over the public API even if the first scenario failed.
     if identifier is None:
         return
     try:
-        rows = history(http, identifier)
-        ws, frames, _ = await replay(config, identifier, -1)
+        ws, frames, _, rows = await full_replay_snapshot(config, http, identifier)
         await ws.close()
-        assert_history(frames, rows)
         evidence["restart_baseline"] = {"frames": frames, "rest_history": rows}
     except (Blocked, Violation):
         return
@@ -333,15 +395,25 @@ async def lifecycle(config, http, fixture, evidence, restart=None):
                 await asyncio.sleep(0.2)
         require(history(http, identifier, missing_code="restart_conversation_lost") == rows,
                 "restart_rest_history_changed")
-        ws, restored, upper = await replay(config, identifier, -1)
+        ws, restored, upper, restored_rows = await full_replay_snapshot(config, http, identifier)
         try:
+            require(restored_rows == rows, "restart_rest_history_changed")
             require(restored == frames, "restart_durable_history_changed")
             evidence["restart_observed"] = {"storage_preserved": True, "rest_history_equal": True,
                                              "replay_frames_equal": True, "durable_events_restored": len(restored)}
-            await live_message(config, http, identifier, ws, "post-restart continuation", upper)
+            recovered, continued_rows = await replayed_message(config, http, identifier, ws, "post-restart continuation", upper)
         finally:
             await ws.close()
-        results[1].update(status="pass", details={"durable_events_restored": len(restored), "storage_preserved": True, "continued_after_restart": True})
+        assert_history(restored + recovered, continued_rows)
+        ws, continued, _, continued_rows = await full_replay_snapshot(config, http, identifier)
+        await ws.close()
+        require(continued[:len(restored) + len(recovered)] == restored + recovered,
+                "restart_continuation_full_history_mismatch")
+        evidence["restart_observed"].update(post_restart_replay_equal=True,
+                                            post_restart_replayed_events=len(recovered))
+        results[1].update(status="pass", details={"durable_events_restored": len(restored), "storage_preserved": True,
+                                                  "continued_after_restart": True,
+                                                  "post_restart_replayed_events": len(recovered)})
     except (Blocked, Violation) as exc:
         results[1].update(status="blocked" if isinstance(exc, Blocked) else "fail", details={"code": str(exc)})
     except Exception:
@@ -401,14 +473,14 @@ def validate_config(config):
         raise Blocked("invalid_candidate_working_dir")
 
 
-def run(config, restart=None):
+def run(config, restart=None, bundle_files=BUNDLE_FILES):
     global OBSERVATION_BYTES, VERIFIER_DEADLINE
     OBSERVATIONS.clear()
     OBSERVATION_BYTES = 0
     VERIFIER_DEADLINE = time.monotonic() + VERIFIER_BUDGET_SECONDS
     contract = json.loads((ROOT / "contracts.json").read_text())
     evidence = {"schema_version": 1, "subject": {"revision": config.get("candidate_revision"), "artifact_sha256": config.get("candidate_artifact_sha256")},
-                "bundle": {"id": contract["id"], "sha256": bundle_digest()},
+                "bundle": {"id": contract["id"], "sha256": bundle_digest(bundle_files)},
                 "configuration_sha256": hashlib.sha256(json.dumps(config, sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
                 "binding_receipt": config.get("candidate_binding_receipt"),
                 "scenarios": [{"id": item["id"], "status": "blocked", "details": {"code": "prerequisite_not_reached"}} for item in contract["scenarios"]]}

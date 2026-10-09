@@ -27,13 +27,29 @@ DEFINITION = ROOT / "definitions/sdk-lifecycle-conformance.json"
 CLOUD = "https://app.all-hands.dev"
 API = "/api/automation/v1"
 FILES = ("main.py", "fixture.py", "contracts.json", "config.json", "requirements.txt", "setup.sh")
+EXPERIMENTAL_SOURCE_FILES = (
+    ("main.py", "main.py"), ("fixture.py", "fixture.py"),
+    ("contracts.json", "contracts.json"), ("config.json", "config.json"),
+    ("requirements.txt", "requirements.txt"),
+    ("setup.sh", "setup_experimental.sh"),
+    ("prepare_experimental.py", "prepare_experimental.py"),
+    ("self_contained.py", "self_contained.py"),
+)
 
 
 def package(config_path, credential=""):
+    return package_files(config_path, credential, ((name, name) for name in FILES))
+
+
+def package_experimental(config_path, credential=""):
+    return package_files(config_path, credential, EXPERIMENTAL_SOURCE_FILES)
+
+
+def package_files(config_path, credential, file_sources):
     stream = io.BytesIO()
     with tarfile.open(fileobj=stream, mode="w", format=tarfile.PAX_FORMAT) as archive:
-        for name in FILES:
-            path = config_path if name == "config.json" else SOURCE / name
+        for name, source_name in file_sources:
+            path = config_path if name == "config.json" else SOURCE / source_name
             if path.is_symlink() or not path.is_file():
                 raise DeploymentError("unsupported_bundle_file")
             data = path.read_bytes()
