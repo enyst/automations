@@ -417,15 +417,16 @@ def run(config, restart=None):
         load_cloud_credentials(config)
         http = HTTP(config["candidate_url"], "X-Session-API-Key", os.environ.get("CONFORMANCE_CANDIDATE_SESSION_KEY", ""))
         fixture = HTTP(config["fixture_url"], "X-Fixture-Control-Key", os.environ.get("CONFORMANCE_FIXTURE_CONTROL_KEY", ""))
-        if restart is None and config.get("restart_control_url"):
+        if restart is None and config.get("restart_control_url") and os.environ.get("CONFORMANCE_RESTART_CONTROL_KEY"):
             url = valid_url(config["restart_control_url"], allow_path=True)
             parts = urllib.parse.urlsplit(url)
             origin = urllib.parse.urlunsplit((parts.scheme, parts.netloc, "", "", ""))
             control = HTTP(origin, "X-Restart-Control-Key", os.environ.get("CONFORMANCE_RESTART_CONTROL_KEY", ""))
             restart = lambda: control.request("POST", parts.path, {"revision": config["candidate_revision"], "artifact_sha256": config["candidate_artifact_sha256"]})
+        remaining = bounded_timeout(VERIFIER_BUDGET_SECONDS)
         asyncio.run(asyncio.wait_for(
             lifecycle(config, http, fixture, evidence, restart),
-            timeout=bounded_timeout(VERIFIER_BUDGET_SECONDS),
+            timeout=remaining,
         ))
     except (asyncio.TimeoutError, TimeoutError):
         for result in evidence["scenarios"]:
@@ -474,6 +475,10 @@ def load_cloud_credentials(config):
                 raise Blocked("run_capability_unavailable")
             os.environ[name] = data.decode().strip()
         except (OSError, UnicodeError, urllib.error.URLError):
+            if name == "CONFORMANCE_RESTART_CONTROL_KEY":
+                # Restart is an independent scenario: continue replay and legacy
+                # without this capability, and leave restart explicitly blocked.
+                continue
             raise Blocked("run_capability_unavailable:" + name) from None
 
 
