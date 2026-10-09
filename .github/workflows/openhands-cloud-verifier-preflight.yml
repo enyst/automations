@@ -1,0 +1,32 @@
+name: OpenHands Cloud verifier deployment preflight
+
+on:
+  push:
+    branches:
+      - agent/cloud-verifier-bootstrap
+    paths:
+      - '.github/workflows/openhands-cloud-verifier-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Verify Cloud capability with scoped repository secret
+        env:
+          OPENHANDS_API_KEY: ${{ secrets.OPENHANDS_API_KEY }}
+        shell: bash
+        run: |
+          if [ -z "$OPENHANDS_API_KEY" ]; then
+            echo "::notice::Blocked: GitHub Actions has no OPENHANDS_API_KEY secret. No Cloud request or deployment attempted."
+            exit 0
+          fi
+          python3 -B scripts/deploy_sdk_conformance.py preflight
