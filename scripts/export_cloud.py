@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Manual Cloud definition export. GET-only; never runs git or an automation."""
+"""Manual Cloud definition export. Cloud GET-only; reads Git, never deploys or dispatches."""
 from __future__ import annotations
 
 import argparse
@@ -17,6 +17,10 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
+
+from cloud_bundle import find_source
+
+ROOT = Path(__file__).resolve().parents[1]
 
 HOST = "https://app.all-hands.dev"
 API = "/api/automation/v1"
@@ -307,7 +311,7 @@ def listing_signature(rows):
 
 
 def export(client, output: Path, org_id: str, user_id: str | None = None,
-           recoveries: dict | None = None) -> dict:
+           recoveries: dict | None = None, *, repo_root: Path = ROOT) -> dict:
     identity = verify_identity(client.json("/api/v1/users/me"), org_id, user_id)
     credential = getattr(client, "credential", "")
     initial = list_all(client)
@@ -353,9 +357,22 @@ def export(client, output: Path, org_id: str, user_id: str | None = None,
                        "updated_at_after_download": after_binding["updated_at"],
                        "bundle": provenance or {"kind": "external_reference"},
                        "files": {name: digest(data) for name, data in sorted(files.items())}}
+            old_receipt = output / directory / "export-status.json"
+            no_symlinks(old_receipt)
+            previous_receipt = json.loads(old_receipt.read_text()) if old_receipt.is_file() else {}
+            if previous_receipt.get("status") != "complete":
+                previous_receipt = previous_receipt.get("last_complete", {})
+            previous = previous_receipt.get("source")
+            try:
+                snapshot_path = (output / directory).relative_to(repo_root).as_posix()
+            except ValueError:
+                snapshot_path = None
+            source = find_source(repo_root, files, snapshot_path, previous)
+            if source:
+                receipt["source"] = source
             scan_fields(receipt)
             scan(encoded(receipt), credential)
-            plans.append((directory, metadata, files, executable))
+            plans.append((directory, metadata, {} if source else files, executable))
         except ExportError as error:
             # Any potential credential stops the entire export before any files are written.
             if error.code in {"credential_content", "credential_like_content",
@@ -383,6 +400,11 @@ def export(client, output: Path, org_id: str, user_id: str | None = None,
         dest = output / row["directory"]
         no_symlinks(dest)
         row["preserved_existing"] = row["status"] != "complete" and (dest / "automation.yaml").is_file()
+        if row["preserved_existing"] and (dest / "export-status.json").is_file():
+            previous = json.loads((dest / "export-status.json").read_text())
+            complete = previous if previous.get("status") == "complete" else previous.get("last_complete")
+            if complete:
+                row["last_complete"] = complete
         scan_fields(row)
         scan(encoded(row), credential)
     listed_dirs = set(by_directory)

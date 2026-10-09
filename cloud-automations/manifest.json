@@ -23,6 +23,10 @@
       "name": "Notebook Field Notes",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "sources/notebook-field-notes"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/9e964186-e170-4291-a6b5-479edebc7b33",
       "updated_at": "2026-09-20T17:08:16.468317Z",
@@ -49,6 +53,10 @@
       "name": "Jev Fast Audit",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "cloud-automations/automation-5aee9a93-51e5-4843-ad13-301a31e1397e/tarball"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/17ed3fb6-a220-4415-97f6-0a693dc9fd60",
       "updated_at": "2026-09-19T22:09:29.130562Z",
@@ -87,6 +95,10 @@
       "name": "Weekly re-vendor: smolpaws openhands-agent-server (SDK + server ports)",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "cloud-automations/automation-d4f8b4de-be10-4795-822b-72ca38dc323e/tarball"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/fa7b9525-f48d-4d2c-b3df-8983ea1ae1d6",
       "updated_at": "2026-09-19T22:09:28.647878Z",
@@ -125,6 +137,10 @@
       "name": "Weekly upstream drift: openhands-agent (OpenHands SDK -> TypeScript)",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "cloud-automations/automation-e6b527a2-5cd1-45d6-82c5-ac1cf89ebda6/tarball"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/d25717ff-c045-40ee-b831-c9b2e582fe74",
       "updated_at": "2026-09-19T22:09:28.647878Z",
@@ -149,6 +165,10 @@
       "name": "QA Changes - Auto-Test PR description (software-agent-sdk)",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "cloud-automations/automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee/tarball"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/813f9d00-d73a-40b6-baf0-1fcf2dbf8280",
       "updated_at": "2026-09-19T22:10:19.713341Z",
@@ -172,6 +192,10 @@
       "name": "Attention router - weekly SDK PRs and @enyst mentions",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6/tarball"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/cdf3d5ec-995c-49e9-ba0a-7077139eeb06",
       "updated_at": "2026-09-19T22:10:00.481210Z",
@@ -197,6 +221,10 @@
       "name": "Issue Duplicate Checker - auto-close sweep",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "cloud-automations/automation-7b7ca607-3052-476e-b9f9-63d98ed98971/tarball"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/88a0d229-cb07-4fbe-b887-9e4c261f1a02",
       "updated_at": "2026-09-19T22:10:19.713341Z",
@@ -222,6 +250,10 @@
       "name": "Issue Duplicate Checker - detect",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "cloud-automations/automation-d0f69df6-4757-4403-8106-2013ae5e0db5/tarball"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/aeb2c3bc-f4c2-4c4f-9c68-16bb61cf4325",
       "updated_at": "2026-09-19T22:09:49.683087Z",
@@ -246,6 +278,10 @@
       "name": "Roasted Code Review - OpenHands PRs (on behalf of @enyst)",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/tarball"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/163eb016-3e05-4b90-95b7-85cac0e6795d",
       "updated_at": "2026-09-18T21:42:10.061762Z",
@@ -269,6 +305,10 @@
       "name": "Daily external PR security screen and review for OpenHands repos",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
+      "source": {
+        "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+        "path": "cloud-automations/automation-e2ca316e-2896-4189-b1fc-fef6100d85f1/tarball"
+      },
       "status": "complete",
       "tarball_path": "oh-internal://uploads/acc675cd-c2fd-48c2-92ee-df554e7aa56e",
       "updated_at": "2026-07-03T00:34:17.196055Z",

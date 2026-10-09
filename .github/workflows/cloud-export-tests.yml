@@ -1,0 +1,28 @@
+name: Cloud export integrity
+on:
+  pull_request:
+    paths:
+      - 'cloud-automations/**'
+      - 'sources/**'
+      - 'scripts/cloud_bundle.py'
+      - 'scripts/export_cloud.py'
+      - 'tests/test_cloud_bundle.py'
+      - 'tests/test_export_cloud.py'
+      - '.github/workflows/cloud-export-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - run: python -m unittest discover -s tests -p 'test_export_cloud.py'
+      - run: python -m unittest discover -s tests -p 'test_cloud_bundle.py'

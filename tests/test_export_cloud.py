@@ -5,8 +5,11 @@ import json
 from pathlib import Path
 import tarfile
 import tempfile
+import sys
 import unittest
 import urllib.error
+
+sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
 
 spec = importlib.util.spec_from_file_location(
     "export_cloud", Path(__file__).parents[1] / "scripts/export_cloud.py")

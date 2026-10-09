@@ -15,6 +15,10 @@
   "id": "055b7b6a-5455-4243-b97f-843e16050ed3",
   "name": "Mention Gazette",
   "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "source": {
+    "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+    "path": "sources/mention-gazette"
+  },
   "status": "complete",
   "tarball_path": "oh-internal://uploads/944f30a5-1b26-4b97-9f69-fd3552ff0713",
   "updated_at": "2026-10-09T18:58:18.448626Z",

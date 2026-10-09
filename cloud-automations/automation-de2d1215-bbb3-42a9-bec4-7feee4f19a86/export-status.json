@@ -16,6 +16,10 @@
   "name": "Roasted Code Review - OpenHands PRs (on behalf of @enyst)",
   "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
   "preserved_existing": false,
+  "source": {
+    "commit": "8acf1ac1c0b0fbbdaee59e6aed8aac529831bf12",
+    "path": "cloud-automations/automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86/tarball"
+  },
   "status": "complete",
   "tarball_path": "oh-internal://uploads/163eb016-3e05-4b90-95b7-85cac0e6795d",
   "updated_at": "2026-09-18T21:42:10.061762Z",

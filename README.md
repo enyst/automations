@@ -24,9 +24,10 @@ The public page was also checked. Eight synthetic tests passed.
 Cloud definition: `055b7b6a-5455-4243-b97f-843e16050ed3`, enabled.
 Local definition: `2794b815-8d12-437a-b3bd-68dff63891e1`, disabled.
 The [targeted Cloud export](cloud-automations/automation-055b7b6a-5455-4243-b97f-843e16050ed3/)
-contains the exact deployed bundle and verification receipt. The September global
-manifest and inventory below remain historical; this migration did not refresh
-unrelated automations. The local Git Sync definition now also records `enabled: false`.
+records the exact deployed bundle through a pinned source reference and verification
+receipt. The September global manifest and inventory below remain historical;
+this migration did not refresh unrelated automations. The local Git Sync definition
+now also records `enabled: false`.
 No general native Git Sync cycle was triggered.
 
 ## Directory ownership
@@ -34,7 +35,7 @@ No general native Git Sync cycle was triggered.
 | Directory | Purpose | Direction |
 | --- | --- | --- |
 | `local-automations/` | Local backend definitions: one directory per automation, containing `automation.yaml` and extracted code in `tarball/`. | Native OpenHands Git Sync, manually triggered and bidirectional. |
-| `cloud-automations/` | Dated exports of the `enyst` OpenHands Cloud account's definitions and available execution sources. | Cloud to Git only during this initial export phase. |
+| `cloud-automations/` | Dated Cloud definitions, verification receipts, and commit-pinned source references. | Cloud to Git only during this initial export phase. |
 | `sources/` | Editable source and runtime configuration for automations maintained here. | Deploy deliberately with the corresponding helper. |
 | `definitions/` | Deployment definitions for maintained automations. | Explicit apply; Git pushes alone do not deploy. |
 | `scripts/` | Export, validation, and dedicated deployment tools. | Read each tool's contract before running it. |
@@ -218,13 +219,41 @@ an exact saved archive; do not substitute an arbitrary source checkout. A refres
 without that recovery can report a bundle unavailable while preserving its
 previously verified files.
 
-Each complete export uses `automation-<UUID>/automation.yaml` and `tarball/`.
+Each complete export uses `automation-<UUID>/automation.yaml` and an
+`export-status.json` receipt. Its `source` points to an exact Git commit and
+directory; `files` selects the observed runtime files and records their SHA-256
+hashes. The exporter reuses committed maintained source when every file matches.
+A new or changed bundle without a matching retained commit is stored in `tarball/`.
 `manifest.json` records origin IDs, hashes, timestamps and completeness. Missing
 bundles are recorded as incomplete, without an importable `automation.yaml`; an
 existing complete export is preserved if a refresh fails. Recovery from a local
 archive requires matching provenance and hashes. A metadata-only export is not a
 complete restore package. Preserve identity and disabled state when comparing
 exports.
+
+**Source deduplication · October 9, 2026:** removed the eleven exported code copies
+from the working tree. Maintained code stays in `sources/`; older or unmaintained
+bundles remain available at their pinned historical paths. The retained tag
+`cloud-export/2026-10-09` keeps these commits reachable even after a squash merge
+and PR branch deletion. Keep this tag and fetch tags/full history when cloning;
+future exports only reference source on retained tags or `origin/main` history.
+Export observations, file hashes and live deployments were not changed.
+
+Verify a snapshot or materialize its exact native layout in a new directory:
+
+```sh
+python3 -B scripts/cloud_bundle.py \
+  cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6
+python3 -B scripts/cloud_bundle.py \
+  cloud-automations/automation-fe2c8185-1b7f-41bf-a687-143e350408b6 \
+  --output /private/tmp/attention-router-snapshot
+```
+
+Materialization verifies the definition and every selected file before writing,
+restores executable modes, and refuses an existing output directory. It never
+deploys or executes the bundle. A failed refresh retains the previous complete
+receipt under `last_complete`, so that snapshot remains recoverable. Local Git
+Sync keeps its native `tarball/` layout because that directory drives live imports.
 
 Export timestamps, enabled flags and last-run results are observations, not live
 monitoring. Check the relevant backend for current state. A completed run alone
@@ -303,7 +332,7 @@ Use scripts/deploy_field_notes.py to stage, test, enable, inspect or pause this
 automation. The nine-file runtime allowlist includes `descriptions.py` and
 `comments.py`; tests, local environments and working references are excluded.
 After an explicit deployment, scripts/export_cloud.py refreshes the
-observed definition and exact runtime source under cloud-automations/.
+observed definition and a verified reference to exact runtime source under cloud-automations/.
 Pushing this repository alone does not update Cloud.
 
 ## Weekday verification attention

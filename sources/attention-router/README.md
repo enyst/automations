@@ -2,7 +2,8 @@
 
 Deployed 2026-10-09 to Cloud automation `fe2c8185-1b7f-41bf-a687-143e350408b6`.
 The original weekly SDK selection/scoring is preserved on Mondays. The maintained
-source is copied from the verified Cloud bundle; the dated export stays unchanged.
+source originated in the verified Cloud bundle. The dated export records its
+original bytes through a commit-pinned source reference and file hashes.
 Git pushes do not deploy this source. Definition: `definitions/attention-router.json`.
 
 Every weekday at 09:00 Europe/Amsterdam, the priority path reads OpenHands/OpenHands
