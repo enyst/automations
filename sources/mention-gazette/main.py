@@ -13,7 +13,7 @@ from render import render
 
 CLOUD = "https://app.all-hands.dev"
 GITHUB = "https://api.github.com"
-SECRET = "GAZETTE_GITHUB_TOKEN"
+SECRET = "REMOTE_GH"
 REPO = "enyst/enyst.github.io"
 PAGE = "/repos/" + REPO + "/contents/arch/mention-gazette.html"
 

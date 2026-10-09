@@ -16,7 +16,7 @@ files and local checkouts are untouched. Identical content creates no new commit
 Retrieval failures do not publish an empty page. Notification collection is limited
 to 2,000 items and fails visibly at the limit rather than silently dropping pages.
 
-Runtime credential: Cloud secret `GAZETTE_GITHUB_TOKEN`, owned by `enyst`, with notification
+Runtime credential: existing Cloud secret `REMOTE_GH`, owned by `enyst`, with notification
 read and notebook write access. The script retrieves only this named secret and never
 logs its value. No secrets belong in Git. Cloud supplies the completion callback token.
 
@@ -24,10 +24,9 @@ Desired schedule: Monday through Thursday, 09:00 Europe/Amsterdam. This preserve
 the local schedule and follows daylight saving time. The edition date uses that zone.
 
 `python3 scripts/deploy_gazette.py` uploads the maintained source, creates or updates a
-paused Cloud definition, and reads it back. The `--install-secret` option explicitly
-copies the existing enyst GitHub credential to Cloud if the dedicated secret is missing.
-Use that option only with authorization for the credential transfer. Existing credentials
-are never overwritten. The helper never enables schedules.
+paused Cloud definition, and reads it back. It checks that `REMOTE_GH` exists without
+reading its value. It does not copy or modify credentials. The Cloud run checks the
+GitHub identity and permissions. The helper never enables schedules.
 Before cutover, manually dispatch one Cloud run and verify the published file. Then
 disable the local definition, enable the desired Cloud schedule, and export both states
 to Git. A Git push alone does not deploy the Cloud code.
