@@ -260,3 +260,10 @@ independently pinned main/release artifact; this bundle does not follow moving
 `main` or attest a deployment itself. Weekly exploration and repair should use the
 same approved contracts and retained incident corpus. The shipped staging cron
 and disabled state leave activation entirely explicit.
+
+The first manual Cloud execution on **2026-10-09** is recorded in the
+[evaluation evidence](../../evaluations/sdk-lifecycle-conformance/2026-10-09-cloud/).
+The automation remains disabled. Against pinned SDK main, the complete Cloud run
+failed the **proposed** persisted live-order predicate in replay and restart;
+the legacy transport smoke passed. This manual evaluation did not activate a
+merge gate or establish cryptographic candidate deployment attestation.
