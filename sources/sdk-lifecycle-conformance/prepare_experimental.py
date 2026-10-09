@@ -124,7 +124,8 @@ def install_verifier():
 def install_agent_server(repository, uv=None):
     command = uv or uv_executable()
     run_command([command, "sync", "--frozen", "--no-dev", "--package",
-                 "openhands-agent-server", "--python", "3.13"], cwd=repository,
+                 "openhands-agent-server", "--package", "openhands-workspace",
+                 "--python", "3.13"], cwd=repository,
                 code="candidate_dependency_install_failed")
     python = Path(repository) / ".venv/bin/python"
     if not python.is_file():

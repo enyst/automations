@@ -1,24 +1,40 @@
 """Offline checks for the co-located experimental SDK positive control."""
 import hashlib
+import io
 import json
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import tempfile
+import tarfile
 import unittest
 from unittest.mock import patch, MagicMock
 
 
 SOURCE = Path(__file__).parents[1] / "sources/sdk-lifecycle-conformance"
+SCRIPTS = SOURCE.parents[1] / "scripts"
 sys.path.insert(0, str(SOURCE))
+sys.path.insert(0, str(SCRIPTS))
 import prepare_experimental as prepare
 import self_contained as experimental
+import deploy_sdk_conformance as deploy
 
 
 def git(*args, cwd):
     return subprocess.check_output(["git", *args], cwd=cwd, stderr=subprocess.DEVNULL).decode().strip()
+
+
+def stage_bundle(destination):
+    archive = deploy.package_experimental(SOURCE / "config.json")
+    with tarfile.open(fileobj=io.BytesIO(archive), mode="r:gz") as bundle:
+        assert set(bundle.getnames()) == set(experimental.EXPERIMENTAL_FILES) | {"config.json"}
+        for member in bundle.getmembers():
+            assert member.name in {name for name, _ in deploy.EXPERIMENTAL_SOURCE_FILES}
+            source = bundle.extractfile(member)
+            assert source is not None
+            (destination / member.name).write_bytes(source.read())
+    return archive
 
 
 class ExperimentalSetupTests(unittest.TestCase):
@@ -81,6 +97,19 @@ class ExperimentalSetupTests(unittest.TestCase):
                           "--disable-pip-version-check", "-r", "requirements.txt"])
         self.assertEqual(command.call_count, 2)
 
+    def test_uv_sync_installs_server_and_workspace_from_pinned_lock(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            repository = Path(temporary)
+            python = repository / ".venv/bin/python"
+            python.parent.mkdir(parents=True)
+            python.touch()
+            with patch.object(prepare, "run_command") as command:
+                self.assertEqual(prepare.install_agent_server(repository, uv="uv"), python)
+        self.assertEqual(command.call_args.args[0],
+                         ["uv", "sync", "--frozen", "--no-dev", "--package",
+                          "openhands-agent-server", "--package", "openhands-workspace",
+                          "--python", "3.13"])
+
     def test_loopback_ports_are_distinct(self):
         reserved = set()
 
@@ -122,14 +151,19 @@ class ExperimentalSetupTests(unittest.TestCase):
     def test_failed_attestation_emits_complete_blocked_evidence(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
+            staged = root / "bundle"
+            staged.mkdir()
+            stage_bundle(staged)
             candidate = root / "not-a-checkout"
             candidate.mkdir()
             output = root / "evidence.json"
             with (patch.object(experimental, "loopback_ports", return_value=(33001, 33002)),
-                  patch.object(experimental.verifier, "callback")):
+                  patch.object(experimental.verifier, "callback"),
+                  patch.object(experimental.verifier, "ROOT", staged)):
                 code = experimental.run(candidate_repository=candidate,
                                         candidate_python=Path(sys.executable),
                                         evidence_path=output)
+                expected_bundle = experimental.verifier.bundle_digest(experimental.EXPERIMENTAL_FILES)
             self.assertEqual(code, 2)
             evidence = json.loads(output.read_text())
             self.assertEqual(evidence["execution_mode"], "co_located_positive_control")
@@ -142,21 +176,17 @@ class ExperimentalSetupTests(unittest.TestCase):
                 separators=(",", ":")).encode()).hexdigest()
             self.assertEqual(evidence["configuration_sha256"], expected)
             self.assertIn("self_contained.py", evidence["bundle"]["files"])
-            self.assertIn("setup_experimental.sh", evidence["bundle"]["files"])
-            self.assertIn("run_experimental.sh", evidence["bundle"]["files"])
-            self.assertNotIn("setup.sh", evidence["bundle"]["files"])
-            self.assertEqual(evidence["bundle"]["sha256"],
-                             experimental.verifier.bundle_digest(experimental.EXPERIMENTAL_FILES))
+            self.assertIn("setup.sh", evidence["bundle"]["files"])
+            self.assertNotIn("setup_experimental.sh", evidence["bundle"]["files"])
+            self.assertEqual(evidence["bundle"]["sha256"], expected_bundle)
 
     def test_experimental_digest_covers_preparer_setup_and_launcher(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            for name in experimental.EXPERIMENTAL_FILES:
-                shutil.copyfile(SOURCE / name, root / name)
+            stage_bundle(root)
             with patch.object(experimental.verifier, "ROOT", root):
                 original = experimental.verifier.bundle_digest(experimental.EXPERIMENTAL_FILES)
-                for name in ("prepare_experimental.py", "setup_experimental.sh",
-                             "run_experimental.sh", "self_contained.py"):
+                for name in ("prepare_experimental.py", "setup.sh", "self_contained.py"):
                     path = root / name
                     content = path.read_bytes()
                     path.write_bytes(content + b"\n# changed\n")
@@ -164,16 +194,19 @@ class ExperimentalSetupTests(unittest.TestCase):
                         experimental.EXPERIMENTAL_FILES), original)
                     path.write_bytes(content)
 
-    def test_dispatcher_command_skips_missing_setup_and_runs_wrapper(self):
+    def test_dispatcher_command_runs_native_safe_setup_before_entrypoint(self):
         definition = json.loads((SOURCE.parents[1] /
             "definitions/sdk-lifecycle-conformance-experimental.json").read_text())
-        self.assertIsNone(definition["setup_script_path"])
-        self.assertEqual(definition["entrypoint"], "sh run_experimental.sh")
-        self.assertNotIn("setup.sh", experimental.EXPERIMENTAL_FILES)
+        self.assertEqual(definition["setup_script_path"], "setup.sh")
+        self.assertEqual(definition["entrypoint"], ".verifier-venv/bin/python self_contained.py")
+        self.assertIn("setup.sh", experimental.EXPERIMENTAL_FILES)
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
-            for name in ("run_experimental.sh", "setup_experimental.sh"):
-                shutil.copyfile(SOURCE / name, root / name)
+            stage_bundle(root)
+            self.assertEqual((root / "setup.sh").read_bytes(),
+                             (SOURCE / "setup_experimental.sh").read_bytes())
+            self.assertNotEqual((root / "setup.sh").read_bytes(),
+                                (SOURCE / "setup.sh").read_bytes())
             (root / "prepare_experimental.py").write_text(
                 "from pathlib import Path\n"
                 "import os, sys\n"
@@ -190,6 +223,12 @@ class ExperimentalSetupTests(unittest.TestCase):
                                     check=False)
             self.assertEqual(result.returncode, 0, result.stderr.decode())
             self.assertEqual((root / "ran.marker").read_text(), "passed")
+
+    def test_external_setup_bytes_remain_in_external_bundle(self):
+        with tarfile.open(fileobj=io.BytesIO(deploy.package(SOURCE / "config.json")),
+                          mode="r:gz") as bundle:
+            self.assertEqual(bundle.extractfile("setup.sh").read(),
+                             (SOURCE / "setup.sh").read_bytes())
 
 
 if __name__ == "__main__":
