@@ -1,0 +1,7 @@
+{
+  "name": "Mention Gazette",
+  "trigger": {"type": "cron", "schedule": "0 9 * * 1-4", "timezone": "Europe/Amsterdam"},
+  "entrypoint": "python3 main.py",
+  "timeout": 300,
+  "keep_alive": false
+}
