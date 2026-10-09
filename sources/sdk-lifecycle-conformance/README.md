@@ -8,22 +8,29 @@ provider calls and no repair agent or GitHub publishing credential in this bundl
 
 ## Scope and contract authority
 
-`contracts.json` creates the required roster **before** execution. This first
-bundle covers full durable replay, exclusive reconnect suffix, live continuation,
+`contracts.json` creates the required roster **before** execution. This
+bundle covers full durable replay, exclusive reconnect suffix, continuation recovery,
 non-durable socket errors, process-crash recovery with preserved storage, and a
 separate legacy event transport smoke. It does not certify the released
 TypeScript client or OpenHands application, run ownership, cancellation,
 confirmation, secret delivery, streaming chunk reconciliation, or storage-failure
 guarantees.
 
-The live continuation predicate currently requires persisted sequence order. This
-is an explicit **proposed** contract, motivated by the session implementation's
-description of an ordered channel and resumable durable cursor. Its activation
-requires a decision about the intended public guarantee. The initial evaluation
-records out-of-order live delivery on pinned main; it must not be relabeled a pass
-by silently sorting arrival order. Transient `full_state` snapshots are allowed,
-have no `seq`, and do not enter the durable history. The legacy endpoint's single
-synthetic `full_state` event is likewise separate from replayed persisted events.
+Version 2 records the owner's **2026-10-09** decision: a live subscriber may
+miss events, and reconnect replay must recover them. This is an experimental
+oracle. It is not an active merge gate. The earlier version 1 evidence remains
+unchanged so its proposed live-order failures keep their original meaning.
+
+Live delivery can omit or reorder durable frames. A subscriber keeps its last
+confirmed durable cursor and reconnects to recover every later committed event.
+The verifier checks that replayed suffix in persisted sequence order against REST
+history after each continuation, including after restart. It does not sort live
+frames to manufacture a pass. The first Cloud evaluation records an out-of-order
+live gap and an ordered replay that recovered it. The old oracle stopped before
+checking recovery of the post-restart gap, so a new run is needed for that claim.
+Transient `full_state` snapshots are allowed, have no `seq`, and do not enter
+the durable history. The legacy endpoint's single synthetic `full_state` event
+is likewise separate from replayed persisted events.
 
 Implementation agents may propose amendments, but may not activate a weaker
 bundle to accept their own changes. Before using this as admission, an independent
@@ -190,8 +197,8 @@ Oracle negative controls and actual HTTP/WS redirect probes:
 
 The test-only reference protocol server qualifies the full roster over real
 loopback HTTP/WebSocket traffic and a real request to the scripted provider.
-Its positive history passes every scenario; its deliberately inverted live
-sequence fails the ordered-delivery predicate. It is an oracle qualification
+Its positive history passes every scenario even when live frames are inverted or
+omitted. Faults in replayed cursors or payloads fail the oracle. It is an oracle qualification
 fixture, not an alternate SDK implementation or evidence that a product candidate
 passes. The actual Agent Server smoke remains separate and can fail the same
 unchanged verifier.
@@ -249,13 +256,16 @@ not establish which backend version is deployed.
 
 `keep_alive: true` preserves the sandbox so the operator can retrieve
 `evidence.json` before its runtime TTL expires. **That is not durable archival.**
-Before scheduling unattended runs, a trusted coordinator must export the exact
-evidence and its digest to durable storage and authenticate the result publisher.
-The initial PR retains evaluation evidence; it does not implement Cloud archive
-retention or silently claim that run status proves conformance.
+Advisory experimental runs can use the separate verifier context. To make
+unattended results reviewable, a coordinator must export exact evidence and its
+digest before that sandbox expires. An admission gate would also need an
+authenticated result publisher. The initial PR retains evaluation evidence;
+it does not implement Cloud archive retention or claim that run status proves
+conformance.
 
-After those prerequisites and contract activation, daily verification at 09:00
-Europe/Stockholm is a reasonable maintenance cadence. Each run must receive an
+Once a coordinator provisions the candidate, fixture, restart control, and
+evidence export, daily advisory verification at 09:00 Europe/Stockholm is a
+reasonable maintenance cadence. Each run must receive an
 independently pinned main/release artifact; this bundle does not follow moving
 `main` or attest a deployment itself. Weekly exploration and repair should use the
 same approved contracts and retained incident corpus. The shipped staging cron
@@ -264,6 +274,8 @@ and disabled state leave activation entirely explicit.
 The first manual Cloud execution on **2026-10-09** is recorded in the
 [evaluation evidence](../../evaluations/sdk-lifecycle-conformance/2026-10-09-cloud/).
 The automation remains disabled. Against pinned SDK main, the complete Cloud run
-failed the **proposed** persisted live-order predicate in replay and restart;
-the legacy transport smoke passed. This manual evaluation did not activate a
+failed the former **proposed** persisted live-order predicate in replay and restart;
+the legacy transport smoke passed. The retained trace shows ordered replay of
+the first out-of-order live gap. The old oracle did not check post-restart
+continuation replay. This manual evaluation did not activate a
 merge gate or establish cryptographic candidate deployment attestation.
