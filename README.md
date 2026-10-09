@@ -3,6 +3,32 @@
 Configuration and source history for Engel's OpenHands Automations.
 Repository: `enyst/automations`, branch `main`.
 
+## Mention Gazette moved to Cloud · October 9, 2026
+
+[Mention Gazette](sources/mention-gazette/) now runs in OpenHands Cloud. Its local
+definition is disabled and retained for history. The schedule is unchanged:
+Monday through Thursday at 09:00 Europe/Amsterdam.
+
+The Cloud bundle contains its renderer and updates only the Gazette HTML file
+through GitHub's Contents API. It uses the existing Cloud `REMOTE_GH` secret.
+No credential was copied from the Mac, and no local Git checkout is used.
+Only notifications from public repositories and supported public subject types
+are included. The automation does not mark notifications as read and uses no LLM.
+
+The first Cloud run published and verified 50 public notifications in
+[notebook commit bc94122](https://github.com/enyst/enyst.github.io/commit/bc94122ee7791c0aa5374dda60d9848da820e35f),
+then failed its completion callback. The callback authentication was corrected.
+Run `dc437ef8-ef97-45ae-99d7-f32f5435aeed` completed successfully before cutover.
+The public page was also checked. Eight synthetic tests passed.
+
+Cloud definition: `055b7b6a-5455-4243-b97f-843e16050ed3`, enabled.
+Local definition: `2794b815-8d12-437a-b3bd-68dff63891e1`, disabled.
+The [targeted Cloud export](cloud-automations/automation-055b7b6a-5455-4243-b97f-843e16050ed3/)
+contains the exact deployed bundle and verification receipt. The September global
+manifest and inventory below remain historical; this migration did not refresh
+unrelated automations. The local Git Sync definition now also records `enabled: false`.
+No general native Git Sync cycle was triggered.
+
 ## Directory ownership
 
 | Directory | Purpose | Direction |
@@ -117,7 +143,20 @@ and runs, then refresh the Cloud export. **Pushing this repository does not appl
 Cloud changes.** Exported files remain observations and backups; local native
 Git Sync continues to use only `local-automations/`.
 
-## Planned automations
+## Experimental and planned automations
+
+- [SDK external lifecycle conformance](sources/sdk-lifecycle-conformance/) —
+  deterministic external REST/WS verifier with a scripted provider, reconnect and
+  process-restart scenarios, a separate legacy transport smoke, and explicit
+  pass/fail/blocked evidence. The [definition](definitions/sdk-lifecycle-conformance.json)
+  is registered in Cloud but disabled; [registration/dispatch](scripts/deploy_sdk_conformance.py)
+  remains explicit. The [October 9 manual Cloud evaluation](evaluations/sdk-lifecycle-conformance/2026-10-09-cloud/)
+  retained the exact evidence: the pinned SDK candidate failed the proposed
+  live-order predicate in replay and restart, while legacy transport passed.
+  Cloud verification needs a separately isolated and authenticated candidate
+  deployment, externally reachable fixture, trusted restart control and durable
+  evidence export. Neither registration nor a Git push provisions a PR candidate.
+  No schedule activation or merge-admission publishing has been performed.
 
 - [Jev release security triage](plans/jev-release-security.md) — planned September
   19, 2026, starting with SDK release PRs. Move the current scan into OpenHands
