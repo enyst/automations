@@ -116,6 +116,29 @@ class OracleTests(unittest.TestCase):
         ):
             verifier.load_cloud_credentials({"restart_control_url": ""})
 
+    def test_missing_configured_restart_secret_does_not_block_replay(self):
+        class MissingSecret:
+            def open(self, request, timeout):
+                raise OSError("controlled unavailable capability")
+
+        with (
+            patch.dict(
+                os.environ,
+                {
+                    "SANDBOX_ID": "synthetic",
+                    "SESSION_API_KEY": "synthetic-session-key",
+                    "CONFORMANCE_CANDIDATE_SESSION_KEY": "synthetic-candidate-key",
+                    "CONFORMANCE_FIXTURE_CONTROL_KEY": "synthetic-fixture-key",
+                },
+                clear=True,
+            ),
+            patch("urllib.request.build_opener", return_value=MissingSecret()),
+        ):
+            verifier.load_cloud_credentials(
+                {"restart_control_url": "https://control.example.invalid/restart"}
+            )
+            self.assertNotIn("CONFORMANCE_RESTART_CONTROL_KEY", os.environ)
+
     def test_run_deadline_preserves_blocked_roster(self):
         async def slow(*args):
             await asyncio.sleep(0.2)
