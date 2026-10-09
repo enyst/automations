@@ -1,0 +1,25 @@
+{
+  "agent_profile_id": null,
+  "enabled": false,
+  "entrypoint": "python3 main.py",
+  "keep_alive": null,
+  "model": "deep-pro",
+  "name": "Issue Duplicate Checker - auto-close sweep",
+  "preset_metadata": null,
+  "prompt": null,
+  "setup_script_path": null,
+  "state": "INACTIVE",
+  "tarball_executables": [
+    "._."
+  ],
+  "tarball_source": {
+    "type": "internal",
+    "url": null
+  },
+  "timeout": 1500,
+  "trigger": {
+    "schedule": "0 9 * * *",
+    "timezone": "UTC",
+    "type": "cron"
+  }
+}

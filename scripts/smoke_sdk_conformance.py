@@ -20,7 +20,7 @@ import tempfile
 import threading
 import time
 
-SOURCE = Path(__file__).resolve().parents[1] / "sources/sdk-lifecycle-conformance"
+SOURCE = Path(__file__).resolve().parents[1] / "cloud-automations/automation-481e4de6-48b1-46b3-a99b-985e7b35ebd3/tarball"
 sys.path.insert(0, str(SOURCE))
 import fixture
 import main as verifier

@@ -1,0 +1,26 @@
+{
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "c710dbcc7993cfc1d60279d98d451463cd5f444ca0ded0d1014498940c13eab7"
+  },
+  "definition_sha256": "c6a97f59fd2dc46ef1df2c395f2e6ef33c30f75855210dac4702989d3bc66de3",
+  "directory": "automation-5aee9a93-51e5-4843-ad13-301a31e1397e",
+  "enabled": false,
+  "files": {
+    "README.md": "269f3e981dcc4ee8969811d03af7007df5e1c3f2c722065390c767f6a5468727",
+    "SECURITY_RUBRIC.md": "17f2a95c0580056be05ab3ca5832acd286e7b61d5984dbe008310db66562a6bf",
+    "audit.py": "be8cec1a90949c7db3d5ca901ea855265dc6f5d31ee20cfb8e987a6137609aa6",
+    "config.json": "1883971f235bd95234e50692e4907294f20439c0235c5cf15236d0d02481bfc6",
+    "description.py": "32bc269664a5bc01b96624f2c684432fb4c819d3b6382879f6079cab72ae190e",
+    "main.py": "ee1db3d4b4920b7bd884748b1ce00a45d753255659518b20d70a57c24cc87e93"
+  },
+  "id": "5aee9a93-51e5-4843-ad13-301a31e1397e",
+  "name": "Jev Fast Audit",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/17ed3fb6-a220-4415-97f6-0a693dc9fd60",
+  "updated_at": "2026-09-20T23:01:05.876344Z",
+  "updated_at_after_download": "2026-09-20T23:01:05.876344Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

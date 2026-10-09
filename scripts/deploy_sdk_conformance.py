@@ -22,7 +22,7 @@ import uuid
 from deploy_jev import Client, DeploymentError, OWNER, SENSITIVE
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "sources/sdk-lifecycle-conformance"
+SOURCE = ROOT / "cloud-automations/automation-481e4de6-48b1-46b3-a99b-985e7b35ebd3/tarball"
 DEFINITION = ROOT / "definitions/sdk-lifecycle-conformance.json"
 CLOUD = "https://app.all-hands.dev"
 API = "/api/automation/v1"
@@ -87,7 +87,7 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="command", required=True)
     for command in ("dry-run", "create"):
         item = sub.add_parser(command)
-        item.add_argument("--config", type=Path, default=SOURCE / "config.json")
+        item.add_argument("--config", type=Path, default=ROOT / "examples/sdk-lifecycle-conformance.json")
     sub.add_parser("preflight")
     for command in ("dispatch", "status"):
         item = sub.add_parser(command)

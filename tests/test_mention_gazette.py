@@ -9,7 +9,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-SOURCE = Path(__file__).resolve().parents[1] / "sources/mention-gazette"
+SOURCE = Path(__file__).resolve().parents[1] / "cloud-automations/automation-055b7b6a-5455-4243-b97f-843e16050ed3/tarball"
 spec = importlib.util.spec_from_file_location("render", SOURCE / "render.py")
 renderer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(renderer)

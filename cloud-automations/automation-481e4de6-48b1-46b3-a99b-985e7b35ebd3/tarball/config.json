@@ -1,0 +1,10 @@
+{
+  "candidate_url": "https://gregory-exotic-tampa-mart.trycloudflare.com",
+  "candidate_revision": "9f47d471ee6f91ba1d140d10d34f3b26d5ac2427",
+  "candidate_artifact_sha256": "5ef7a4c11ecd6c8a0a0f47e3bed0da5ce9fc0be05d5d5446d5a930c1d9440909",
+  "candidate_binding_receipt": "local-seatbelt-87c79cd2e3744995b356368cf4af7745",
+  "fixture_url": "https://org-expense-shirt-study.trycloudflare.com",
+  "restart_control_url": "https://partnerships-roy-faculty-medicare.trycloudflare.com/restart",
+  "working_dir": "/private/tmp/sdk-conformance-cloud-run-5aSGis/candidate/project",
+  "timeout_seconds": 60
+}

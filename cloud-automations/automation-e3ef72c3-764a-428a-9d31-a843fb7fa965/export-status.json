@@ -1,0 +1,22 @@
+{
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "de764d4f45f5c1439acde38f8c94c85ed5796e00a14bb7279ef4cbdea5f5a414"
+  },
+  "definition_sha256": "f7ae9db041b8f05864540e6483927179c76e7515f0c7b6c532b57ca6825de99a",
+  "directory": "automation-e3ef72c3-764a-428a-9d31-a843fb7fa965",
+  "enabled": false,
+  "files": {
+    "main.py": "7db4ada93b58b6db13f21f79e2a7f763a3cd78964425748df79dcd1d08f9b034",
+    "setup.sh": "b707aab4edef736041f63d7324b02001d4b6c9362ea69152611c61fb1a7431be"
+  },
+  "id": "e3ef72c3-764a-428a-9d31-a843fb7fa965",
+  "name": "Temporary transpile native-auth verification 2026-09-22",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/88a41df2-a8f4-44bc-b610-650198a1124b",
+  "updated_at": "2026-09-22T12:02:16.007525Z",
+  "updated_at_after_download": "2026-09-22T12:02:16.007525Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

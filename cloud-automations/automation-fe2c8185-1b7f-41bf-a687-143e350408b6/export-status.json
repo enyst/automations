@@ -1,0 +1,26 @@
+{
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "4fdbc17f211af11c7c87d286e138210a9ca31df328e0a9dd24b1c7e94268f1e8"
+  },
+  "definition_sha256": "9470de925bc6864cbe2907dca6e38f75e587a3bf96749ae9d13e71a604777d58",
+  "directory": "automation-fe2c8185-1b7f-41bf-a687-143e350408b6",
+  "enabled": true,
+  "files": {
+    "README.md": "ba188d3f7648db0e735e81dc7f81321c1974a6647a5f43f3b2ffcc3e09ebe601",
+    "daily.py": "1bde613840daae9f8d9a9c14e668099da57282cd43ba356f3579433960bc3f34",
+    "github_context.py": "49055bcb9e4f7e617620c5a41d69e5640a30079b850bb030f24cf12ce3935d4d",
+    "run.py": "12a3ef0aeeed82ffb4a12dccba3c275b54f4c8f325b4f251ded8bb08c79dcce2",
+    "setup.sh": "c4c6cd02f43395279bce3373155d8bf4b6424344094fb7f3e95dbb46bd9a0252",
+    "verification.py": "52372bfab08274e5a762efaf2904918f7c139e0b231fdf84718e9485de9b771f"
+  },
+  "id": "fe2c8185-1b7f-41bf-a687-143e350408b6",
+  "name": "Attention router - daily verification reports and weekly SDK PRs",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/5ada02d6-11d5-4869-a280-bb17aa31f9c7",
+  "updated_at": "2026-10-09T19:39:51.620909Z",
+  "updated_at_after_download": "2026-10-09T19:39:51.620909Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

@@ -5,7 +5,7 @@ import sys
 import unittest
 from unittest.mock import Mock, patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "sources/notebook-field-notes"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "cloud-automations/automation-623cc664-07c2-425e-bc99-8da3d43c4206/tarball"))
 from comments import InfoComments, COMMENT_TEXT, comment_marker, is_info_comment
 from transport import FieldNotesError
 

@@ -1,0 +1,22 @@
+{
+  "agent_profile_id": null,
+  "enabled": false,
+  "entrypoint": ".verifier-venv/bin/python main.py",
+  "keep_alive": true,
+  "model": "deep-pro",
+  "name": "SDK external lifecycle conformance",
+  "preset_metadata": null,
+  "prompt": null,
+  "setup_script_path": "setup.sh",
+  "state": "INACTIVE",
+  "tarball_source": {
+    "type": "internal",
+    "url": null
+  },
+  "timeout": 300,
+  "trigger": {
+    "schedule": "0 0 1 1 *",
+    "timezone": "UTC",
+    "type": "cron"
+  }
+}

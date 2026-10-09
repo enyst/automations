@@ -36,7 +36,7 @@ def archive(members=None):
 def definition(automation_id=ID):
     return {"id": automation_id, "user_id": ORG, "org_id": ORG,
             "name": "Attention", "trigger": {"type": "cron", "schedule": "0 9 * * 1"},
-            "entrypoint": "python main.py", "enabled": False,
+            "entrypoint": "python main.py", "enabled": False, "state": "INACTIVE",
             "tarball_path": "oh-internal://uploads/current",
             "updated_at": "2026-09-18T00:00:00Z", "prompt": "Review recent changes.",
             "agent_profile_id": "astra-review-auditor",
@@ -83,6 +83,8 @@ class ExportTests(unittest.TestCase):
             entry = output / ("automation-" + ID)
             metadata = json.loads((entry / "automation.yaml").read_text())
             self.assertFalse(metadata["enabled"])
+            self.assertEqual(metadata["state"], "INACTIVE")
+            self.assertEqual(metadata["agent_profile_id"], "astra-review-auditor")
             self.assertEqual(metadata["tarball_executables"], ["main.py"])
             self.assertNotIn("unknown_secret_payload", metadata)
             self.assertEqual((entry / "tarball/main.py").stat().st_mode & 0o777, 0o755)

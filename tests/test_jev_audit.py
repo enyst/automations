@@ -7,7 +7,7 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 
-SOURCE = Path(__file__).resolve().parents[1] / "sources/jev-fast-audit/audit.py"
+SOURCE = Path(__file__).resolve().parents[1] / "cloud-automations/automation-5aee9a93-51e5-4843-ad13-301a31e1397e/tarball/audit.py"
 SPEC = importlib.util.spec_from_file_location("jev_audit", SOURCE)
 audit = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(audit)

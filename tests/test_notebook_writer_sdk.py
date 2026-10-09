@@ -24,7 +24,7 @@ try:
 except ImportError:
     HAS_SDK = False
 
-SOURCE = Path(__file__).parents[1] / "sources/notebook-field-notes"
+SOURCE = Path(__file__).parents[1] / "cloud-automations/automation-623cc664-07c2-425e-bc99-8da3d43c4206/tarball"
 spec = importlib.util.spec_from_file_location("notebook_writer_sdk", SOURCE / "writer.py")
 w = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = w

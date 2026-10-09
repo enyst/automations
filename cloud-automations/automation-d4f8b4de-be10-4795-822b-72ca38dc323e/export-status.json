@@ -1,0 +1,27 @@
+{
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "191d2b819deab01d99001c638ba53fb9a68aec22d06264301a58af56770e8ab0"
+  },
+  "definition_sha256": "e43d6614dc549781b155678486c073a2e2a0d4853b9956d7f8a3c8a2b94236f9",
+  "directory": "automation-d4f8b4de-be10-4795-822b-72ca38dc323e",
+  "enabled": true,
+  "files": {
+    "finish_tool_hook.py": "2c40af043b94471b2711f92f959b0d55460b798a1add1cb5ed9a6def0eb4ff97",
+    "gate.py": "589251e9eed6f20c418caa2b9068873a8e6731090526119c29ef52f56961a492",
+    "github_identity.py": "0d8732d99e62ddd37149b756b6855ed3b2093a51ea0c2da908db2f049106bfa9",
+    "main.py": "73e492337e404abbbabbd824f4cd424326356fcded74bd534e430ef427ac07de",
+    "prompt.txt": "e68184193392c30d26fa3e96a9c9e722404804e1e4c34eb6c0347b6c76f9c7ce",
+    "repos_config.json": "4f038eaabeb846cecd185dc37308d65998bfb13a2930ec0b9ac9d1d19d66b8cc",
+    "setup.sh": "b707aab4edef736041f63d7324b02001d4b6c9362ea69152611c61fb1a7431be"
+  },
+  "id": "d4f8b4de-be10-4795-822b-72ca38dc323e",
+  "name": "Weekly re-vendor: smolpaws openhands-agent-server (SDK + server ports)",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/79ff0f6a-ae30-44e9-a2b0-2013153b5332",
+  "updated_at": "2026-10-09T19:40:21.704398Z",
+  "updated_at_after_download": "2026-10-09T19:40:21.704398Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

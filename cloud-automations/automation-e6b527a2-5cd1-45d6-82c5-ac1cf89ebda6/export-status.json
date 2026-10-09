@@ -1,0 +1,27 @@
+{
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "ebd49b8882e3331e2fdf97b7dac00c510e55db2c65acafd9d3390bf09e22f706"
+  },
+  "definition_sha256": "e6ded75a7149e776f8f90e44afaf7cb1d7305ebc63970f48efb3f5933ce329b1",
+  "directory": "automation-e6b527a2-5cd1-45d6-82c5-ac1cf89ebda6",
+  "enabled": true,
+  "files": {
+    "finish_tool_hook.py": "2c40af043b94471b2711f92f959b0d55460b798a1add1cb5ed9a6def0eb4ff97",
+    "gate.py": "589251e9eed6f20c418caa2b9068873a8e6731090526119c29ef52f56961a492",
+    "github_identity.py": "0d8732d99e62ddd37149b756b6855ed3b2093a51ea0c2da908db2f049106bfa9",
+    "main.py": "ce1f7b5082539db7a81b68bfb4f079073b2f60a775b49ec89d989b992b9904d9",
+    "prompt.txt": "8ba62e0929a396c5bd987ec1ae630530ca4750c1e80202075f6a66da3fa7a377",
+    "repos_config.json": "5961d9c98dc99ab753e724fcf8b4470b16776a20528354efa56bc2d6c9aaecbf",
+    "setup.sh": "b707aab4edef736041f63d7324b02001d4b6c9362ea69152611c61fb1a7431be"
+  },
+  "id": "e6b527a2-5cd1-45d6-82c5-ac1cf89ebda6",
+  "name": "Weekly upstream drift: openhands-agent (OpenHands SDK -> TypeScript)",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/2cc72377-f0f7-42be-9ada-ed861c0306b9",
+  "updated_at": "2026-10-09T19:40:21.647094Z",
+  "updated_at_after_download": "2026-10-09T19:40:21.647094Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

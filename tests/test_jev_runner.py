@@ -6,7 +6,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-SOURCE = Path(__file__).parents[1] / "sources/jev-fast-audit"
+SOURCE = Path(__file__).parents[1] / "cloud-automations/automation-5aee9a93-51e5-4843-ad13-301a31e1397e/tarball"
 sys.path.insert(0, str(SOURCE))
 spec = importlib.util.spec_from_file_location("jev_runner", SOURCE / "main.py")
 r = importlib.util.module_from_spec(spec)

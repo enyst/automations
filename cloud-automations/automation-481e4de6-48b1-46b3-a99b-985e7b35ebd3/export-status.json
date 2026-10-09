@@ -1,0 +1,26 @@
+{
+  "bundle": {
+    "kind": "cloud_download",
+    "sha256": "d07ea6b987e9f45b5537b6a59e649341ac9358caca30fadc4500f38715307525"
+  },
+  "definition_sha256": "6af187901dfb5c400d9da6dc1424e5386a163ee9c2fc59805565e616397e712c",
+  "directory": "automation-481e4de6-48b1-46b3-a99b-985e7b35ebd3",
+  "enabled": false,
+  "files": {
+    "config.json": "e6a0717fde7dbff1165a608fd7f4019c1303e473339bcc28ca9e4e3cd9d67e95",
+    "contracts.json": "b7cd01791c01b5f1ff16b7a382479585d8da1496325278e8591b36f5fca83288",
+    "fixture.py": "caeb82de44a8e1019c4478f199ffdbd72fb73bb657b87bd1ada45b45cfcf62b9",
+    "main.py": "18c38f569556631fc1b050380dca5cc8918d0a94cbd669b1aa996058c18acb0e",
+    "requirements.txt": "9ec828179a682425537349fb41440b48a47b1ef006b7b3e1d1542566d3ec6943",
+    "setup.sh": "d25b3e7f92a499f62603dcca8257103e812eaf730badc27cc2e3d6187d2469d8"
+  },
+  "id": "481e4de6-48b1-46b3-a99b-985e7b35ebd3",
+  "name": "SDK external lifecycle conformance",
+  "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
+  "status": "complete",
+  "tarball_path": "oh-internal://uploads/48f2eeac-24aa-470e-bc85-03663f5db60a",
+  "updated_at": "2026-10-09T03:13:49.689959Z",
+  "updated_at_after_download": "2026-10-09T03:13:49.689959Z",
+  "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+}

@@ -1,0 +1,22 @@
+{
+  "agent_profile_id": null,
+  "enabled": false,
+  "entrypoint": ".venv/bin/python main.py --publish",
+  "keep_alive": false,
+  "model": "gpt-6-astra-eval",
+  "name": "Notebook Field Notes",
+  "preset_metadata": null,
+  "prompt": null,
+  "setup_script_path": "setup.sh",
+  "state": "INACTIVE",
+  "tarball_source": {
+    "type": "internal",
+    "url": null
+  },
+  "timeout": 1800,
+  "trigger": {
+    "schedule": "15 * * * *",
+    "timezone": "UTC",
+    "type": "cron"
+  }
+}

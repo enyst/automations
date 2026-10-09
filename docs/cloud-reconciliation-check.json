@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-09",
+  "baseline_exported_at": "2026-10-09T19:40:53.961523+00:00",
+  "verified_again_at": "2026-10-09T19:46:08.141256+00:00",
+  "automations": 13,
+  "enabled": 6,
+  "runtime_files": 67,
+  "ids_unchanged": true,
+  "settings_unchanged": true,
+  "runtime_hashes_unchanged": true,
+  "runtime_copy": "cloud-automations/automation-<UUID>/tarball",
+  "removed_duplicate_trees": [
+    "mention-gazette",
+    "jev-fast-audit",
+    "notebook-field-notes",
+    "sdk-lifecycle-conformance"
+  ],
+  "tests": {
+    "passed": 233,
+    "skipped": 4,
+    "skip_reason": "Optional OpenHands SDK integration dependency unavailable"
+  },
+  "cloud_git_sync": {
+    "enabled": false,
+    "repository_check": "passed using existing Cloud REMOTE_GH",
+    "credential_config_write": "HTTP 503",
+    "config_without_credential": "succeeded",
+    "sync_cycles_run": 0,
+    "server_cause": "unconfirmed; gateway returned generic HTML"
+  }
+}

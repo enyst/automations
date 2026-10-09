@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import Mock
 import base64
 
-SOURCE = Path(__file__).resolve().parents[1] / "sources/notebook-field-notes"
+SOURCE = Path(__file__).resolve().parents[1] / "cloud-automations/automation-623cc664-07c2-425e-bc99-8da3d43c4206/tarball"
 sys.path.insert(0, str(SOURCE))
 from transport import API, FieldNotesError, GitState, Publisher
 

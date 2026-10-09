@@ -14,7 +14,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(ROOT / 'sources/jev-fast-audit'))
+sys.path.insert(0, str(ROOT / 'cloud-automations/automation-5aee9a93-51e5-4843-ad13-301a31e1397e/tarball'))
 # Freeze the pre-experiment code and validator even after live code changes.
 BASELINE_COMMIT = "fe5a5d32af5f343f9204b173ee5f1966db2be8bf"
 BASELINE_SOURCE = (HERE / "baseline_audit.py").read_bytes()
