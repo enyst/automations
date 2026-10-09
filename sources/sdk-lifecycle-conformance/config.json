@@ -1,0 +1,10 @@
+{
+  "candidate_url": "",
+  "candidate_revision": "",
+  "candidate_artifact_sha256": "",
+  "candidate_binding_receipt": "",
+  "fixture_url": "",
+  "restart_control_url": "",
+  "working_dir": "/workspace/conformance",
+  "timeout_seconds": 45
+}

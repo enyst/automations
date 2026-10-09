@@ -1,0 +1,28 @@
+name: SDK lifecycle verifier controls
+on:
+  pull_request:
+    paths:
+      - 'sources/sdk-lifecycle-conformance/**'
+      - 'tests/test_sdk_conformance*.py'
+      - 'scripts/deploy_sdk_conformance.py'
+      - '.github/workflows/sdk-lifecycle-conformance-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oracle-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install verifier's pinned WebSocket dependency
+        run: python -m pip install -r sources/sdk-lifecycle-conformance/requirements.txt
+      - name: Qualify with actual HTTP and WebSocket reference peers
+        run: python -m unittest discover -s tests -p 'test_sdk_conformance*.py' -v
+      - name: Verify inactive Cloud package
+        run: python scripts/deploy_sdk_conformance.py dry-run
