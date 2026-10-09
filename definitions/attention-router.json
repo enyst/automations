@@ -1,0 +1,13 @@
+{
+  "name": "Attention router - daily verification reports and weekly SDK PRs",
+  "trigger": {
+    "type": "cron",
+    "schedule": "0 9 * * 1-5",
+    "timezone": "Europe/Amsterdam"
+  },
+  "entrypoint": ".venv/bin/python daily.py",
+  "setup_script_path": "setup.sh",
+  "model": "deep-pro",
+  "timeout": 1800,
+  "keep_alive": false
+}

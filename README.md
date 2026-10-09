@@ -266,3 +266,13 @@ automation. The nine-file runtime allowlist includes `descriptions.py` and
 After an explicit deployment, scripts/export_cloud.py refreshes the
 observed definition and exact runtime source under cloud-automations/.
 Pushing this repository alone does not update Cloud.
+
+## Weekday verification attention
+
+[`sources/attention-router/`](sources/attention-router/) adds daily priority tracking
+for verify-openhands map-maintenance reports and green-CI-gated all-hands-bot
+review requests. The broad SDK scan stays weekly. The definition is
+[`definitions/attention-router.json`](definitions/attention-router.json).
+Deployed and read-back verified on October 9, 2026: weekdays at 09:00
+Europe/Amsterdam. The first manual Cloud run completed and published four reports.
+Future source changes still require explicit deployment.
