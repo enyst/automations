@@ -84,7 +84,10 @@ def fire_callback(status="COMPLETED", error=None):
     body = {"status": status, "run_id": os.environ.get("AUTOMATION_RUN_ID", "")}
     if error:
         body["error"] = error
-    API(CLOUD, os.environ.get("AUTOMATION_CALLBACK_API_KEY", "")).request(parsed.path, "POST", body)
+    token = os.environ.get("AUTOMATION_CALLBACK_API_KEY") or os.environ.get("OPENHANDS_API_KEY", "")
+    if not token:
+        raise GazetteError("callback_credential_missing")
+    API(CLOUD, token).request(parsed.path, "POST", body)
 
 
 def notifications(gh):

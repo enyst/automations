@@ -7,6 +7,7 @@ import io
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
 
 SOURCE = Path(__file__).resolve().parents[1] / "sources/mention-gazette"
 spec = importlib.util.spec_from_file_location("render", SOURCE / "render.py")
@@ -50,6 +51,14 @@ class FakeGitHub:
 
 
 class GazetteTests(unittest.TestCase):
+    def test_cloud_callback_uses_available_runtime_credential(self):
+        env = {"AUTOMATION_CALLBACK_URL": "https://app.all-hands.dev/api/automation/v1/runs/1234/complete",
+               "AUTOMATION_RUN_ID": "1234", "OPENHANDS_API_KEY": "synthetic-runtime-credential"}
+        with patch.dict(gazette.os.environ, env, clear=True), patch.object(gazette, "API") as api:
+            gazette.fire_callback()
+            api.assert_called_once_with(gazette.CLOUD, "synthetic-runtime-credential")
+            self.assertEqual(api.return_value.request.call_args.args[2]["status"], "COMPLETED")
+
     def test_full_run_publishes_only_public_escaped_data(self):
         gh = FakeGitHub([notification(title='<script>alert("x")</script>'),
                          notification(True, "PRIVATE TITLE"), notification(None, "UNKNOWN"),
