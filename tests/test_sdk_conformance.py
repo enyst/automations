@@ -101,6 +101,10 @@ class OracleTests(unittest.TestCase):
                 )
 
     def test_cloud_does_not_demand_unused_restart_secret(self):
+        class NoNetwork:
+            def open(self, request, timeout):
+                raise AssertionError("unexpected secret fetch")
+
         with (
             patch.dict(
                 os.environ,
@@ -112,7 +116,7 @@ class OracleTests(unittest.TestCase):
                 },
                 clear=True,
             ),
-            patch("urllib.request.build_opener", side_effect=AssertionError("unexpected fetch")),
+            patch("urllib.request.build_opener", return_value=NoNetwork()),
         ):
             verifier.load_cloud_credentials({"restart_control_url": ""})
 
