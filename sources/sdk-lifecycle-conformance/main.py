@@ -103,9 +103,9 @@ class HTTP:
             raise Violation("invalid_json_response") from None
 
 
-def bundle_digest():
+def bundle_digest(files=BUNDLE_FILES):
     digest = hashlib.sha256()
-    for name in BUNDLE_FILES:
+    for name in files:
         data = (ROOT / name).read_bytes()
         digest.update(name.encode() + b"\0" + len(data).to_bytes(8, "big") + data)
     return digest.hexdigest()
@@ -473,14 +473,14 @@ def validate_config(config):
         raise Blocked("invalid_candidate_working_dir")
 
 
-def run(config, restart=None):
+def run(config, restart=None, bundle_files=BUNDLE_FILES):
     global OBSERVATION_BYTES, VERIFIER_DEADLINE
     OBSERVATIONS.clear()
     OBSERVATION_BYTES = 0
     VERIFIER_DEADLINE = time.monotonic() + VERIFIER_BUDGET_SECONDS
     contract = json.loads((ROOT / "contracts.json").read_text())
     evidence = {"schema_version": 1, "subject": {"revision": config.get("candidate_revision"), "artifact_sha256": config.get("candidate_artifact_sha256")},
-                "bundle": {"id": contract["id"], "sha256": bundle_digest()},
+                "bundle": {"id": contract["id"], "sha256": bundle_digest(bundle_files)},
                 "configuration_sha256": hashlib.sha256(json.dumps(config, sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
                 "binding_receipt": config.get("candidate_binding_receipt"),
                 "scenarios": [{"id": item["id"], "status": "blocked", "details": {"code": "prerequisite_not_reached"}} for item in contract["scenarios"]]}

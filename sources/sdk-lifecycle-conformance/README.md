@@ -48,7 +48,9 @@ The account key injected into the Cloud runner makes this condition concrete;
 placing the verifier in another repository or sandbox does not enforce it.
 
 `bundle.sha256` hashes the named verifier/peer/contract/dependency/setup files
-using filename, length and bytes. `configuration_sha256` hashes the effective
+using filename, length and bytes. The co-located experimental mode also includes
+its preparer, setup script, and launcher in a distinct bundle digest.
+`configuration_sha256` hashes the effective
 input. The subject contains an exact source revision and artifact SHA256 supplied
 by a trusted coordinator; neither endpoint auth nor `/server_info` establishes
 that the deployed artifact matches that subject. A receipt string is an evidence
@@ -111,7 +113,7 @@ Cloud can upload a custom tarball, validate and register its definition, manuall
 dispatch it, and expose its run history. Each automation run gets a fresh sandbox.
 This is suitable for the **trusted verifier**. Cloud injects the user's
 `OPENHANDS_API_KEY` and sandbox `SESSION_API_KEY` into the automation runtime.
-The candidate must therefore run in a **different isolated environment** that
+For independent admission, the candidate must run in a **different isolated environment** that
 cannot read the verifier filesystem/environment, its Cloud credentials, GitHub
 credentials, control endpoints or artifact store.
 
@@ -125,7 +127,7 @@ provide the target URL and run-scoped target key. Same-host subprocesses, a shar
 Docker socket, or a separate conversation in the verifier's sandbox do not create
 that isolation boundary.
 
-The candidate's LLM `base_url` must reach an **externally reachable scripted peer**.
+In external mode, the candidate's LLM `base_url` must reach an **externally reachable scripted peer**.
 `127.0.0.1` refers to the candidate's host, not the Cloud verifier. `fixture.py`
 can be hosted behind a dedicated TLS reverse proxy, or a trusted coordinator can
 bridge the fixture service. Give the candidate access only to `/v1/*`; protect
@@ -279,3 +281,43 @@ the legacy transport smoke passed. The retained trace shows ordered replay of
 the first out-of-order live gap. The old oracle did not check post-restart
 continuation replay. This manual evaluation did not activate a
 merge gate or establish cryptographic candidate deployment attestation.
+
+## Co-located experimental positive control
+
+The separate experimental definition is disabled and has an inert cron.
+Its `setup_experimental.sh` fetches the exact SDK commit
+`9f47d471ee6f91ba1d140d10d34f3b26d5ac2427` from the public repository.
+It checks the Git archive SHA256
+`5ef7a4c11ecd6c8a0a0f47e3bed0da5ce9fc0be05d5d5446d5a930c1d9440909`
+before it installs the Agent Server with the pinned lockfile. The setup also
+installs the verifier's pinned WebSocket dependency. The 1800-second Cloud job
+timeout covers setup; the verifier keeps its separate 200-second run budget.
+
+The setup runs Git, pip, uv, and build hooks with an explicit environment. It
+keeps network proxy and CA settings but omits Cloud account, session, and
+callback credentials. A setup failure stops the Cloud job before the entrypoint
+can write `evidence.json`. Inspect the Cloud setup log and treat that run as
+operationally blocked, not as a verifier verdict.
+
+`self_contained.py` rechecks the source digest and verifies that all four
+OpenHands imports resolve inside that checkout. It starts the Agent Server and
+scripted provider on loopback with synthetic keys. It kills and restarts the
+Agent Server process while preserving storage. The candidate child gets an
+explicit environment without account, GitHub, or provider credentials.
+
+The evidence marks `execution_mode: co_located_positive_control`. It contains
+the full nonsecret effective configuration, its canonical hash, the pinned
+Git source archive verification, and a distinct digest that covers the experimental setup
+and launcher. The run directory and server log remain in the kept Cloud sandbox
+for review until its runtime TTL expires. The launcher writes `evidence.json`
+before it sends the completion callback.
+
+This mode checks a trusted pinned SDK build in a context separate from agents
+that edit code repositories. Its candidate and verifier share one Cloud sandbox.
+The child environment limits accidental credential delivery, but it is not a
+security boundary against malicious candidate code. Treat its result as an
+advisory positive control, not an independent admission verdict or merge gate.
+The subject hash attests the Git source archive, not the installed executable
+or its dependencies.
+The original external-mode definition, API, and historical evidence remain
+available for an independent run later.

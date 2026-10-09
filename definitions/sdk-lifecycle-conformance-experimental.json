@@ -1,0 +1,9 @@
+{
+  "name": "SDK lifecycle conformance experimental",
+  "trigger": {"type": "cron", "schedule": "0 0 1 1 *", "timezone": "UTC"},
+  "entrypoint": ".verifier-venv/bin/python self_contained.py",
+  "setup_script_path": "setup_experimental.sh",
+  "timeout": 1800,
+  "keep_alive": true,
+  "enabled": false
+}
