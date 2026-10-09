@@ -23,6 +23,10 @@ MAX_BODY = 4 * 1024 * 1024
 BUNDLE_FILES = ("main.py", "fixture.py", "contracts.json", "requirements.txt", "setup.sh")
 OBSERVATIONS = []
 OBSERVATION_BYTES = 0
+# Leave headroom for setup, evidence writing, and callback inside Cloud's
+# 300-second job timeout.
+VERIFIER_BUDGET_SECONDS = 200
+VERIFIER_DEADLINE = None
 
 
 class Blocked(Exception):
@@ -31,6 +35,16 @@ class Blocked(Exception):
 
 class Violation(Exception):
     pass
+
+
+def bounded_timeout(seconds):
+    """Limit blocking operations to the remaining invocation budget."""
+    if VERIFIER_DEADLINE is None:
+        return seconds
+    remaining = VERIFIER_DEADLINE - time.monotonic()
+    if remaining <= 0:
+        raise Blocked("verifier_deadline_exceeded")
+    return max(0.01, min(seconds, remaining))
 
 
 def require(condition, code):
@@ -69,7 +83,7 @@ class HTTP:
         data = json.dumps(body, allow_nan=False).encode() if body is not None else None
         request = urllib.request.Request(self.origin + path, data=data, headers=headers, method=method)
         try:
-            with self.opener.open(request, timeout=self.timeout) as response:
+            with self.opener.open(request, timeout=bounded_timeout(self.timeout)) as response:
                 status = response.status
                 raw = response.read(MAX_BODY + 1)
         except urllib.error.HTTPError as exc:
@@ -80,6 +94,7 @@ class HTTP:
             raise Violation("http_unexpected_" + str(status)) from None
         except (OSError, TimeoutError, urllib.error.URLError):
             raise Blocked("endpoint_unavailable") from None
+        bounded_timeout(0.01)
         require(status == expected, "unexpected_http_status")
         require(len(raw) <= MAX_BODY, "response_budget_exceeded")
         try:
@@ -96,14 +111,21 @@ def bundle_digest():
     return digest.hexdigest()
 
 
-def history(http, identifier):
+def history(http, identifier, missing_code="observed_conversation_missing"):
     rows, seen = [], set()
     page_id = None
     for _ in range(20):
         path = f"/api/conversations/{identifier}/events/search?limit=100"
         if page_id:
             path += "&page_id=" + urllib.parse.quote(page_id, safe="")
-        page = http.request("GET", path)
+        try:
+            page = http.request("GET", path)
+        except Blocked as exc:
+            # The conversation was already created and observed: a later 404
+            # is a lost conversation, not an unavailable prerequisite.
+            if str(exc) == "http_unavailable_404":
+                raise Violation(missing_code) from None
+            raise
         require(isinstance(page, dict) and isinstance(page.get("items"), list), "invalid_history_page")
         rows.extend(page["items"])
         page_id = page.get("next_page_id")
@@ -121,6 +143,8 @@ def assert_history(frames, rows):
     wire = {f["event"]["id"]: f["event"] for f in frames}
     rest = {row["id"]: row for row in rows}
     require(wire == rest, "durable_history_payload_mismatch")
+    require([f["event"]["id"] for f in frames] == [row["id"] for row in rows],
+            "durable_history_order_mismatch")
 
 
 async def connect(config, identifier, path):
@@ -138,7 +162,7 @@ async def connect(config, identifier, path):
         def process_redirect(self, exc):
             return exc
     try:
-        return await ExactOriginConnection(url, additional_headers=headers, open_timeout=10, close_timeout=2, max_size=MAX_BODY, max_queue=32, proxy=None)
+        return await ExactOriginConnection(url, additional_headers=headers, open_timeout=bounded_timeout(10), close_timeout=2, max_size=MAX_BODY, max_queue=32, proxy=None)
     except Exception:
         raise Blocked("websocket_unavailable") from None
 
@@ -146,8 +170,10 @@ async def connect(config, identifier, path):
 async def recv(ws, timeout):
     global OBSERVATION_BYTES
     try:
-        data = await asyncio.wait_for(ws.recv(), timeout=timeout)
+        data = await asyncio.wait_for(ws.recv(), timeout=bounded_timeout(timeout))
     except asyncio.TimeoutError:
+        if VERIFIER_DEADLINE is not None and time.monotonic() >= VERIFIER_DEADLINE:
+            raise Blocked("verifier_deadline_exceeded") from None
         raise Violation("required_ws_frame_timeout") from None
     except Exception:
         raise Violation("unexpected_ws_disconnect") from None
@@ -203,6 +229,10 @@ async def live_message(config, http, identifier, ws, text, previous):
     for index in range(len(rows) - before):
         frame = await next_kind(ws, "durable", config["timeout_seconds"])
         frames.append(frame)
+    # The first REST snapshot can race a subsequent committed state event.
+    # Do not misattribute that unstable baseline to replay.
+    if history(http, identifier) != rows:
+        raise Blocked("live_history_changed_during_collection")
     for index, frame in enumerate(frames):
         require(frame.get("seq") == previous + index + 1, "live_cursor_gap_or_duplicate:expected=" + str(previous + index + 1) + ":actual=" + str(frame.get("seq")))
     require(sum(f.get("event", {}).get("source") == "user" and text in json.dumps(f["event"]) for f in frames) == 1, "live_message_not_persisted_once")
@@ -301,7 +331,8 @@ async def lifecycle(config, http, fixture, evidence, restart=None):
                 if time.monotonic() >= deadline:
                     raise Blocked("restart_endpoint_unavailable") from None
                 await asyncio.sleep(0.2)
-        require(history(http, identifier) == rows, "restart_rest_history_changed")
+        require(history(http, identifier, missing_code="restart_conversation_lost") == rows,
+                "restart_rest_history_changed")
         ws, restored, upper = await replay(config, identifier, -1)
         try:
             require(restored == frames, "restart_durable_history_changed")
@@ -371,9 +402,10 @@ def validate_config(config):
 
 
 def run(config, restart=None):
-    global OBSERVATION_BYTES
+    global OBSERVATION_BYTES, VERIFIER_DEADLINE
     OBSERVATIONS.clear()
     OBSERVATION_BYTES = 0
+    VERIFIER_DEADLINE = time.monotonic() + VERIFIER_BUDGET_SECONDS
     contract = json.loads((ROOT / "contracts.json").read_text())
     evidence = {"schema_version": 1, "subject": {"revision": config.get("candidate_revision"), "artifact_sha256": config.get("candidate_artifact_sha256")},
                 "bundle": {"id": contract["id"], "sha256": bundle_digest()},
@@ -382,7 +414,7 @@ def run(config, restart=None):
                 "scenarios": [{"id": item["id"], "status": "blocked", "details": {"code": "prerequisite_not_reached"}} for item in contract["scenarios"]]}
     try:
         validate_config(config)
-        load_cloud_credentials()
+        load_cloud_credentials(config)
         http = HTTP(config["candidate_url"], "X-Session-API-Key", os.environ.get("CONFORMANCE_CANDIDATE_SESSION_KEY", ""))
         fixture = HTTP(config["fixture_url"], "X-Fixture-Control-Key", os.environ.get("CONFORMANCE_FIXTURE_CONTROL_KEY", ""))
         if restart is None and config.get("restart_control_url"):
@@ -391,13 +423,24 @@ def run(config, restart=None):
             origin = urllib.parse.urlunsplit((parts.scheme, parts.netloc, "", "", ""))
             control = HTTP(origin, "X-Restart-Control-Key", os.environ.get("CONFORMANCE_RESTART_CONTROL_KEY", ""))
             restart = lambda: control.request("POST", parts.path, {"revision": config["candidate_revision"], "artifact_sha256": config["candidate_artifact_sha256"]})
-        asyncio.run(lifecycle(config, http, fixture, evidence, restart))
+        asyncio.run(asyncio.wait_for(
+            lifecycle(config, http, fixture, evidence, restart),
+            timeout=bounded_timeout(VERIFIER_BUDGET_SECONDS),
+        ))
+    except (asyncio.TimeoutError, TimeoutError):
+        for result in evidence["scenarios"]:
+            if result["status"] == "blocked":
+                result["details"] = {"code": "verifier_deadline_exceeded"}
     except Blocked as exc:
         for result in evidence["scenarios"]:
-            result["details"] = {"code": str(exc)}
+            if result["status"] == "blocked":
+                result["details"] = {"code": str(exc)}
     except Exception:
         for result in evidence["scenarios"]:
-            result["details"] = {"code": "unexpected_harness_error"}
+            if result["status"] == "blocked":
+                result["details"] = {"code": "unexpected_harness_error"}
+    finally:
+        VERIFIER_DEADLINE = None
     statuses = {result["status"] for result in evidence["scenarios"]}
     evidence["verdict"] = "fail" if "fail" in statuses else "pass" if statuses == {"pass"} else "blocked"
     evidence["identity_source"] = "trusted coordinator input; not candidate self-report"
@@ -405,8 +448,8 @@ def run(config, restart=None):
     return redact(evidence)
 
 
-def load_cloud_credentials():
-    """Only three named run/fixture capabilities; never enumerate org secrets."""
+def load_cloud_credentials(config):
+    """Fetch only the credentials required by the configured scenarios."""
     sandbox = os.environ.get("SANDBOX_ID", "")
     if not sandbox:
         return  # Development harness supplies explicit synthetic env keys.
@@ -416,13 +459,16 @@ def load_cloud_credentials():
     if not session:
         raise Blocked("cloud_secret_context_missing")
     opener = urllib.request.build_opener(NoRedirect())
-    for name in ("CONFORMANCE_CANDIDATE_SESSION_KEY", "CONFORMANCE_FIXTURE_CONTROL_KEY", "CONFORMANCE_RESTART_CONTROL_KEY"):
+    names = ["CONFORMANCE_CANDIDATE_SESSION_KEY", "CONFORMANCE_FIXTURE_CONTROL_KEY"]
+    if config.get("restart_control_url"):
+        names.append("CONFORMANCE_RESTART_CONTROL_KEY")
+    for name in names:
         if os.environ.get(name):
             continue
         request = urllib.request.Request("https://app.all-hands.dev/api/v1/sandboxes/" + sandbox + "/settings/secrets/" + name,
                                          headers={"X-Session-API-Key": session})
         try:
-            with opener.open(request, timeout=20) as response:
+            with opener.open(request, timeout=bounded_timeout(20)) as response:
                 data = response.read(16385)
             if not data or len(data) > 16384:
                 raise Blocked("run_capability_unavailable")
@@ -472,11 +518,14 @@ def main():
     args.evidence.write_text(json.dumps(evidence, indent=2) + "\n")
     # Safe summary excludes candidate events and every credential.
     print(json.dumps({key: evidence[key] for key in ("subject", "bundle", "scenarios", "verdict")}))
+    # Callback delivery is independent of the computed verifier verdict.
+    # An unavailable callback must not rewrite fail into blocked (or vice versa).
     try:
         callback(evidence)
-    except Blocked:
-        print(json.dumps({"callback": "blocked"}))
-        return 2
+    except (Blocked, Violation) as exc:
+        print(json.dumps({"callback": "unavailable", "code": str(exc)}))
+    except Exception:
+        print(json.dumps({"callback": "unavailable", "code": "unexpected_callback_error"}))
     return {"pass": 0, "fail": 1, "blocked": 2}[evidence["verdict"]]
 
 
