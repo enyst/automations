@@ -48,9 +48,9 @@ class ReferenceServer(ThreadingHTTPServer):
     daemon_threads = True
     allow_reuse_address = True
 
-    def __init__(self, address, storage, fixture_url, invert=False):
+    def __init__(self, address, storage, fixture_url, invert=False, lost=False):
         super().__init__(address, Handler)
-        self.storage, self.fixture_url, self.invert = storage, fixture_url, invert
+        self.storage, self.fixture_url, self.invert, self.lost = storage, fixture_url, invert, lost
         self.events = json.loads(storage.read_text()) if storage.exists() else []
         self.lock = threading.RLock()
         self.subscribers = []
@@ -115,6 +115,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.websocket()
         if self.path == "/ready":
             return self.reply(200, {"status": "ready"})
+        if self.server.lost and self.path.startswith("/api/conversations/"):
+            return self.reply(404, {})
         if "/events/search" in self.path:
             return self.reply(200, {"items": list(self.server.events), "next_page_id": None})
         if self.path.startswith("/api/conversations/"):
@@ -164,7 +166,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 class ReferenceQualification(unittest.TestCase):
-    def qualify(self, invert):
+    def qualify(self, invert, lose_on_restart=False):
         with tempfile.TemporaryDirectory() as work:
             peer = fixture.FixtureServer(("127.0.0.1", 0))
             threading.Thread(target=peer.serve_forever, daemon=True).start()
@@ -176,7 +178,9 @@ class ReferenceQualification(unittest.TestCase):
             def restart():
                 servers[-1].shutdown()
                 servers[-1].server_close()
-                replacement = ReferenceServer(("127.0.0.1", target_port), Path(work) / "history.json", peer_url, invert)
+                if lose_on_restart:
+                    (Path(work) / "history.json").unlink(missing_ok=True)
+                replacement = ReferenceServer(("127.0.0.1", target_port), Path(work) / "history.json", peer_url, invert, lost=lose_on_restart)
                 servers.append(replacement)
                 threading.Thread(target=replacement.serve_forever, daemon=True).start()
                 return {"restarted": True, "storage_preserved": True}
@@ -197,6 +201,14 @@ class ReferenceQualification(unittest.TestCase):
         result = self.qualify(False)
         self.assertEqual(result["verdict"], "pass", result["scenarios"])
         self.assertTrue(all(s["status"] == "pass" for s in result["scenarios"]))
+
+    def test_restart_lost_conversation_is_failed_observation(self):
+        result = self.qualify(False, lose_on_restart=True)
+        self.assertEqual(result["verdict"], "fail", result["scenarios"])
+        self.assertEqual(result["scenarios"][0]["status"], "pass")
+        self.assertEqual(result["scenarios"][1]["status"], "fail")
+        self.assertEqual(result["scenarios"][1]["details"]["code"], "restart_conversation_lost")
+        self.assertEqual(result["scenarios"][2]["status"], "fail")
 
     def test_live_inversion_negative_reference(self):
         result = self.qualify(True)
