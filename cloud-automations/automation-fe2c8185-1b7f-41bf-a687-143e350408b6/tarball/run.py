@@ -439,9 +439,9 @@ def resolve_repos():
     return list(DEFAULT_REPOS)
 
 
-def main() -> int:
+def main(score_fit=None) -> int:
     repos = resolve_repos()
-    score_fit = make_scorer()  # Resolves Cloud secrets before any GitHub request.
+    score_fit = score_fit or make_scorer()  # Resolves Cloud secrets before GitHub reads.
     if not GITHUB_TOKEN:
         raise RuntimeError("GITHUB_TOKEN is required for complete GitHub collection")
     if (not DRY_RUN or VALIDATE_ONLY) and not INGEST_TOKEN:

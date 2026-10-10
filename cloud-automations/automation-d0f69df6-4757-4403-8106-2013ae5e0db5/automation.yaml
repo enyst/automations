@@ -1,4 +1,5 @@
 {
+  "agent_profile_id": null,
   "enabled": true,
   "entrypoint": ".venv/bin/python main.py",
   "keep_alive": null,
@@ -7,6 +8,7 @@
   "preset_metadata": null,
   "prompt": null,
   "setup_script_path": "setup.sh",
+  "state": "ACTIVE",
   "tarball_executables": [
     "._.",
     "._setup.sh",

@@ -3,10 +3,9 @@
     "kind": "cloud_download",
     "sha256": "5f86a08f194503d97d0367f71a04ca7f358bf3bbce6d3c272277256b64850883"
   },
-  "definition_sha256": "90593a574693284459ea869c152e6f899659cd4cd02f3a8ba91029909372a49c",
+  "definition_sha256": "c4d7984f8b06a49d6a48ead7468196d0c6c8114c5dca1952c20db2b645200676",
   "directory": "automation-055b7b6a-5455-4243-b97f-843e16050ed3",
   "enabled": true,
-  "exported_at": "2026-10-09T18:58:30.410342+00:00",
   "files": {
     "README.md": "9c9d4f90bdfdce6f429156a3688de88c9db9f67a326284cec86352133550aed1",
     "main.py": "1611398a85e3a359aa7f502870fa0affcd2088d2238c648ab1c87cb971ad63af",
@@ -15,8 +14,10 @@
   "id": "055b7b6a-5455-4243-b97f-843e16050ed3",
   "name": "Mention Gazette",
   "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "preserved_existing": false,
   "status": "complete",
   "tarball_path": "oh-internal://uploads/944f30a5-1b26-4b97-9f69-fd3552ff0713",
-  "updated_at": "2026-10-09T18:58:18.448626Z",
+  "updated_at": "2026-10-09T19:40:21.704398Z",
+  "updated_at_after_download": "2026-10-09T19:40:21.704398Z",
   "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
 }

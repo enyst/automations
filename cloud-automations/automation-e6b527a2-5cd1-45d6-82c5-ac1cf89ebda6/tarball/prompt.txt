@@ -23,3 +23,10 @@ Operating constraints (these restate the runbook; the runbook wins on details):
 - No secrets in commits or PR text. No model names in commit messages.
 
 Report at the end: the interval chosen (or why none), the PR URL, disposition counts, and anything a human must decide.
+
+GitHub identity and repository safety (required for this run):
+- GH_TOKEN and GITHUB_TOKEN are explicitly bound to the verified smolpaws bot credential. Before any GitHub write, confirm `gh api user --jq .login` returns exactly `smolpaws`; stop if it does not. Never fall back to another account/token.
+- Run `gh auth setup-git` in this isolated sandbox before git pushes. Keep origin URLs credential-free and pointed at the canonical smolpaws repository. Do not print tokens or embed them in Git URLs.
+- The canonical repositories are smolpaws/openhands-agent and smolpaws/smolpaws. enyst forks are review mirrors, not the target. Any old runbook checkout-name mention does not change this.
+- Keep the configured native DeepSeek Pro model for this run. Do not switch profiles to work around authentication.
+- Do not ping or tag specific people in PRs or issues. No merges, no pushes to main.

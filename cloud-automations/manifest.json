@@ -3,20 +3,91 @@
     {
       "bundle": {
         "kind": "cloud_download",
-        "sha256": "24cf3d28ba8eb9d89698be133568fd5473c90a35d0711909ac675a8cede6114b"
+        "sha256": "5f86a08f194503d97d0367f71a04ca7f358bf3bbce6d3c272277256b64850883"
       },
-      "definition_sha256": "a2ce905f9ff364d8714db87e1b82565768161aa324b86e4bdd7af39762501eb0",
-      "directory": "automation-623cc664-07c2-425e-bc99-8da3d43c4206",
+      "definition_sha256": "c4d7984f8b06a49d6a48ead7468196d0c6c8114c5dca1952c20db2b645200676",
+      "directory": "automation-055b7b6a-5455-4243-b97f-843e16050ed3",
       "enabled": true,
       "files": {
-        "RUBRIC.md": "c47ec5ef4b100f61ec499e55b610ba7bef45f6273929c5a6d09950174d0bbe47",
-        "comments.py": "b140daf5a593e42b3d754e217ece0c7727acffb06fbf368e4a6a84bbd20cffdc",
+        "README.md": "9c9d4f90bdfdce6f429156a3688de88c9db9f67a326284cec86352133550aed1",
+        "main.py": "1611398a85e3a359aa7f502870fa0affcd2088d2238c648ab1c87cb971ad63af",
+        "render.py": "ae223791ae823a17a810324d0ad7f0e7a5b45a2b05030f503bb8f99c74633d57"
+      },
+      "id": "055b7b6a-5455-4243-b97f-843e16050ed3",
+      "name": "Mention Gazette",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/944f30a5-1b26-4b97-9f69-fd3552ff0713",
+      "updated_at": "2026-10-09T19:40:21.704398Z",
+      "updated_at_after_download": "2026-10-09T19:40:21.704398Z",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "bundle": {
+        "kind": "cloud_download",
+        "sha256": "d07ea6b987e9f45b5537b6a59e649341ac9358caca30fadc4500f38715307525"
+      },
+      "definition_sha256": "6af187901dfb5c400d9da6dc1424e5386a163ee9c2fc59805565e616397e712c",
+      "directory": "automation-481e4de6-48b1-46b3-a99b-985e7b35ebd3",
+      "enabled": false,
+      "files": {
+        "config.json": "e6a0717fde7dbff1165a608fd7f4019c1303e473339bcc28ca9e4e3cd9d67e95",
+        "contracts.json": "b7cd01791c01b5f1ff16b7a382479585d8da1496325278e8591b36f5fca83288",
+        "fixture.py": "caeb82de44a8e1019c4478f199ffdbd72fb73bb657b87bd1ada45b45cfcf62b9",
+        "main.py": "18c38f569556631fc1b050380dca5cc8918d0a94cbd669b1aa996058c18acb0e",
+        "requirements.txt": "9ec828179a682425537349fb41440b48a47b1ef006b7b3e1d1542566d3ec6943",
+        "setup.sh": "d25b3e7f92a499f62603dcca8257103e812eaf730badc27cc2e3d6187d2469d8"
+      },
+      "id": "481e4de6-48b1-46b3-a99b-985e7b35ebd3",
+      "name": "SDK external lifecycle conformance",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/48f2eeac-24aa-470e-bc85-03663f5db60a",
+      "updated_at": "2026-10-09T03:13:49.689959Z",
+      "updated_at_after_download": "2026-10-09T03:13:49.689959Z",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "bundle": {
+        "kind": "cloud_download",
+        "sha256": "de764d4f45f5c1439acde38f8c94c85ed5796e00a14bb7279ef4cbdea5f5a414"
+      },
+      "definition_sha256": "f7ae9db041b8f05864540e6483927179c76e7515f0c7b6c532b57ca6825de99a",
+      "directory": "automation-e3ef72c3-764a-428a-9d31-a843fb7fa965",
+      "enabled": false,
+      "files": {
+        "main.py": "7db4ada93b58b6db13f21f79e2a7f763a3cd78964425748df79dcd1d08f9b034",
+        "setup.sh": "b707aab4edef736041f63d7324b02001d4b6c9362ea69152611c61fb1a7431be"
+      },
+      "id": "e3ef72c3-764a-428a-9d31-a843fb7fa965",
+      "name": "Temporary transpile native-auth verification 2026-09-22",
+      "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
+      "preserved_existing": false,
+      "status": "complete",
+      "tarball_path": "oh-internal://uploads/88a41df2-a8f4-44bc-b610-650198a1124b",
+      "updated_at": "2026-09-22T12:02:16.007525Z",
+      "updated_at_after_download": "2026-09-22T12:02:16.007525Z",
+      "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
+    },
+    {
+      "bundle": {
+        "kind": "cloud_download",
+        "sha256": "06c3bb3e75ecee1ed68850554e36afd07c53901f758b989471b72e77f1a9c1f9"
+      },
+      "definition_sha256": "a69a703f13db1b85d1f44a66bc52a48d2c7ee68ea255d76459c03c879de94ee7",
+      "directory": "automation-623cc664-07c2-425e-bc99-8da3d43c4206",
+      "enabled": false,
+      "files": {
+        "RUBRIC.md": "e8bd2b6aab8d1c83aef9cd43b0a85207c6c9c1e43982acf550dfcfe876889db8",
+        "comments.py": "feddd00d0ec0ac71a12a44df21f620a06b3b030edda35173aca589636e39f365",
         "config.json": "ad2fbe1207d122d69ff4d6c0c88bc48ac512e928daf9f68a9843d08befed5a35",
-        "core.py": "c052b1a958676a112467de9bf5d51f0752c2153d208695b6d4fbf27555c69236",
-        "descriptions.py": "51daec6f661e3fe3317a7f3bab46246fa2b2ea58f1848c8d77f18455f5a42825",
-        "main.py": "7db68a4f349a02d261b685c8833cad796ef1de1eaf5f86b4b586c42681b70da3",
+        "core.py": "fb955db38a6d5851ece0a1bc33565ebc6b3b10fdc926e57b179b590e3be441d2",
+        "descriptions.py": "af3cb4e14ddc3cb4c689f49a5c57d008b5bcd18627ab85508d0f34a3d659904f",
+        "main.py": "0565f42158871ac15324463ef62e242731252772e318ceaa54c21b4eb4937f51",
         "setup.sh": "41357c12d49e2784b8d981d5e446984d8f33f95ca9048c54a4c645d2695229fa",
-        "transport.py": "75a6f40e9285863feda76df7c91f3ff302ceb22f620a37a96b80990761d98b73",
+        "transport.py": "d49224cc6b96407e2ec316f18619cff60ca8748ecd2f2c1fb47b2c30552d9c22",
         "writer.py": "3b8ae7c7ae9ddf383d49b9bb1b2e8026077456aac55cc5fa10f4063985cbda44"
       },
       "id": "623cc664-07c2-425e-bc99-8da3d43c4206",
@@ -24,9 +95,9 @@
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
       "status": "complete",
-      "tarball_path": "oh-internal://uploads/978a87e7-572d-4ebd-9802-ba760ec1bcac",
-      "updated_at": "2026-09-19T22:09:30.434081Z",
-      "updated_at_after_download": "2026-09-19T22:09:30.434081Z",
+      "tarball_path": "oh-internal://uploads/9e964186-e170-4291-a6b5-479edebc7b33",
+      "updated_at": "2026-09-25T06:16:52.568842Z",
+      "updated_at_after_download": "2026-09-25T06:16:52.568842Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -34,9 +105,9 @@
         "kind": "cloud_download",
         "sha256": "c710dbcc7993cfc1d60279d98d451463cd5f444ca0ded0d1014498940c13eab7"
       },
-      "definition_sha256": "31d64f7f05507c637f40b5e9e4ba49f4a927b58051002d7eeb42ae7c5b8db85b",
+      "definition_sha256": "c6a97f59fd2dc46ef1df2c395f2e6ef33c30f75855210dac4702989d3bc66de3",
       "directory": "automation-5aee9a93-51e5-4843-ad13-301a31e1397e",
-      "enabled": true,
+      "enabled": false,
       "files": {
         "README.md": "269f3e981dcc4ee8969811d03af7007df5e1c3f2c722065390c767f6a5468727",
         "SECURITY_RUBRIC.md": "17f2a95c0580056be05ab3ca5832acd286e7b61d5984dbe008310db66562a6bf",
@@ -51,35 +122,24 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/17ed3fb6-a220-4415-97f6-0a693dc9fd60",
-      "updated_at": "2026-09-19T22:09:29.130562Z",
-      "updated_at_after_download": "2026-09-19T22:09:29.130562Z",
+      "updated_at": "2026-09-20T23:01:05.876344Z",
+      "updated_at_after_download": "2026-09-20T23:01:05.876344Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
       "bundle": {
         "kind": "cloud_download",
-        "sha256": "d67c33ad8ed5600ff9b946fc74ff28b41f05997bebde9b0072c4b4c4a7a28e53"
+        "sha256": "191d2b819deab01d99001c638ba53fb9a68aec22d06264301a58af56770e8ab0"
       },
-      "definition_sha256": "bff7eca5a95551557efd92f57e5f763e596d4d57b00be59be6dbe06c4d7d2fa6",
+      "definition_sha256": "e43d6614dc549781b155678486c073a2e2a0d4853b9956d7f8a3c8a2b94236f9",
       "directory": "automation-d4f8b4de-be10-4795-822b-72ca38dc323e",
       "enabled": true,
       "files": {
-        "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        ".___pycache__": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._finish_tool_hook.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._gate.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._main.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._prompt.txt": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._repos_config.json": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._setup.sh": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "__pycache__/._gate.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "__pycache__/._main.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "__pycache__/gate.cpython-314.pyc": "284cef5f87d4c25458b2fecd1c8903b3d5141c94bcf277ef49b33f082f1b8e1d",
-        "__pycache__/main.cpython-314.pyc": "836fd5612f66b61fb72ce1521425933e3c343094e6d2c60699dfad9176720559",
         "finish_tool_hook.py": "2c40af043b94471b2711f92f959b0d55460b798a1add1cb5ed9a6def0eb4ff97",
         "gate.py": "589251e9eed6f20c418caa2b9068873a8e6731090526119c29ef52f56961a492",
-        "main.py": "a98b407b6e36a8333bdb1b5fa49dfd92053022c709aa05f2aab2472620f07ff4",
-        "prompt.txt": "c5a4caad8ecf5d48897f123a31e45ae590f2947d93e1ace0fd7d220f7cc00e00",
+        "github_identity.py": "0d8732d99e62ddd37149b756b6855ed3b2093a51ea0c2da908db2f049106bfa9",
+        "main.py": "73e492337e404abbbabbd824f4cd424326356fcded74bd534e430ef427ac07de",
+        "prompt.txt": "e68184193392c30d26fa3e96a9c9e722404804e1e4c34eb6c0347b6c76f9c7ce",
         "repos_config.json": "4f038eaabeb846cecd185dc37308d65998bfb13a2930ec0b9ac9d1d19d66b8cc",
         "setup.sh": "b707aab4edef736041f63d7324b02001d4b6c9362ea69152611c61fb1a7431be"
       },
@@ -88,36 +148,25 @@
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
       "status": "complete",
-      "tarball_path": "oh-internal://uploads/fa7b9525-f48d-4d2c-b3df-8983ea1ae1d6",
-      "updated_at": "2026-09-19T22:09:28.647878Z",
-      "updated_at_after_download": "2026-09-19T22:09:28.647878Z",
+      "tarball_path": "oh-internal://uploads/79ff0f6a-ae30-44e9-a2b0-2013153b5332",
+      "updated_at": "2026-10-09T19:40:21.704398Z",
+      "updated_at_after_download": "2026-10-09T19:40:21.704398Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
       "bundle": {
         "kind": "cloud_download",
-        "sha256": "2d0f4ca2bba7f368fa32692d7e38bcb392d3bc58a3c344fc2f00f76c7d8df792"
+        "sha256": "ebd49b8882e3331e2fdf97b7dac00c510e55db2c65acafd9d3390bf09e22f706"
       },
-      "definition_sha256": "e1f78924be69e92ce1dce1ae697bc258fd7d9e3e7b30b84624a1298fa92a2e8a",
+      "definition_sha256": "e6ded75a7149e776f8f90e44afaf7cb1d7305ebc63970f48efb3f5933ce329b1",
       "directory": "automation-e6b527a2-5cd1-45d6-82c5-ac1cf89ebda6",
       "enabled": true,
       "files": {
-        "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        ".___pycache__": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._finish_tool_hook.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._gate.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._main.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._prompt.txt": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._repos_config.json": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "._setup.sh": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "__pycache__/._gate.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "__pycache__/._main.cpython-314.pyc": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
-        "__pycache__/gate.cpython-314.pyc": "a5c46f17dcaf582ac850426478ebe9eea7c437e70f561e6267b03724e6260534",
-        "__pycache__/main.cpython-314.pyc": "79a1f2de0b271cc3c0601fe1e4b062062f82fd1d0347ab3d25c24cf1cc1ac75b",
         "finish_tool_hook.py": "2c40af043b94471b2711f92f959b0d55460b798a1add1cb5ed9a6def0eb4ff97",
         "gate.py": "589251e9eed6f20c418caa2b9068873a8e6731090526119c29ef52f56961a492",
-        "main.py": "d0d08859dc4e42f1acd26bd3e37c7df04aac431ba23ee3b107279a345672115f",
-        "prompt.txt": "10ed9a1ade620c41bd36215cc160442a2fdad84fd4fccb7e73a914778a1d5569",
+        "github_identity.py": "0d8732d99e62ddd37149b756b6855ed3b2093a51ea0c2da908db2f049106bfa9",
+        "main.py": "ce1f7b5082539db7a81b68bfb4f079073b2f60a775b49ec89d989b992b9904d9",
+        "prompt.txt": "8ba62e0929a396c5bd987ec1ae630530ca4750c1e80202075f6a66da3fa7a377",
         "repos_config.json": "5961d9c98dc99ab753e724fcf8b4470b16776a20528354efa56bc2d6c9aaecbf",
         "setup.sh": "b707aab4edef736041f63d7324b02001d4b6c9362ea69152611c61fb1a7431be"
       },
@@ -126,9 +175,9 @@
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
       "status": "complete",
-      "tarball_path": "oh-internal://uploads/d25717ff-c045-40ee-b831-c9b2e582fe74",
-      "updated_at": "2026-09-19T22:09:28.647878Z",
-      "updated_at_after_download": "2026-09-19T22:09:28.647878Z",
+      "tarball_path": "oh-internal://uploads/2cc72377-f0f7-42be-9ada-ed861c0306b9",
+      "updated_at": "2026-10-09T19:40:21.647094Z",
+      "updated_at_after_download": "2026-10-09T19:40:21.647094Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -136,7 +185,7 @@
         "kind": "cloud_download",
         "sha256": "dd9c73a698f2ad6c634ee52e71e0769d0b59aac9f40e041eb8c35966a351dace"
       },
-      "definition_sha256": "3858cf10b8a00cdeb7766ea675edfe969bae34d94a3e3f505c40b4e6edcd6aa0",
+      "definition_sha256": "791ff28bb69b21a984b1aa700823a308baec2aa54bfea82c317f45cd520dbc6c",
       "directory": "automation-1dd76c1d-5c79-4598-b19e-018ad893c6ee",
       "enabled": true,
       "files": {
@@ -151,31 +200,34 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/813f9d00-d73a-40b6-baf0-1fcf2dbf8280",
-      "updated_at": "2026-09-19T22:10:19.713341Z",
-      "updated_at_after_download": "2026-09-19T22:10:19.713341Z",
+      "updated_at": "2026-10-09T19:39:51.620909Z",
+      "updated_at_after_download": "2026-10-09T19:39:51.620909Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
       "bundle": {
         "kind": "cloud_download",
-        "sha256": "2dba9a92b3e6c33ecb562257a2840d428a6833d1edc451286da1febfa6c1e607"
+        "sha256": "4fdbc17f211af11c7c87d286e138210a9ca31df328e0a9dd24b1c7e94268f1e8"
       },
-      "definition_sha256": "3dc1c22535d2074747b2160af702eee7e93b30c3a5fcb980e298b3b3666e8705",
+      "definition_sha256": "9470de925bc6864cbe2907dca6e38f75e587a3bf96749ae9d13e71a604777d58",
       "directory": "automation-fe2c8185-1b7f-41bf-a687-143e350408b6",
       "enabled": true,
       "files": {
+        "README.md": "ba188d3f7648db0e735e81dc7f81321c1974a6647a5f43f3b2ffcc3e09ebe601",
+        "daily.py": "1bde613840daae9f8d9a9c14e668099da57282cd43ba356f3579433960bc3f34",
         "github_context.py": "49055bcb9e4f7e617620c5a41d69e5640a30079b850bb030f24cf12ce3935d4d",
-        "run.py": "9bf22e41a0d3944c57041ac38002478fee130e4f6861b392d09b5472008825b6",
-        "setup.sh": "c4c6cd02f43395279bce3373155d8bf4b6424344094fb7f3e95dbb46bd9a0252"
+        "run.py": "12a3ef0aeeed82ffb4a12dccba3c275b54f4c8f325b4f251ded8bb08c79dcce2",
+        "setup.sh": "c4c6cd02f43395279bce3373155d8bf4b6424344094fb7f3e95dbb46bd9a0252",
+        "verification.py": "52372bfab08274e5a762efaf2904918f7c139e0b231fdf84718e9485de9b771f"
       },
       "id": "fe2c8185-1b7f-41bf-a687-143e350408b6",
-      "name": "Attention router - weekly SDK PRs and @enyst mentions",
+      "name": "Attention router - daily verification reports and weekly SDK PRs",
       "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
       "preserved_existing": false,
       "status": "complete",
-      "tarball_path": "oh-internal://uploads/cdf3d5ec-995c-49e9-ba0a-7077139eeb06",
-      "updated_at": "2026-09-19T22:10:00.481210Z",
-      "updated_at_after_download": "2026-09-19T22:10:00.481210Z",
+      "tarball_path": "oh-internal://uploads/5ada02d6-11d5-4869-a280-bb17aa31f9c7",
+      "updated_at": "2026-10-09T19:39:51.620909Z",
+      "updated_at_after_download": "2026-10-09T19:39:51.620909Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -183,9 +235,9 @@
         "kind": "cloud_download",
         "sha256": "ee3acaf3bb91040f306f18a1cc946eee73b675b976753feac30f98c1cf4bf5f6"
       },
-      "definition_sha256": "b01723450854ff5c9512167689d61f7ee096815ece13d0c60e19845cf5389993",
+      "definition_sha256": "fa7e8597cb904a7754cd093ceee0375c89d7480acaa7ce1ed3766a309a37d48e",
       "directory": "automation-7b7ca607-3052-476e-b9f9-63d98ed98971",
-      "enabled": true,
+      "enabled": false,
       "files": {
         "._.": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
         "._auto_close_duplicate_issues.py": "d676672f03731a4a139694e736ac19251509c46416d667433ae37ca5736ad518",
@@ -199,8 +251,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/88a0d229-cb07-4fbe-b887-9e4c261f1a02",
-      "updated_at": "2026-09-19T22:10:19.713341Z",
-      "updated_at_after_download": "2026-09-19T22:10:19.713341Z",
+      "updated_at": "2026-09-25T09:28:30.278231Z",
+      "updated_at_after_download": "2026-09-25T09:28:30.278231Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -208,7 +260,7 @@
         "kind": "cloud_download",
         "sha256": "af46f105e1ded303c088cb4d27236faa4a436cc96ef1bbe832ad2c091f1d1e4f"
       },
-      "definition_sha256": "3011aec024cbffd710086cff73abb292a0aa0d5d5d6ffa8dc4171e6e01677bfb",
+      "definition_sha256": "7a15d7706e8b5b1d5bc3ee1eddff0badac10b0f1b30f9fd857d8fbf3de722315",
       "directory": "automation-d0f69df6-4757-4403-8106-2013ae5e0db5",
       "enabled": true,
       "files": {
@@ -224,8 +276,8 @@
       "preserved_existing": false,
       "status": "complete",
       "tarball_path": "oh-internal://uploads/aeb2c3bc-f4c2-4c4f-9c68-16bb61cf4325",
-      "updated_at": "2026-09-19T22:09:49.683087Z",
-      "updated_at_after_download": "2026-09-19T22:09:49.683087Z",
+      "updated_at": "2026-10-09T19:39:52.172459Z",
+      "updated_at_after_download": "2026-10-09T19:39:52.172459Z",
       "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
     },
     {
@@ -233,7 +285,7 @@
         "kind": "cloud_download",
         "sha256": "18b25921683a7014bfba4a0cdaaefe8aa8e11007618e8de75779e52156ef1dd8"
       },
-      "definition_sha256": "d5141de393d76d17b41b9f0d30866ba39a6c98305749632c9a1b538cc1578b37",
+      "definition_sha256": "315338e5e281fa38cf4bb407c10109d57dee654a5f32298bfdff28a3e0eafc08",
       "directory": "automation-de2d1215-bbb3-42a9-bec4-7feee4f19a86",
       "enabled": false,
       "files": {
@@ -257,7 +309,7 @@
         "kind": "cloud_download",
         "sha256": "4f6d711383016a8c0d4eff271b72ade1f39dffa7c41ea4bf8c2c200f8c850f47"
       },
-      "definition_sha256": "189643f564268d5b53664f69f81e5c5c4945be10b06943b7ccd3c09740f4ee12",
+      "definition_sha256": "cbd13417c6aab73b979b286fd3f8d6f728dfeb581386579166a9896b3adc8889",
       "directory": "automation-e2ca316e-2896-4189-b1fc-fef6100d85f1",
       "enabled": false,
       "files": {
@@ -278,14 +330,14 @@
   ],
   "complete": true,
   "direction": "cloud_to_git_export_only",
-  "exported_owner_definitions": 10,
-  "generated_at": "2026-09-19T22:10:46.140823+00:00",
+  "exported_owner_definitions": 13,
+  "generated_at": "2026-10-09T19:40:53.961523+00:00",
   "identity": {
     "login": "enyst",
     "org_id": "18881862-24a9-4521-ba8a-8424314c6458",
     "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
   },
-  "listed": 10,
+  "listed": 13,
   "not_in_current_listing_preserved": [],
   "schema": 1,
   "skipped_other_owners": 0,

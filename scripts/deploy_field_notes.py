@@ -59,7 +59,7 @@ def main():
             inventory=cloud.request("GET",API+"?limit=100")
             if inventory.get("total",0)>100:raise DeploymentError("inventory_pagination_required")
             if any(a.get("name")==NAME for a in inventory["automations"]):raise DeploymentError("use_existing_automation_id")
-        archive,files=runtime_bundle(ROOT/"sources/notebook-field-notes",(cloud.credential,))
+        archive,files=runtime_bundle(ROOT/"cloud-automations/automation-623cc664-07c2-425e-bc99-8da3d43c4206/tarball",(cloud.credential,))
         definition=desired()
         definition["trigger"]=STAGING
         if args.keep_trial_sandbox:definition["keep_alive"]=True

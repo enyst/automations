@@ -420,28 +420,11 @@ More activity arrived on the same subject while this run was queued:
     print(f"  model: {llm.model}")
     print(f"  api_key present: {bool(llm.api_key)}")
 
-    # Get secrets via workspace
-    print("\n=== GET_SECRETS ===")
-    secrets = {}
-    try:
-        secrets = workspace.get_secrets()
-        print(f"  available: {list(secrets.keys()) or '(none)'}")
-    except Exception as e:
-        # Not a hard failure — user may not have secrets configured
-        print(f"  get_secrets() failed (ok if no secrets): {e}")
-
-    # Get MCP config via workspace
-    print("\n=== GET_MCP_CONFIG ===")
+    # Transpile jobs only need the verified bot's GitHub credential.
+    # Do not forward all personal secrets or unrelated MCP credentials.
+    from github_identity import github_secrets
+    secrets = github_secrets(workspace)
     mcp_config = {}
-    try:
-        mcp_config = _normalize_mcp_config(workspace.get_mcp_config())
-        if mcp_config:
-            print(f"  servers: {list(mcp_config.keys())}")
-        else:
-            print("  no MCP servers configured")
-    except Exception as e:
-        # Not a hard failure — user may not have MCP configured
-        print(f"  get_mcp_config() failed (ok if no MCP): {e}")
 
     # Get default agent with tools and condenser (CLI mode to disable browser)
     print("\n=== AGENT ===")

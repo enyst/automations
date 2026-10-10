@@ -194,7 +194,7 @@ def main(argv=None) -> int:
     sub.add_parser("preflight")
     sub.add_parser("install-secrets")
     deploy = sub.add_parser("deploy")
-    deploy.add_argument("--source", type=Path, default=ROOT / "sources/jev-fast-audit")
+    deploy.add_argument("--source", type=Path, default=ROOT / "cloud-automations/automation-5aee9a93-51e5-4843-ad13-301a31e1397e/tarball")
     deploy.add_argument("--definition", type=Path, required=True)
     deploy.add_argument("--automation-id")
     deploy.add_argument("--paused", action="store_true", help="Pause after deployment; new definitions must use the January 1 staging schedule")

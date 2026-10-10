@@ -16,7 +16,7 @@ import uuid
 from core import (REPOSITORIES, POLICY_VERSION, ValidationError, canonical_repository, fingerprint,
     screen_candidate, classification_request, validate_classification, classify_decision,
     build_note, render_document)
-from transport import (API, CLOUD, GITHUB, FieldNotesError, GitState, Publisher, secret)
+from transport import (API, CLOUD, GITHUB, FieldNotesError, GitState, Publisher, secret, ready_classifier)
 from writer import WriterError, check_writer, disable_sdk_tracing
 from descriptions import gather, still_current
 from comments import InfoComments
@@ -91,7 +91,8 @@ def listing_fingerprint(item):
 
 
 def _settled_or_cooling(old, now):
-    return old.get("status") in {"published", "existing", "reserved"} or now.timestamp() - old.get("at", 0) < 86400
+    settled = old.get("status") in {"published", "existing", "reserved"} and old.get("needs_info") is not True
+    return settled or now.timestamp() - old.get("at", 0) < 86400
 
 
 def _daily_budget_full(state, config, now):
@@ -139,27 +140,30 @@ def run(config,gh,jev,*,publish=False,workspace_factory=load_workspace):
     failed=False
     report={"considered":0,"classified":0,"written":0,"published":[],"decisions":[],"comments":[]}
     try:
-        if publish and _daily_budget_full(state, config, now):
-            return {**report, "status": "daily_budget"}
         if publish:
             state.ensure_branch()
             if not state.claim():return {**report, "status":"busy"}
             claimed=True
-            # A preceding run may have used the final slot between load and claim.
-            if _daily_budget_full(state, config, now):
-                return {**report, "status": "daily_budget"}
         pins=source_repositories(gh)
         inventory=publisher.manifest(publisher.head())
         published={row["id"] for row in inventory["notes"]}
         for repo,kind,number,item in discovery(gh,config,now):
             repo = _target(repo, kind, number)
             key=repo.lower().replace("/","-")+"-"+kind+"-"+str(number)
-            if "field-note-"+key in published:continue
             if time.monotonic()-start>900:break  # leave ample writer/callback time within 1800s
             if report["considered"] >= config["max_candidates_per_run"]:break
             old=state.value["seen"].get(key,{})
+            settled_status = "published" if "field-note-" + key in published else None
+            if old.get("policy_version") == POLICY_VERSION and old.get("status") in {"published", "existing", "reserved"}:
+                settled_status = settled_status or old["status"]
+            # Completed/reserved writing stays final. Only an outstanding comment
+            # opportunity may revisit it; never research or publish it again.
+            if settled_status and old.get("needs_info") is not True:
+                continue
             listed_identity = listing_fingerprint(item)
-            if (old.get("policy_version") == POLICY_VERSION and old.get("source_updated_at") == item["updated_at"]
+            writer_available = publish and not report["written"] and not _daily_budget_full(state, config, now)
+            ready_to_attempt = old.get("status") == "ready" and writer_available
+            if (not ready_to_attempt and old.get("policy_version") == POLICY_VERSION and old.get("source_updated_at") == item["updated_at"]
                 and old.get("listing_fingerprint") == listed_identity and _settled_or_cooling(old, now)):
                 continue
             report["considered"]+=1
@@ -173,38 +177,70 @@ def run(config,gh,jev,*,publish=False,workspace_factory=load_workspace):
                 if publish:
                     # An uncollected candidate has no source fingerprint yet. The
                     # listing digest supports cooldown only, never completion.
-                    state.remember(key, listed_identity, "defer", source_updated_at=item["updated_at"],
-                                   listing_fingerprint=listed_identity, policy_version=POLICY_VERSION)
-                report["decisions"].append({"subject":key,"decision":"defer","reason":"candidate_unavailable"})
+                    state.remember(key, listed_identity, settled_status or "defer", source_updated_at=item["updated_at"],
+                                   listing_fingerprint=listed_identity, policy_version=POLICY_VERSION,
+                                   needs_info=old.get("needs_info") is True)
+                report["decisions"].append({"subject":key,"decision":"defer","reason":"candidate_unavailable","needs_info":False})
                 continue
-            def remember(status):
+            needs_info = False
+            def remember(status, *, classifier=None):
                 state.remember(key, identity, status, source_updated_at=candidate["updated_at"],
-                               listing_fingerprint=listed_identity, policy_version=POLICY_VERSION)
+                               listing_fingerprint=listed_identity, policy_version=POLICY_VERSION,
+                               needs_info=needs_info, **({"classifier": classifier} if classifier is not None else {}))
             coverage=request["state"]["coverage"]
             complete=coverage["retrieval_complete"] and not coverage["truncated"]
             def request_info():
-                if publish and complete:
+                nonlocal needs_info
+                if publish and complete and needs_info:
                     receipt=InfoComments(gh,state,maximum=config.get("max_info_comments_per_day",2)).request(
                         candidate,still_current=lambda:still_current(gh,candidate))
                     report["comments"].append(receipt)
+                    # Pending POSTs remain at-most-once inside InfoComments. A
+                    # later visit may reconcile them, never automatically repost.
+                    if receipt["status"] in {"posted", "existing", "not_open", "ineligible"}:
+                        needs_info = False
             # Re-fetch linked issues after the cooldown, even if the PR itself
             # has not changed. Unchanged descriptions need no new paid judgment.
-            if (old.get("policy_version")==POLICY_VERSION and old.get("fingerprint")==identity
-                and (old.get("status") in {"skip","needs_info"} or _settled_or_cooling(old,now))):
-                if old.get("status")=="needs_info":request_info()
-                if publish:remember(old["status"])
+            same_input = old.get("policy_version") == POLICY_VERSION and old.get("fingerprint") == identity
+            if (same_input and old.get("status") != "ready"
+                and (settled_status or old.get("status") == "skip" or _settled_or_cooling(old,now))):
+                needs_info = old.get("needs_info") is True
+                if now.timestamp() - old.get("at", 0) >= 86400:
+                    request_info()
+                if publish:remember(settled_status or old["status"])
                 continue
             if screened["decision"]=="skip":
-                if publish:remember("skip")
+                if publish:remember(settled_status or "skip")
                 continue
-            judged=validate_classification(jev.request("/v1/systemone",method="POST",data=request))
+            reuse_ready = same_input and old.get("status") == "ready"
+            if reuse_ready:
+                # Re-read source first; a score cache never bypasses freshness,
+                # coverage or current-policy validation.
+                judged = ready_classifier(old.get("classifier"))
+            else:
+                judged=validate_classification(jev.request("/v1/systemone",method="POST",data=request))
+                report["classified"]+=1
             decision=classify_decision(judged,context_complete=complete)
-            report["classified"]+=1
-            report["decisions"].append({"subject":key,"decision":decision["decision"],"probabilities":judged["probabilities"]})
+            report["decisions"].append({"subject":key,"decision":decision["decision"],
+                                        "needs_info":decision["needs_info"],"probabilities":judged["probabilities"]})
+            needs_info = old.get("needs_info") is True if reuse_ready else decision["needs_info"]
+            # Missing input cannot justify a comment or erase an outstanding
+            # opportunity. Its next attempt still needs complete fresh evidence.
+            if not complete and old.get("needs_info") is True:
+                needs_info = True
+            if not reuse_ready or now.timestamp() - old.get("at", 0) >= 86400:
+                request_info()
+            if settled_status:
+                if publish:remember(settled_status)
+                continue
             if decision["decision"]!="write":
-                if decision["decision"]=="needs_info":request_info()
                 if publish:remember(decision["decision"])
             elif publish:
+                # Comment discovery has its own budget. Exhausted note slots
+                # must not stop unrelated explanatory comments in this run.
+                if report["written"] or _daily_budget_full(state, config, now):
+                    remember("ready", classifier=judged)
+                    continue
                 if workspace is None:workspace=workspace_factory()
                 # Custom runner uses account defaults; Cloud may inject an unrelated
                 # named evaluation profile into AUTOMATION_MODEL.
@@ -213,7 +249,9 @@ def run(config,gh,jev,*,publish=False,workspace_factory=load_workspace):
                 # Refuse technical initialization/tool-boundary failures before
                 # spending the daily model-call allowance. This makes no paid call.
                 check_writer(llm)
-                if not state.reserve_attempt(config["max_notes_per_day"]):break
+                if not state.reserve_attempt(config["max_notes_per_day"]):
+                    remember("ready", classifier=judged)
+                    continue
                 # Persistence still precedes every model call; failed research can retry.
                 remember("writing")
                 from writer import write_note
@@ -230,7 +268,7 @@ def run(config,gh,jev,*,publish=False,workspace_factory=load_workspace):
                 receipt=publisher.publish(note,render_document(note))
                 remember(receipt["status"])
                 report["published"].append(receipt)
-                break  # one researched note per run; daily cap remains two
+                published.add("field-note-" + key)
             if report["considered"]>=config["max_candidates_per_run"]:break
         return report
     except Exception:

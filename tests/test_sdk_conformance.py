@@ -9,7 +9,7 @@ import threading
 import unittest
 from unittest.mock import patch, MagicMock
 
-SOURCE = Path(__file__).parents[1] / "sources/sdk-lifecycle-conformance"
+SOURCE = Path(__file__).parents[1] / "cloud-automations/automation-481e4de6-48b1-46b3-a99b-985e7b35ebd3/tarball"
 SPEC = importlib.util.spec_from_file_location("sdk_lifecycle_verifier", SOURCE / "main.py")
 verifier = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(verifier)
@@ -29,7 +29,7 @@ class ScriptedSocket:
 
 class OracleTests(unittest.TestCase):
     def test_unconfigured_is_blocked_with_complete_roster(self):
-        result = verifier.run(json.loads((SOURCE / "config.json").read_text()))
+        result = verifier.run(json.loads((Path(__file__).parents[1] / "examples/sdk-lifecycle-conformance.json").read_text()))
         self.assertEqual(result["verdict"], "blocked")
         self.assertEqual(len(result["scenarios"]), 3)
         self.assertTrue(all(item["status"] == "blocked" for item in result["scenarios"]))

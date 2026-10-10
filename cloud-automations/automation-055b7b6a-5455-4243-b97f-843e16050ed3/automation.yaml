@@ -1,4 +1,5 @@
 {
+  "agent_profile_id": null,
   "enabled": true,
   "entrypoint": "python3 main.py",
   "keep_alive": false,
@@ -7,6 +8,7 @@
   "preset_metadata": null,
   "prompt": null,
   "setup_script_path": null,
+  "state": "ACTIVE",
   "tarball_source": {
     "type": "internal",
     "url": null

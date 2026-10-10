@@ -3,7 +3,7 @@ from pathlib import Path
 import unittest
 
 spec = importlib.util.spec_from_file_location(
-    "jev_description", Path(__file__).parents[1] / "sources/jev-fast-audit/description.py")
+    "jev_description", Path(__file__).parents[1] / "cloud-automations/automation-5aee9a93-51e5-4843-ad13-301a31e1397e/tarball/description.py")
 description = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(description)
 strip_audit = description.strip_audit

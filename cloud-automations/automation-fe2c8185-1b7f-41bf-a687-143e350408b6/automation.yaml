@@ -1,23 +1,22 @@
 {
+  "agent_profile_id": null,
   "enabled": true,
-  "entrypoint": ".venv/bin/python run.py",
+  "entrypoint": ".venv/bin/python daily.py",
   "keep_alive": false,
   "model": "deep-pro",
-  "name": "Attention router - weekly SDK PRs and @enyst mentions",
+  "name": "Attention router - daily verification reports and weekly SDK PRs",
   "preset_metadata": null,
   "prompt": null,
   "setup_script_path": "setup.sh",
-  "tarball_executables": [
-    "setup.sh"
-  ],
+  "state": "ACTIVE",
   "tarball_source": {
     "type": "internal",
     "url": null
   },
   "timeout": 1800,
   "trigger": {
-    "schedule": "0 9 * * 1",
-    "timezone": "Europe/Stockholm",
+    "schedule": "0 9 * * 1-5",
+    "timezone": "Europe/Amsterdam",
     "type": "cron"
   }
 }

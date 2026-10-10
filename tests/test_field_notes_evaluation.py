@@ -13,7 +13,7 @@ from io import BytesIO
 ROOT=Path(__file__).parents[1]
 spec=importlib.util.spec_from_file_location("field_notes_evaluation",ROOT/"scripts/evaluate_field_notes.py")
 e=importlib.util.module_from_spec(spec);spec.loader.exec_module(e)
-policy_spec=importlib.util.spec_from_file_location("evaluation_policy",ROOT/"sources/notebook-field-notes/core.py")
+policy_spec=importlib.util.spec_from_file_location("evaluation_policy",ROOT/"cloud-automations/automation-623cc664-07c2-425e-bc99-8da3d43c4206/tarball/core.py")
 core=importlib.util.module_from_spec(policy_spec);policy_spec.loader.exec_module(core)
 
 class Response:
@@ -26,7 +26,7 @@ class Response:
 class Evaluation(unittest.TestCase):
     def fixture(self,root):
         (root/"requests").mkdir();(root/"responses").mkdir()
-        source=(ROOT/"sources/notebook-field-notes/core.py").read_bytes()
+        source=(ROOT/"cloud-automations/automation-623cc664-07c2-425e-bc99-8da3d43c4206/tarball/core.py").read_bytes()
         (root/"core.snapshot.py").write_bytes(source)
         issue={"number":42,"html_url":"https://github.com/OpenHands/software-agent-sdk/issues/42",
                "title":"Preserve context on resume","body":"Resuming loses conversation context. Preserve it.",

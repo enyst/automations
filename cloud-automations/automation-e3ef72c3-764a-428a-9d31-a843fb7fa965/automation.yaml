@@ -1,0 +1,22 @@
+{
+  "agent_profile_id": null,
+  "enabled": false,
+  "entrypoint": ".venv/bin/python main.py",
+  "keep_alive": false,
+  "model": "transpile-deepseek-pro-native",
+  "name": "Temporary transpile native-auth verification 2026-09-22",
+  "preset_metadata": null,
+  "prompt": null,
+  "setup_script_path": "setup.sh",
+  "state": "INACTIVE",
+  "tarball_source": {
+    "type": "internal",
+    "url": null
+  },
+  "timeout": 300,
+  "trigger": {
+    "schedule": "0 0 1 1 *",
+    "timezone": "UTC",
+    "type": "cron"
+  }
+}

@@ -25,8 +25,8 @@ MAX_ARCHIVE = 20 * 1024 * 1024
 MAX_FILE = 8 * 1024 * 1024
 MAX_UNPACKED = 64 * 1024 * 1024
 MAX_FILES = 2000
-FIELDS = ("name", "model", "trigger", "setup_script_path", "entrypoint",
-          "timeout", "keep_alive", "enabled", "prompt", "preset_metadata")
+FIELDS = ("name", "model", "agent_profile_id", "trigger", "setup_script_path", "entrypoint",
+          "timeout", "keep_alive", "enabled", "state", "prompt", "preset_metadata")
 SECRET_PATTERNS = [
     rb"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----",
     rb"\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})",

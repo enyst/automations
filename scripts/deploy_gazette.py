@@ -23,7 +23,7 @@ def main():
         raise DeploymentError("multiple_gazette_definitions")
     if SECRET not in secret_names(cloud):
         raise DeploymentError("remote_gh_secret_missing")
-    archive, files = bundle(ROOT / "sources/mention-gazette", (cloud.credential,))
+    archive, files = bundle(ROOT / "cloud-automations/automation-055b7b6a-5455-4243-b97f-843e16050ed3/tarball", (cloud.credential,))
     if set(files) != {"main.py", "render.py", "README.md"}:
         raise DeploymentError("unexpected_runtime_files")
     upload = cloud.request("POST", API + "/uploads?name=Mention-Gazette", archive, "application/gzip")
