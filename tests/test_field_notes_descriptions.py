@@ -16,12 +16,13 @@ PR={"number":7,"html_url":f"https://github.com/{REPO}/pull/7","title":"Recover t
     "updated_at":DATE,"head":{"sha":SHA},"base":{"sha":"b"*40},"draft":False,"state":"open"}
 ISSUE={"number":9,"html_url":f"https://github.com/{REPO}/issues/9","title":"Lost tool observations",
        "body":"Compaction drops tool observations. The next step cannot use them.","updated_at":DATE}
-def gh(*, graph=None, issue=None):
+def gh(*, graph=None, issue=None, pr=None):
+    pr = pr or PR
     client=Mock()
     def request(path,**kw):
-        if path==f"/repos/{REPO}/pulls/7":return copy.deepcopy(PR)
+        if path==f"/repos/{REPO}/pulls/7":return copy.deepcopy(pr)
         if path=="/graphql":return {"data":{"repository":{"pullRequest":{
-            "body":PR["body"],"updatedAt":DATE,"headRefOid":SHA,"closingIssuesReferences":
+            "body":pr["body"],"updatedAt":pr["updated_at"],"headRefOid":pr["head"]["sha"],"closingIssuesReferences":
             graph or {"nodes":[],"pageInfo":{"hasNextPage":False},"totalCount":0}}}}}
         if path==f"/repos/{REPO}/issues/9":
             if isinstance(issue,Exception):raise issue
@@ -97,6 +98,21 @@ class DescriptionCollection(unittest.TestCase):
         newer=gh(issue={**ISSUE,"body":ISSUE["body"]+" New design details."})
         self.assertFalse(d.still_current(newer,value))
         self.assertTrue(d.still_current(client,value))
+
+    def test_comment_timestamp_does_not_invalidate_unchanged_material(self):
+        value = d.gather(gh(), REPO, "pr", 7, [{"repository": REPO, "sha": SHA}])
+        after_comment = gh(pr={**PR, "updated_at": "2026-09-19T10:01:00Z"})
+        self.assertTrue(d.still_current(after_comment, value))
+
+    def test_timestamp_tolerance_still_rejects_changed_description_code_or_coverage(self):
+        value = d.gather(gh(), REPO, "pr", 7, [{"repository": REPO, "sha": SHA}])
+        for change in [{"title": "A different design"}, {"body": PR["body"] + " Change the contract."},
+                       {"head": {"sha": "c" * 40}}, {"base": {"sha": "c" * 40}}, {"draft": True}]:
+            with self.subTest(change=change):
+                after = gh(pr={**PR, "updated_at": "2026-09-19T10:01:00Z", **change})
+                self.assertFalse(d.still_current(after, value))
+        incomplete = gh(issue=FieldNotesError("http_404", status=404))
+        self.assertFalse(d.still_current(incomplete, value))
 
     def test_issue_description_only_for_standalone_issue(self):
         client=Mock()
