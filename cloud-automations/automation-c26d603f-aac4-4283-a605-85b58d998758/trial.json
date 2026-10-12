@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-12",
+  "verdict": "blocked",
+  "automation_id": "c26d603f-aac4-4283-a605-85b58d998758",
+  "profile_id": "55383c97-f65f-44c8-a81a-3fa65a41b39b",
+  "target_repository": "OpenHands/OpenHands",
+  "target_sha": "d7e14e25bcf14238e566139ec9490e1f05efcd69",
+  "feature_id": "F02.sidebar-collapse",
+  "runtime": {"version": "1.50.1", "sdk_version": "1.50.1", "build_git_sha": "1e1390acc8788346ba4804c34323284009bf3f5e"},
+  "runs": [
+    {"id": "3313f04c-82a8-42cd-846d-4840430aea1a", "status": "CANCELLED", "reason": "secret_scope_check_before_agent_execution"},
+    {"id": "f5bd828a-4f50-40f6-bf66-6687a7f7009e", "status": "CANCELLED", "conversation_id": "5797ee91a1af50019d065fd9c105a978", "agent_kind": "acp", "acp_server": "codex", "model": "gpt-6.1-sol", "error_codes": ["ACPAuthRequired", "CredentialNeedsReauthentication"], "error_detail": "ChatGPT authentication did not complete in time. Please sign in again."}
+  ],
+  "account_secret_values_sent_from_mac": false,
+  "secrets_payload_sent": false,
+  "legacy_account_secret_behavior_accepted_by_user": true,
+  "codex_tool_actions": 0,
+  "live_recipe_run": false,
+  "owned_sandboxes_remaining": 0,
+  "automation_state": "INACTIVE",
+  "active_agent_profile_changed": false
+}

@@ -1,0 +1,11 @@
+{
+  "cloud_url": "https://app.all-hands.dev",
+  "owner_id": "18881862-24a9-4521-ba8a-8424314c6458",
+  "agent_profile_id": "55383c97-f65f-44c8-a81a-3fa65a41b39b",
+  "repository": "OpenHands/OpenHands",
+  "branch": "main",
+  "target_sha": "d7e14e25bcf14238e566139ec9490e1f05efcd69",
+  "feature_id": "F02.sidebar-collapse",
+  "deadline_seconds": 1500,
+  "allow_legacy_account_secrets": true
+}

@@ -1,0 +1,10 @@
+{
+  "name": "codex-map-canary",
+  "agent_kind": "acp",
+  "acp_server": "codex",
+  "acp_model": "gpt-6.1-sol",
+  "acp_prompt_timeout": 300,
+  "acp_startup_timeout": 180,
+  "mcp_server_refs": [],
+  "secret_refs": ["CODEX_AUTH_JSON", "DEEPSEEK_API_KEY", "GITHUB_TOKEN"]
+}
