@@ -74,6 +74,15 @@ completion callback was corrected. The
 The earlier publication is recorded in
 [notebook commit bc94122](https://github.com/enyst/enyst.github.io/commit/bc94122ee7791c0aa5374dda60d9848da820e35f).
 
+## Codex Cloud verification canary
+
+The [inactive Codex ACP canary](cloud-automations/automation-c26d603f-aac4-4283-a605-85b58d998758/)
+tries one real Canvas map recipe in an OpenHands Cloud sandbox. The October 12
+trial reached Codex startup but stopped on ChatGPT reauthentication; no UI
+verification ran. Its source and explicit deployment helper are retained here.
+It has no daily or weekly schedule enabled. See its README and trial receipt
+before dispatching again.
+
 ## Implementation notes
 
 - [Jev Fast Audit](docs/jev-fast-audit.md): classifier inputs, evidence limits, and explicit deployment.

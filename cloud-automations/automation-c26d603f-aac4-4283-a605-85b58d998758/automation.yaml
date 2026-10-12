@@ -1,0 +1,9 @@
+{
+  "name": "Codex ACP Canvas verification canary",
+  "agent_profile_id": "55383c97-f65f-44c8-a81a-3fa65a41b39b",
+  "trigger": {"type": "cron", "schedule": "0 0 1 1 *", "timezone": "UTC"},
+  "entrypoint": "python3 main.py",
+  "timeout": 1800,
+  "keep_alive": true,
+  "state": "INACTIVE"
+}
