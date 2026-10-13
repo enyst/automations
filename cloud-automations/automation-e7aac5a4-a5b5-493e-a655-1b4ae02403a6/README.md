@@ -5,7 +5,7 @@ Created in OpenHands Cloud on October 13, 2026, after explicit approval.
 not an agreed recurring schedule. The timeout is 1800 seconds. The saved
 `deep-pro` model profile is selected explicitly; the account default is unchanged.
 
-The method comes from [OpenHands/OpenHands PR #18417](https://github.com/OpenHands/OpenHands/pull/18417):
+The method combines
 knip normal/production and TypeScript unused-local analysis, actual language-service
 references, whole-repo search, a deletion experiment, baseline comparison, both
 builds and byte-identical public declarations. The final tree must also pass full

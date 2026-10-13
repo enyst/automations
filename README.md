@@ -86,9 +86,13 @@ before dispatching again.
 ## Canvas dead-code cleanup
 
 [Canvas dead-code](cloud-automations/automation-e7aac5a4-a5b5-493e-a655-1b4ae02403a6/)
-was created **inactive** on October 13. It follows PR #18417's proof and deletion-test
-method, covering all proven safe removals in one draft PR per run. No run or recurring
+was created **inactive** on October 13. It uses reference proof and deletion-test
+validation, covering all proven safe removals in one draft PR per run. No run or recurring
 cadence is enabled. Its Cloud-downloaded bundle is the sole runtime source.
+
+An [independent historical canary](cloud-automations/automation-ad8b24d9-1878-4047-a729-00bd50210c18/)
+was manually dispatched October 13 at pinned commit `5a4071c7`. Its automation
+remains inactive. Results are pending; see the dated evaluation receipt.
 
 ## Implementation notes
 

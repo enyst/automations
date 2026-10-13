@@ -1,11 +1,11 @@
 {
-  "bundle_sha256": "8404c730b6da62487a6ae0a58b4946959422494b655822a95fc43ffe378b93ec",
+  "bundle_sha256": "350bb16f3ac5d0275aa90da8e32e44fc9797629cbeea0bbfddd8848e7bb065e6",
   "dispatches": 0,
   "enabled": false,
   "files": {
     "finish_tool_hook.py": "2c40af043b94471b2711f92f959b0d55460b798a1add1cb5ed9a6def0eb4ff97",
     "main.py": "d51b41c9a4b107e61ef39b846a8ca95c183114a619366ddc7b6c3934590000b9",
-    "prompt.txt": "5ddf441550b01dbe95f32af5053cc17b2aecc2e32b06f7aae13228c39a2d81fd",
+    "prompt.txt": "77d3a13bf0d0ae98fc129a57f5789d76788efd155a8868b4703eca8b01d8d0c8",
     "repos_config.json": "75e4dbf29f9291ac67847e334bbbd09f325bb8c3d0a34633081d6df142aaf1e1",
     "setup.sh": "92683a93e2d265387bae47ecf95c04fe4ff42a3835ee17770f2c05213f0093b3"
   },
@@ -14,7 +14,7 @@
   "provenance": "cloud_prompt_preset_download",
   "state": "INACTIVE",
   "status": "complete",
-  "tarball_path": "oh-internal://uploads/8a3b6b74-b4d9-40a7-8d3b-d88185949dc7",
-  "updated_at": "2026-10-13T14:59:12.948134Z",
+  "tarball_path": "oh-internal://uploads/50927ce0-54e4-466c-a1ab-77636c813006",
+  "updated_at": "2026-10-13T15:20:30.602663Z",
   "user_id": "18881862-24a9-4521-ba8a-8424314c6458"
 }
