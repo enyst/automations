@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a paused prompt preset and retain its exact Cloud bundle. Never dispatch."""
+"""Create or update a paused prompt preset and retain its exact Cloud bundle. Never dispatch."""
 import argparse
 import hashlib
 import json
@@ -10,7 +10,8 @@ from export_cloud import ExportError, encoded, public_definition, scan, unpack, 
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFINITION = ROOT / 'definitions/canvas-dead-code'
-NAME = 'Canvas bounded dead-code'
+NAME = 'Canvas dead-code'
+AUTOMATION_ID = 'e7aac5a4-a5b5-493e-a655-1b4ae02403a6'
 PACKAGE = ROOT / 'cloud-automations/automation-e7aac5a4-a5b5-493e-a655-1b4ae02403a6'
 
 
@@ -34,7 +35,7 @@ def create(cloud, downloader):
     body = request_body()
     identity(cloud)
     listing = cloud.request('GET', API + '?limit=100')
-    if listing.get('total', 0) > 100 or any(a.get('name') == NAME for a in listing.get('automations', [])):
+    if listing.get('total', 0) > 100 or any(a.get('name') in {NAME, 'Canvas bounded dead-code'} for a in listing.get('automations', [])):
         raise DeploymentError('inspect_inventory_before_create')
     profiles = cloud.request('GET', '/api/v1/settings/profiles')
     if not any(p.get('name') == body['model'] for p in profiles.get('profiles', [])):
@@ -48,6 +49,29 @@ def create(cloud, downloader):
     if observed.get('state') != 'INACTIVE' or observed.get('enabled') is not False:
         cloud.request('PATCH', API + '/' + identifier, {'state': 'INACTIVE', 'enabled': False})
         raise DeploymentError('creation_state_mismatch_paused')
+    return retain(cloud, downloader, identifier, body, observed)
+
+
+def update(cloud, downloader):
+    body = request_body()
+    identity(cloud)
+    current = cloud.request('GET', API + '/' + AUTOMATION_ID)
+    if (current.get('user_id') != OWNER or current.get('org_id') != OWNER
+            or current.get('name') not in {NAME, 'Canvas bounded dead-code'}
+            or current.get('state') != 'INACTIVE' or current.get('enabled') is not False):
+        raise DeploymentError('update_requires_owned_inactive_automation')
+    runs = cloud.request('GET', API + '/' + AUTOMATION_ID + '/runs?limit=10')['runs']
+    if any(r['status'] in {'PENDING', 'RUNNING'} for r in runs):
+        raise DeploymentError('automation_running')
+    cloud.request('PATCH', API + '/' + AUTOMATION_ID,
+                  {k: body[k] for k in ('name', 'prompt', 'state', 'enabled')})
+    observed = cloud.request('GET', API + '/' + AUTOMATION_ID)
+    if observed.get('state') != 'INACTIVE' or observed.get('enabled') is not False:
+        raise DeploymentError('update_state_mismatch')
+    return retain(cloud, downloader, AUTOMATION_ID, body, observed, replace=True)
+
+
+def retain(cloud, downloader, identifier, body, observed, replace=False):
     expected = {'id': OWNER, 'org_id': OWNER}
     fields, binding = public_definition(observed, {'user_id': expected['id'], 'org_id': expected['org_id']})
     for key in ('name', 'prompt', 'model', 'timeout', 'keep_alive'):
@@ -58,6 +82,8 @@ def create(cloud, downloader):
             raise DeploymentError('creation_trigger_mismatch')
     archive = downloader.bundle(identifier)
     files, executables = unpack(archive, cloud.credential)
+    if files.get('prompt.txt') != body['prompt'].encode():
+        raise DeploymentError('runtime_prompt_mismatch')
     if not {'main.py', 'setup.sh'}.issubset(files):
         raise DeploymentError('preset_bundle_incomplete')
     for name, data in files.items():
@@ -67,7 +93,7 @@ def create(cloud, downloader):
     if any(final.get(k) != observed.get(k) for k in ('state', 'enabled', 'prompt', 'model', 'tarball_path', 'updated_at')):
         raise DeploymentError('definition_changed_during_download')
     dest = ROOT / 'cloud-automations' / ('automation-' + identifier)
-    if dest.exists():
+    if dest.exists() and not replace:
         raise DeploymentError('export_destination_exists')
     if executables:
         fields['tarball_executables'] = executables
@@ -88,14 +114,15 @@ def create(cloud, downloader):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['dry-run', 'create'])
+    parser.add_argument('command', choices=['dry-run', 'create', 'update'])
     args = parser.parse_args(argv)
     if args.command == 'dry-run':
         print(json.dumps({'request': request_body(), 'network_requests': 0}))
         return 0
     from export_cloud import Client as DownloadClient
     credential = keychain('OPENHANDS_API_KEY')
-    result = create(Client(CLOUD, credential), DownloadClient(credential))
+    operation = update if args.command == 'update' else create
+    result = operation(Client(CLOUD, credential), DownloadClient(credential))
     print(json.dumps(result))
     return 0
 

@@ -1,5 +1,5 @@
 {
-  "name": "Canvas bounded dead-code",
+  "name": "Canvas dead-code",
   "model": "deep-pro",
   "trigger": {
     "type": "cron",

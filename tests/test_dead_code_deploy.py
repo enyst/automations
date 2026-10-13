@@ -30,6 +30,8 @@ class Cloud:
                 return {'profiles': [{'name': 'deep-pro'}] if self.profile else []}
             if path == '/api/v1/secrets/search?limit=100':
                 return {'items': [{'name': 'GITHUB_TOKEN'}]}
+            if path.endswith('/runs?limit=10'):
+                return {'runs': []}
             if path.startswith(API + '/'):
                 return {**deploy.request_body(), 'id': '11111111-1111-4111-8111-111111111111',
                         'user_id': OWNER, 'org_id': OWNER, 'entrypoint': '.venv/bin/python main.py',
@@ -47,7 +49,7 @@ class Download:
     def bundle(self, identifier):
         output = io.BytesIO()
         with tarfile.open(fileobj=output, mode='w:gz') as archive:
-            for name, content in {'main.py': b'print("fixture")\n', 'setup.sh': b'echo setup\n'}.items():
+            for name, content in {'main.py': b'print("fixture")\n', 'setup.sh': b'echo setup\n', 'prompt.txt': deploy.request_body()['prompt'].encode()}.items():
                 info = tarfile.TarInfo(name); info.size = len(content)
                 archive.addfile(info, io.BytesIO(content))
         return output.getvalue()
@@ -91,6 +93,40 @@ class DeadCodeTests(unittest.TestCase):
         prompt = deploy.request_body()['prompt']
         for required in ('--production', '--noUnusedLocals', 'LanguageService.findReferences',
                          'FINAL candidate', 'byte-for-byte', 'Full test suite',
-                         'ONE draft PR', 'NO_CHANGE', 'BLOCKED', '1800-second',
+                         'ONE draft PR', 'NO_CHANGE', 'BLOCKED', 'ALL behavior-preserving',
                          'Do not merge', 'Check again immediately before publishing'):
             self.assertIn(required, prompt)
+
+    def test_prompt_has_no_small_cleanup_or_numeric_limits(self):
+        prompt = deploy.request_body()['prompt']
+        for removed in ('at most 5', '10 production files', '200 deleted',
+                        'smallest cohesive safe set', 'ONE small', 'bounded dead-code"'):
+            self.assertNotIn(removed, prompt)
+        self.assertIn('all candidates', prompt)
+
+    def test_update_rejects_active_job_before_writes(self):
+        cloud = Cloud(active=True)
+        with self.assertRaisesRegex(DeploymentError, 'update_requires_owned_inactive'):
+            deploy.update(cloud, Download())
+        self.assertEqual(cloud.writes, [])
+
+    def test_stale_runtime_prompt_is_rejected(self):
+        class StaleDownload(Download):
+            def bundle(self, identifier):
+                with patch.object(deploy, 'request_body', return_value={'prompt': 'old prompt'}):
+                    return super().bundle(identifier)
+        with self.assertRaisesRegex(DeploymentError, 'runtime_prompt_mismatch'):
+            deploy.create(Cloud(), StaleDownload())
+
+    def test_update_keeps_same_owned_job_paused(self):
+        cloud = Cloud()
+        with tempfile.TemporaryDirectory() as directory, patch.object(deploy, 'ROOT', Path(directory).resolve()):
+            result = deploy.update(cloud, Download())
+        self.assertEqual(result['id'], deploy.AUTOMATION_ID)
+        self.assertEqual(len(cloud.writes), 1)
+        method, path, body = cloud.writes[0]
+        self.assertEqual(method, 'PATCH')
+        self.assertEqual(path, API + '/' + deploy.AUTOMATION_ID)
+        self.assertFalse(body['enabled'])
+        self.assertEqual(body['name'], 'Canvas dead-code')
+        self.assertEqual(body['prompt'], deploy.request_body()['prompt'])

@@ -1,4 +1,4 @@
-# Canvas bounded dead-code
+# Canvas dead-code
 
 Created in OpenHands Cloud on October 13, 2026, after explicit approval.
 **INACTIVE. Zero dispatches.** The January 1 UTC trigger is a staging placeholder,
@@ -12,12 +12,13 @@ builds and byte-identical public declarations. The final tree must also pass ful
 suite comparison and applicable smoke/source/pre-commit checks. Historic baseline
 failures do not excuse failures in a new run.
 
-Each run may remove at most 5 symbols, change 10 production files and delete 200
-production lines in one cohesive cleanup. Only verified work may produce one
-**draft** PR. Existing overlapping work is skipped. Public API, telemetry/product
+Each run should cover **all dead code found** and collect every proven safe
+removal in one **draft** PR. There is no symbol, file, line-count or small-cleanup
+limit. Existing overlapping work is skipped. Public API, telemetry/product
 decisions, translations/assets, dependencies and broad refactors are excluded.
 No merges, approvals, auto-merge, people mentions, reviews, issue writes or subagents.
-If the checks cannot finish within the timeout, report BLOCKED without publishing.
+If execution is interrupted, retain findings and remaining checks without
+claiming a complete sweep or publishing unverified removals.
 No safe candidate is a valid NO_CHANGE result.
 
 ## Source and deployment
@@ -25,13 +26,14 @@ No safe candidate is a valid NO_CHANGE result.
 `tarball/` is the sole runtime copy, downloaded directly from the Cloud prompt
 preset. Its `prompt.txt` is the maintained prompt. `automation.yaml` records the
 observed settings; `deployment.json` records the source hashes and Cloud identity.
-The request template in `definitions/canvas-dead-code/request.json` only supports
-explicit creation. `scripts/deploy_dead_code.py create` refuses duplicates and
-exports ONLY the newly created automation, leaving other bundles unchanged.
+The request template in `definitions/canvas-dead-code/request.json` supports
+explicit paused creation or updates. `scripts/deploy_dead_code.py create` refuses duplicates. Its `update` command
+accepts only this owned, inactive Cloud automation. Both export ONLY the affected
+automation, leaving other bundles unchanged.
 
 Git Sync is still disabled. Repository edits do not deploy. Review the current
 Cloud bundle before any explicit update. The helper has no dispatch or activation
-command. Choose a cadence and authorize a bounded first trial separately.
+command. Choose a cadence and authorize a first trial separately.
 
 ## Evidence and limitations
 
@@ -53,3 +55,11 @@ fork write permissions, model budget and secret/MCP scope. The automation must
 never expose secrets or change authentication. `keep_alive: false` requests
 sandbox cleanup after completion; retain sanitized report evidence in the draft
 PR/conversation before finishing, and verify lifecycle cleanup during the trial.
+
+## October 13 scope correction
+
+At Engel's request, the numeric deletion limits and small-cleanup instruction
+were removed from the prompt and the same paused Cloud job was updated. The
+verification requirements remain. The 1800-second service timeout is unchanged;
+it is an infrastructure limit, not a requested limit on the cleanup size. A full
+sweep has not yet executed.
