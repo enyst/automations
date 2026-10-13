@@ -23,3 +23,8 @@ proven just by creation. Evidence and outcomes go in the dated evaluation receip
 `scripts/run_dead_code_canary.py create` refuses duplicate definitions;
 `dispatch` verifies exact identity and inactive state, and refuses a second run.
 Repository changes do not deploy through Git Sync.
+
+## Trial result
+
+The manual run timed out before a verified patch or draft PR. The conversation
+and sandbox were explicitly paused. See the [comparison and limitations](../../evaluations/dead-code-canary-2026-10-13.md).

@@ -92,7 +92,8 @@ cadence is enabled. Its Cloud-downloaded bundle is the sole runtime source.
 
 An [independent historical canary](cloud-automations/automation-ad8b24d9-1878-4047-a729-00bd50210c18/)
 was manually dispatched October 13 at pinned commit `5a4071c7`. Its automation
-remains inactive. Results are pending; see the dated evaluation receipt.
+remains inactive. The trial timed out before a patch; the sandbox is paused. See the
+[comparison](evaluations/dead-code-canary-2026-10-13.md).
 
 ## Implementation notes
 
