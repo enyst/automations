@@ -55,3 +55,38 @@ See [trial.json](trial.json) for the non-secret receipt. A next trial needs work
 Cloud Codex authentication. The coordinator starts the conversation idle, checks
 its declared agent, then sends the run message; its completion checks require the
 scoped JSON result and verified cleanup, not merely a finished conversation.
+
+## October 13 fresh-login trial
+
+A separate device login was stored in Cloud `CODEX_AUTH_JSON`, with explicit
+approval to replace the older Cloud credential. The existing Mac `auth.json`
+was checked before and after and was unchanged. The new credential was never
+committed or included in the automation bundle or conversation request.
+
+The fresh login authenticated successfully. The ACP adapter reported actual
+model `gpt-6-astra`, although the profile and app metadata named `gpt-6.1-sol`.
+Treat the adapter's current-model observation as authoritative for this trial.
+
+The idle-start follow-up initially lacked the complete task; Codex asked for
+it again. A manual resend of the entire bounded task allowed the real recipe
+run. All **16 desktop sidebar assertions passed**, including reload persistence,
+60-pixel width, hidden/restored checklist, tooltip, backend popover, both expand
+paths and zero application browser errors. Five screenshots and the scoped
+transcript were retained privately before pausing the sandbox.
+
+The final verdict remains **blocked**. All five verification ports were closed,
+but the launcher and browser were PID-1-owned zombies. The harness refused its
+private-state purge. No broad kill or PID-1 manipulation was attempted.
+
+The coordinator also found that this Cloud deployment omitted
+`AUTOMATION_CALLBACK_API_KEY`. The repaired source now uses the existing
+`OPENHANDS_API_KEY` fallback, as other Cloud automations do, and resends the full
+task in the run message. Both repairs were deployed while the automation
+remained INACTIVE. They have offline regression coverage but have not yet had a
+fresh automatic end-to-end replay. The observed trial's FAILED callback was
+sent manually, and its containing sandbox was verified PAUSED.
+
+Authentication now works at least for this one fresh run. Long-lived refresh,
+parallel credential use, the requested Sol model selection and fully unattended
+completion remain unproven. This is sufficient evidence to continue developing
+the route, not to enable a daily maintenance fleet yet.

@@ -6,10 +6,30 @@
   "target_repository": "OpenHands/OpenHands",
   "target_sha": "d7e14e25bcf14238e566139ec9490e1f05efcd69",
   "feature_id": "F02.sidebar-collapse",
-  "runtime": {"version": "1.50.1", "sdk_version": "1.50.1", "build_git_sha": "1e1390acc8788346ba4804c34323284009bf3f5e"},
+  "runtime": {
+    "version": "1.50.1",
+    "sdk_version": "1.50.1",
+    "build_git_sha": "1e1390acc8788346ba4804c34323284009bf3f5e"
+  },
   "runs": [
-    {"id": "3313f04c-82a8-42cd-846d-4840430aea1a", "status": "CANCELLED", "reason": "secret_scope_check_before_agent_execution"},
-    {"id": "f5bd828a-4f50-40f6-bf66-6687a7f7009e", "status": "CANCELLED", "conversation_id": "5797ee91a1af50019d065fd9c105a978", "agent_kind": "acp", "acp_server": "codex", "model": "gpt-6.1-sol", "error_codes": ["ACPAuthRequired", "CredentialNeedsReauthentication"], "error_detail": "ChatGPT authentication did not complete in time. Please sign in again."}
+    {
+      "id": "3313f04c-82a8-42cd-846d-4840430aea1a",
+      "status": "CANCELLED",
+      "reason": "secret_scope_check_before_agent_execution"
+    },
+    {
+      "id": "f5bd828a-4f50-40f6-bf66-6687a7f7009e",
+      "status": "CANCELLED",
+      "conversation_id": "5797ee91a1af50019d065fd9c105a978",
+      "agent_kind": "acp",
+      "acp_server": "codex",
+      "model": "gpt-6.1-sol",
+      "error_codes": [
+        "ACPAuthRequired",
+        "CredentialNeedsReauthentication"
+      ],
+      "error_detail": "ChatGPT authentication did not complete in time. Please sign in again."
+    }
   ],
   "account_secret_values_sent_from_mac": false,
   "secrets_payload_sent": false,
@@ -18,5 +38,25 @@
   "live_recipe_run": false,
   "owned_sandboxes_remaining": 0,
   "automation_state": "INACTIVE",
-  "active_agent_profile_changed": false
+  "active_agent_profile_changed": false,
+  "fresh_login_trial": {
+    "date": "2026-10-13",
+    "run_id": "2c8810e1-81c1-4088-b37f-8a83a665a6ae",
+    "conversation_id": "e6e92e2605465119a12934e3af6b3e5a",
+    "status": "FAILED",
+    "authentication": "successful_fresh_device_login",
+    "original_local_auth_unchanged": true,
+    "requested_model": "gpt-6.1-sol",
+    "adapter_current_model": "gpt-6-astra",
+    "ui_assertions_passed": 16,
+    "scope": "F02.sidebar-collapse desktop only",
+    "verdict": "blocked",
+    "blocker": "verification launcher and browser were PID-1-owned zombies; all five ports closed but harness refused private-state purge",
+    "screenshots_retained_privately": 5,
+    "manual_full_task_resend": true,
+    "manual_completion_callback": true,
+    "containing_sandbox_status": "PAUSED",
+    "new_coordinator_source_deployed": true,
+    "automatic_replay_of_repairs": "not_run"
+  }
 }

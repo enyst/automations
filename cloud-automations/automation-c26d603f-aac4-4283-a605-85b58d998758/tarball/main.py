@@ -62,7 +62,7 @@ def start_body(config, run_id, sandbox_id, prompt):
 
 def callback(status, conversation_id=None, error=None):
     url = os.environ.get("AUTOMATION_CALLBACK_URL", "")
-    key = os.environ.get("AUTOMATION_CALLBACK_API_KEY", "")
+    key = os.environ.get("AUTOMATION_CALLBACK_API_KEY") or os.environ.get("OPENHANDS_API_KEY", "")
     if not url or not key:
         raise CanaryError("callback_context_missing")
     cloud_host = urlsplit(os.environ["OPENHANDS_CLOUD_API_URL"]).netloc
@@ -125,7 +125,7 @@ def run():
             if status != "idle":
                 raise CanaryError("conversation_not_idle_before_scope_check")
             request("POST", api + f"/api/v1/app-conversations/{cid}/send-message", key,
-                    {"content": [{"type": "text", "text": "Proceed with the authorized canary above."}], "run": True})
+                    {"content": [{"type": "text", "text": prompt + "\nPinned target SHA: " + config["target_sha"]}], "run": True})
             started = True
             time.sleep(5)
             continue

@@ -1,15 +1,15 @@
 {
-  "verified_at": "2026-10-12T23:46:08.728776+00:00",
+  "verified_at": "2026-10-13T01:20:45.684625+00:00",
   "id": "c26d603f-aac4-4283-a605-85b58d998758",
   "direction": "explicit_upload_and_cloud_readback",
   "state": "INACTIVE",
   "enabled": false,
   "agent_profile_id": "55383c97-f65f-44c8-a81a-3fa65a41b39b",
-  "bundle_sha256": "2dc71a19af7e3635ca76ed7562c264d3e6ebd75152bd7fe3f38e4bd85b0bf73f",
+  "bundle_sha256": "dc3a1113294f1e58b213e630b09c1ef5527021711b0813a7e1a25e5a4bfe8900",
   "runtime_files_match": true,
   "files": {
     "config.json": "d8b72191b01a9977de506771dfded2c2b8dac6815c174ac8281f39e461aa7696",
-    "main.py": "86befd2357bb316d382e23555023518fa22d5be5772565e5e907c9ef0f602007",
+    "main.py": "657513e7b99bf793080d8c15026565d2811cb1d39ffcd4567a729d4e492552c9",
     "prompt.txt": "56c1ff9aad0056fece515abd65e81c1d307601bf83593a0cd9a7a59bda8e45b9"
   }
 }

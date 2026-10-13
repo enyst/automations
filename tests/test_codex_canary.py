@@ -60,3 +60,31 @@ class CanaryTests(unittest.TestCase):
     def test_exact_secret_scope_is_accepted(self):
         canary.assert_profile_scope({"launched_agent_profile": {
             "agent_profile_id": "profile", "secret_refs": ["GITHUB_TOKEN", "CODEX_AUTH_JSON", "DEEPSEEK_API_KEY"]}}, "profile")
+
+    def test_callback_accepts_account_key_when_cloud_omits_callback_key(self):
+        env = {"AUTOMATION_CALLBACK_URL": "https://app.all-hands.dev/api/automation/v1/runs/run/complete", "OPENHANDS_API_KEY": "synthetic-account", "OPENHANDS_CLOUD_API_URL": "https://app.all-hands.dev", "AUTOMATION_RUN_ID": "run"}
+        with patch.dict(canary.os.environ, env, clear=True), patch.object(canary, "request") as request:
+            canary.callback("COMPLETED", "conversation")
+            self.assertEqual(request.call_args.args[2], "synthetic-account")
+
+    def test_run_message_repeats_complete_task_for_idle_acp_start(self):
+        config = json.loads((SOURCE / "config.json").read_text())
+        run_id = "11111111-1111-4111-8111-111111111111"
+        cid = canary.start_body(config, run_id, "sandbox", "task")["conversation_id"]
+        messages = []
+        def request(method, url, key, body=None):
+            if url.endswith("/users/me"):
+                return {"id": config["owner_id"], "org_id": config["owner_id"]}
+            if method == "POST" and url.endswith("/app-conversations"):
+                return {"id": "task", "status": "READY", "app_conversation_id": cid, "sandbox_id": "sandbox"}
+            if method == "POST" and url.endswith("/send-message"):
+                messages.append(body)
+                return {}
+            if "/file?" in url:
+                return json.dumps({"verdict": "pass", "feature_id": config["feature_id"], "checkout_sha": config["target_sha"], "cleanup_verified": True})
+            return [{"agent_kind": "acp", "acp_server": "codex", "execution_status": "finished" if messages else "idle"}]
+        env = {"OPENHANDS_CLOUD_API_URL": config["cloud_url"], "OPENHANDS_API_KEY": "synthetic", "SANDBOX_ID": "sandbox", "AUTOMATION_RUN_ID": run_id}
+        with patch.dict(canary.os.environ, env, clear=True), patch.object(canary, "request", side_effect=request), patch.object(canary.time, "sleep"), patch.object(canary, "callback"), patch.object(canary.Path, "write_text"):
+            canary.run()
+        self.assertEqual(messages[0]["content"][0]["text"], (SOURCE / "prompt.txt").read_text() + "\nPinned target SHA: " + config["target_sha"])
+        self.assertTrue(messages[0]["run"])
