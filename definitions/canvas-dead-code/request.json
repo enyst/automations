@@ -1,0 +1,20 @@
+{
+  "name": "Canvas bounded dead-code",
+  "model": "deep-pro",
+  "trigger": {
+    "type": "cron",
+    "schedule": "0 0 1 1 *",
+    "timezone": "UTC"
+  },
+  "state": "INACTIVE",
+  "enabled": false,
+  "timeout": 1800,
+  "keep_alive": false,
+  "repos": [
+    {
+      "url": "https://github.com/OpenHands/OpenHands",
+      "provider": "github",
+      "ref": "main"
+    }
+  ]
+}
