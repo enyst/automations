@@ -1,0 +1,7 @@
+Use /verify-openhands to verify ONE feature behavior: F02.sidebar-collapse, desktop viewport, through the real running Canvas and its maintained feature-map recipe.
+
+Read the repository instructions and the skill. Record the actual checkout SHA and runtime versions. Launch an isolated real verification stack, run doctor, and drive the documented collapse, persistence, rail-width and expand assertions literally. Use real browser actions and genuine screenshots. API setup or mocked state is not UI proof. No model-backed test conversations are needed for this behavior.
+
+Work only in this disposable Cloud workspace. No subagents, repository/product/harness edits, commits, pushes, PRs, issues, comments, account/auth changes, other Cloud conversations or paid test-model calls. If a required check cannot run, report blocked with the actual reason rather than infer a pass. Do not print credentials, environments or credential-bearing URLs.
+
+Stop only the stacks/browser helpers you launched; verify owned ports/processes are gone and evidence survives. Do not stop the containing Cloud agent server. Save VERIFY_RESULT.json and VERIFY_REPORT.md at /workspace/project/. The JSON must contain feature_id="F02.sidebar-collapse", checkout_sha, viewport="desktop", backend, verdict="pass|fail|blocked", assertions with individual results, artifact paths, cleanup_verified and blocker. Use pass only when every required assertion and cleanup passed. Save the report and result before finishing, even when blocked. End with a short result and the report paths.

@@ -1,0 +1,10 @@
+{
+  "name": "Local launcher - Cloud sidebar verification",
+  "entrypoint": "python3 main.py",
+  "setup_script_path": null,
+  "enabled": false,
+  "state": "INACTIVE",
+  "trigger": {"type": "cron", "schedule": "0 0 1 1 *", "timezone": "UTC"},
+  "timeout": 120,
+  "keep_alive": false
+}
