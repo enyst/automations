@@ -90,6 +90,15 @@ before dispatching again.
 - [SDK lifecycle conformance](docs/sdk-lifecycle-conformance.md): independent verifier and trial evidence.
 - [Jev release security triage](plans/jev-release-security.md): a plan, not a deployed automation.
 
+## Local launcher with Cloud verification
+
+[Cloud sidebar verification](local-automations/cloud-sidebar-verification/)
+keeps the control-plane script local and all verification in an OpenHands Cloud
+worker. Its repository configuration is forwarded to Cloud for automatic cloning.
+It selects one desktop `F02.sidebar-collapse` behavior. The definition is inactive;
+installation and a first manual dispatch are separate explicit steps. No local
+verification stack is started.
+
 ## Local Git Sync
 
 The local configuration remains `main`, path `local-automations/`, with
