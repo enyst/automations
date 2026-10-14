@@ -28,7 +28,9 @@ The launcher reads only the existing local `OPENHANDS_API_KEY` secret via the
 Agent Server settings API. It validates the Cloud account. No keys are copied
 into code, prompts, subprocess environments or conversation-create payloads.
 The Cloud worker uses API-authenticated `openhands/deepseek-v4-pro`, not ACP or
-ChatGPT login. Start idle, validate the actual agent/model, then send the task.
+ChatGPT login. Request idle creation, validate the actual agent/model, then send the task only
+if still idle. Some Cloud versions already run the initial message; in that
+case, record the submitted worker without sending the task twice.
 Cloud uses its saved account settings/integration; the current runtime can expose
 all saved account secrets/MCP settings. This is not a per-worker allowlist.
 
@@ -62,3 +64,11 @@ handling, ACP rejection and local-only execution. A live verification result
 must not be inferred from these tests. The local secret was checked against the
 expected Cloud identity without copying or logging it; the Cloud account's
 active agent profile was unset at preflight.
+
+## First trial · October 14
+
+Installed paused and manually dispatched after approval. Local submission completed;
+one normal OpenHands/DeepSeek-Pro Cloud worker is running. The existing local
+stack was not restarted. Cloud unexpectedly ran the initial message immediately;
+the launcher now handles that without sending the task twice. Result and remote
+cleanup are still pending. See `deployment.json` for identities.

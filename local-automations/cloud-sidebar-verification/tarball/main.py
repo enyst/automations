@@ -152,6 +152,9 @@ def run(status_only=False):
             raise LauncherError('normal_openhands_worker_required')
         if conversation.get('llm_model') != config['model']:
             raise LauncherError('unexpected_worker_model')
+        if not state['sent'] and conversation.get('execution_status') != 'idle':
+            # Some Cloud versions run initial_message even when run=False.
+            state.update(sent=True, phase='submitted', started_from_initial_message=True)
         if not state['sent'] and not status_only:
             # Mark uncertain BEFORE sending. An HTTP failure never auto-resends the task.
             state.update(sent=True, phase='send_pending')

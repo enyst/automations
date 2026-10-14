@@ -30,7 +30,7 @@ class Cloud:
         if '/start-tasks?' in url:
             return [{'status': 'READY', 'app_conversation_id': self.cid, 'sandbox_id': 'cloud-sandbox'}]
         if '/app-conversations?ids=' in url:
-            return [{'agent_kind': self.kind, 'llm_model': 'openhands/deepseek-v4-pro', 'execution_status': 'running'}]
+            return [{'agent_kind': self.kind, 'llm_model': 'openhands/deepseek-v4-pro', 'execution_status': 'idle'}]
         if url.endswith('/send-message'):
             if self.fail_send:
                 raise launcher.LauncherError('http_502')
@@ -137,3 +137,18 @@ class LauncherTests(unittest.TestCase):
                 code = launcher.main()
             self.assertEqual(code, 0 if error is None else 1)
             self.assertEqual(callback.call_args.args[0] if callback.call_args.args else 'COMPLETED', expected)
+
+    def test_cloud_already_running_initial_message_is_not_sent_twice(self):
+        cloud = Cloud()
+        original = cloud.request
+        def started(method, url, key, body=None, **kwargs):
+            value = original(method, url, key, body, **kwargs)
+            if '/app-conversations?ids=' in url:
+                value[0]['execution_status'] = 'running'
+            return value
+        cloud.request = started
+        with tempfile.TemporaryDirectory() as directory:
+            value = self.execute(cloud, directory)
+        self.assertTrue(value['sent'])
+        self.assertTrue(value['started_from_initial_message'])
+        self.assertFalse(any(url.endswith('/send-message') for _, url, _ in cloud.calls))
