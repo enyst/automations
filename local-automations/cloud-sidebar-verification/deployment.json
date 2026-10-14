@@ -3,7 +3,7 @@
   "backend": "local",
   "state": "INACTIVE",
   "dispatches": 1,
-  "bundle_sha256": "923e7fb74c1daa8e43a3dd75715ec3a920cd96fc92fe0135821e42b4021a7698",
+  "bundle_sha256": "17c87b257cf61898f6ac84381e275810f7a4a0a878089d0db4bf08a19193447f",
   "files": [
     "config.json",
     "main.py",
@@ -13,5 +13,8 @@
   "run_id": "d9ed1dae-d6cd-4901-a702-08435413c783",
   "cloud_conversation_id": "e12b14b1-2d00-4e1a-8235-26bd53764de3",
   "cloud_worker_status": "running",
-  "started_from_initial_message": true
+  "started_from_initial_message": true,
+  "name": "Local launcher - Cloud daily verification",
+  "task": "daily-pass",
+  "latest_deployment_dispatched": false
 }

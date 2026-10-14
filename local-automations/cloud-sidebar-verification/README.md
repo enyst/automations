@@ -1,4 +1,4 @@
-# Local launcher, Cloud verification worker
+# Local launcher, Cloud daily verification worker
 
 A local OpenHands **custom script automation**, built from the extensions
 `openhands-automation` skill. The script uses only Python's standard library;
@@ -16,11 +16,16 @@ consume `repos_config.json`; the script must forward it. There is no local clone
 installation, server launch or browser command, nor a clone instruction in the
 worker prompt.
 
-The worker uses `/verify-openhands` for one behavior: **F02.sidebar-collapse**,
-desktop. It must use actual browser actions, retain screenshots and per-assertion
-evidence, stop its own stack, verify cleanup and write the result/report. No
-product/harness edits or public writes are authorized. This is a single behavior
-trial, not a daily full-map job.
+The worker follows `.agents/skills/verify-openhands/references/daily.md` and its
+linked procedures. Subagents are allowed, each with its own verification run.
+One maintenance PR may contain proven map/harness corrections; product defects
+are reported, not fixed. Existing issues receive new reproduction evidence
+instead of duplicates. No merges. Model-backed verification requires an explicit
+budget; otherwise it is marked blocked. The prompt does not duplicate the skill.
+
+The directory keeps its original name to preserve the deployed automation's
+history. The October 14 sidebar trial remains a separate historical result;
+it is not evidence of a completed daily pass.
 
 ## Authentication and state
 
@@ -34,7 +39,7 @@ case, record the submitted worker without sending the task twice.
 Cloud uses its saved account settings/integration; the current runtime can expose
 all saved account secrets/MCP settings. This is not a per-worker allowlist.
 
-Private state under `~/.smolpaws/automation-state/cloud-sidebar-verification/`
+Private state under `~/.smolpaws/automation-state/cloud-daily-verification/`
 is stable across local automation runs. A file lock serializes submissions;
 an atomic state write records intent before each create/send. Repeated runs
 monitor the same worker instead of launching another. Ambiguous POST responses
@@ -44,8 +49,8 @@ stop with the saved ID for inspection instead of automatically resending.
 If startup is still pending when this short launcher exits, dispatch the same
 local definition again to finish startup/send, using its retained ID. This
 initial version does not automatically schedule monitoring or another trial.
-On terminal completion, collect `VERIFY_RESULT.json`, `VERIFY_REPORT.md` and
-sanitized evidence from the Cloud worker, then pause its owned sandbox. Never
+On terminal completion, collect the daily report and sanitized evidence from
+the Cloud worker, then pause its owned sandbox. Never
 apply the local launcher's timeout to the remote verification conversation.
 This evidence retrieval/cleanup is an operator step for this first trial.
 
@@ -72,3 +77,13 @@ one normal OpenHands/DeepSeek-Pro Cloud worker is running. The existing local
 stack was not restarted. Cloud unexpectedly ran the initial message immediately;
 the launcher now handles that without sending the task twice. Result and remote
 cleanup are still pending. See `deployment.json` for identities.
+
+## Daily prompt replacement · October 14
+
+After the launcher PR merged, the same inactive local definition was renamed
+and its bundle replaced with the minimal daily prompt. No daily run or schedule
+was enabled. The new task uses a separate state directory so it never sends a
+daily task into the finished sidebar conversation. This launcher still submits
+one worker and then monitors that saved worker on subsequent dispatches; it is
+not yet a recurring daily-run lifecycle manager. Choose model-backed test budgets
+and a recurrence policy before enabling a daily schedule.
