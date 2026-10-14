@@ -1,0 +1,5 @@
+{
+  "files": {
+    "pydantic_secrets.py": "from typing import Final\n\n# Validation-context flag: when true, validate_secret raises SecretDecryptionError\n# for an undecryptable Fernet token instead of returning None.\nSTRICT_DECRYPT_CONTEXT_KEY: Final[str] = \"strict_decrypt\"\n"
+  }
+}

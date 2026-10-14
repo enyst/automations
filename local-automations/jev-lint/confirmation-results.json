@@ -1,0 +1,490 @@
+[
+  {
+    "case": "original",
+    "items": [
+      {
+        "id": "0",
+        "rule": "BOOL_SCOPE",
+        "location": "hooks_service.py:21"
+      },
+      {
+        "id": "1",
+        "rule": "PY_SUPPRESS",
+        "location": "hooks_service.py:68"
+      },
+      {
+        "id": "2",
+        "rule": "PY_SUPPRESS",
+        "location": "hooks_service.py:79"
+      },
+      {
+        "id": "3",
+        "rule": "BOOL_SCOPE",
+        "location": "hooks_router.py:17"
+      }
+    ],
+    "response": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "0": {
+          "type": "noul",
+          "noul": 0.94
+        },
+        "0_choice": {
+          "type": "choice",
+          "choice": "correct",
+          "confidence": 0.98,
+          "probabilities": {
+            "correct": 0.99,
+            "accept": 0.01
+          }
+        },
+        "1": {
+          "type": "noul",
+          "noul": 0.79
+        },
+        "1_choice": {
+          "type": "choice",
+          "choice": "correct",
+          "confidence": 0.5,
+          "probabilities": {
+            "correct": 0.75,
+            "accept": 0.25
+          }
+        },
+        "2": {
+          "type": "noul",
+          "noul": 0.2
+        },
+        "2_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 0.86,
+          "probabilities": {
+            "correct": 0.07,
+            "accept": 0.93
+          }
+        },
+        "3": {
+          "type": "noul",
+          "noul": 0.95
+        },
+        "3_choice": {
+          "type": "choice",
+          "choice": "correct",
+          "confidence": 0.98,
+          "probabilities": {
+            "correct": 0.99,
+            "accept": 0.01
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 2196,
+        "output_tokens": 183
+      }
+    },
+    "errors": [
+      {
+        "severity": "error",
+        "code": "BOOL_SCOPE",
+        "location": "hooks_service.py:21",
+        "message": "Public loading flags must name the resource they control, as well as its source if relevant. For loading hooks, use load_project_hooks and load_user_hooks, not load_project and load_user. An enclosing function name or field description does not exempt a public option from this naming rule.",
+        "alternative": "Include the loaded resource in the boolean names and update callers/tests, e.g. load_project_hooks/load_user_hooks. Preserve released REST field spellings through aliases and a deprecation runway.",
+        "signal_probability": 0.99,
+        "noul_probability": 0.94,
+        "source_sha256": "c10993a935cccea825990d6c4f512a6302b528edaa16dc32e138f1eee6f20f43"
+      },
+      {
+        "severity": "error",
+        "code": "BOOL_SCOPE",
+        "location": "hooks_router.py:17",
+        "message": "Public loading flags must name the resource they control, as well as its source if relevant. For loading hooks, use load_project_hooks and load_user_hooks, not load_project and load_user. An enclosing function name or field description does not exempt a public option from this naming rule.",
+        "alternative": "Include the loaded resource in the boolean names and update callers/tests, e.g. load_project_hooks/load_user_hooks. Preserve released REST field spellings through aliases and a deprecation runway.",
+        "signal_probability": 0.99,
+        "noul_probability": 0.95,
+        "source_sha256": "2940f84d5f487c82ff55ead655d4fef686d76fc3a33387a5544da297313e1fd4"
+      }
+    ]
+  },
+  {
+    "case": "suppress-only",
+    "items": [
+      {
+        "id": "0",
+        "rule": "BOOL_SCOPE",
+        "location": "hooks_service.py:22"
+      },
+      {
+        "id": "1",
+        "rule": "PY_SUPPRESS",
+        "location": "hooks_service.py:79"
+      },
+      {
+        "id": "2",
+        "rule": "BOOL_SCOPE",
+        "location": "hooks_router.py:17"
+      }
+    ],
+    "response": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "0": {
+          "type": "noul",
+          "noul": 0.94
+        },
+        "0_choice": {
+          "type": "choice",
+          "choice": "correct",
+          "confidence": 0.96,
+          "probabilities": {
+            "correct": 0.98,
+            "accept": 0.02
+          }
+        },
+        "1": {
+          "type": "noul",
+          "noul": 0.3
+        },
+        "1_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 0.82,
+          "probabilities": {
+            "correct": 0.09,
+            "accept": 0.91
+          }
+        },
+        "2": {
+          "type": "noul",
+          "noul": 0.95
+        },
+        "2_choice": {
+          "type": "choice",
+          "choice": "correct",
+          "confidence": 0.98,
+          "probabilities": {
+            "correct": 0.99,
+            "accept": 0.01
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 1804,
+        "output_tokens": 138
+      }
+    },
+    "errors": [
+      {
+        "severity": "error",
+        "code": "BOOL_SCOPE",
+        "location": "hooks_service.py:22",
+        "message": "Public loading flags must name the resource they control, as well as its source if relevant. For loading hooks, use load_project_hooks and load_user_hooks, not load_project and load_user. An enclosing function name or field description does not exempt a public option from this naming rule.",
+        "alternative": "Include the loaded resource in the boolean names and update callers/tests, e.g. load_project_hooks/load_user_hooks. Preserve released REST field spellings through aliases and a deprecation runway.",
+        "signal_probability": 0.98,
+        "noul_probability": 0.94,
+        "source_sha256": "c10993a935cccea825990d6c4f512a6302b528edaa16dc32e138f1eee6f20f43"
+      },
+      {
+        "severity": "error",
+        "code": "BOOL_SCOPE",
+        "location": "hooks_router.py:17",
+        "message": "Public loading flags must name the resource they control, as well as its source if relevant. For loading hooks, use load_project_hooks and load_user_hooks, not load_project and load_user. An enclosing function name or field description does not exempt a public option from this naming rule.",
+        "alternative": "Include the loaded resource in the boolean names and update callers/tests, e.g. load_project_hooks/load_user_hooks. Preserve released REST field spellings through aliases and a deprecation runway.",
+        "signal_probability": 0.99,
+        "noul_probability": 0.95,
+        "source_sha256": "2940f84d5f487c82ff55ead655d4fef686d76fc3a33387a5544da297313e1fd4"
+      }
+    ]
+  },
+  {
+    "case": "names-only",
+    "items": [
+      {
+        "id": "0",
+        "rule": "BOOL_SCOPE",
+        "location": "hooks_service.py:21"
+      },
+      {
+        "id": "1",
+        "rule": "PY_SUPPRESS",
+        "location": "hooks_service.py:68"
+      },
+      {
+        "id": "2",
+        "rule": "PY_SUPPRESS",
+        "location": "hooks_service.py:79"
+      },
+      {
+        "id": "3",
+        "rule": "BOOL_SCOPE",
+        "location": "hooks_router.py:17"
+      }
+    ],
+    "response": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "0": {
+          "type": "noul",
+          "noul": 0.05
+        },
+        "0_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 1.0,
+          "probabilities": {
+            "correct": 0.0,
+            "accept": 1.0
+          }
+        },
+        "1": {
+          "type": "noul",
+          "noul": 0.79
+        },
+        "1_choice": {
+          "type": "choice",
+          "choice": "correct",
+          "confidence": 0.62,
+          "probabilities": {
+            "correct": 0.81,
+            "accept": 0.19
+          }
+        },
+        "2": {
+          "type": "noul",
+          "noul": 0.24
+        },
+        "2_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 0.78,
+          "probabilities": {
+            "correct": 0.11,
+            "accept": 0.89
+          }
+        },
+        "3": {
+          "type": "noul",
+          "noul": 0.05
+        },
+        "3_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 1.0,
+          "probabilities": {
+            "correct": 0.0,
+            "accept": 1.0
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 2204,
+        "output_tokens": 183
+      }
+    },
+    "errors": []
+  },
+  {
+    "case": "fixed",
+    "items": [
+      {
+        "id": "0",
+        "rule": "BOOL_SCOPE",
+        "location": "hooks_service.py:22"
+      },
+      {
+        "id": "1",
+        "rule": "PY_SUPPRESS",
+        "location": "hooks_service.py:68"
+      },
+      {
+        "id": "2",
+        "rule": "BOOL_SCOPE",
+        "location": "hooks_router.py:17"
+      }
+    ],
+    "response": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "0": {
+          "type": "noul",
+          "noul": 0.05
+        },
+        "0_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 1.0,
+          "probabilities": {
+            "correct": 0.0,
+            "accept": 1.0
+          }
+        },
+        "1": {
+          "type": "noul",
+          "noul": 0.24
+        },
+        "1_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 0.82,
+          "probabilities": {
+            "correct": 0.09,
+            "accept": 0.91
+          }
+        },
+        "2": {
+          "type": "noul",
+          "noul": 0.06
+        },
+        "2_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 1.0,
+          "probabilities": {
+            "correct": 0.0,
+            "accept": 1.0
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 1839,
+        "output_tokens": 138
+      }
+    },
+    "errors": []
+  },
+  {
+    "case": "clean",
+    "items": [],
+    "errors": [],
+    "requests": 0
+  },
+  {
+    "case": "non-suppressible",
+    "items": [
+      {
+        "id": "0",
+        "rule": "BOOL_SCOPE",
+        "location": "hooks.py:1"
+      },
+      {
+        "id": "1",
+        "rule": "PY_SUPPRESS",
+        "location": "hooks.py:2"
+      }
+    ],
+    "response": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "0": {
+          "type": "noul",
+          "noul": 0.09
+        },
+        "0_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 0.94,
+          "probabilities": {
+            "correct": 0.03,
+            "accept": 0.97
+          }
+        },
+        "1": {
+          "type": "noul",
+          "noul": 0.18
+        },
+        "1_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 0.84,
+          "probabilities": {
+            "correct": 0.08,
+            "accept": 0.92
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 1052,
+        "output_tokens": 93
+      }
+    },
+    "errors": []
+  },
+  {
+    "case": "final-old",
+    "items": [
+      {
+        "id": "0",
+        "rule": "CONST_FINAL",
+        "location": "pydantic_secrets.py:3"
+      }
+    ],
+    "response": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "0": {
+          "type": "noul",
+          "noul": 0.94
+        },
+        "0_choice": {
+          "type": "choice",
+          "choice": "correct",
+          "confidence": 0.96,
+          "probabilities": {
+            "correct": 0.98,
+            "accept": 0.02
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 615,
+        "output_tokens": 48
+      }
+    },
+    "errors": [
+      {
+        "severity": "error",
+        "code": "CONST_FINAL",
+        "location": "pydantic_secrets.py:3",
+        "message": "Annotate a module-level constant with typing.Final and its value type, for example NAME: Final[str] = \"value\". A plain inferred type or UPPER_CASE spelling alone does not satisfy this policy. Do not apply to mutable state or a type alias.",
+        "alternative": "Import Final from typing and annotate the constant as NAME: Final[its_value_type] = value. Keep the value unchanged; Final is a static contract, not runtime immutability.",
+        "signal_probability": 0.98,
+        "noul_probability": 0.94,
+        "source_sha256": "fa68a82c64ad23d5e4db479e308d27a4b2209b82ad8ead64e4cd99d8cbbe1e76"
+      }
+    ]
+  },
+  {
+    "case": "final-fixed",
+    "items": [
+      {
+        "id": "0",
+        "rule": "CONST_FINAL",
+        "location": "pydantic_secrets.py:5"
+      }
+    ],
+    "response": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "0": {
+          "type": "noul",
+          "noul": 0.04
+        },
+        "0_choice": {
+          "type": "choice",
+          "choice": "accept",
+          "confidence": 0.98,
+          "probabilities": {
+            "correct": 0.01,
+            "accept": 0.99
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 619,
+        "output_tokens": 48
+      }
+    },
+    "errors": []
+  }
+]

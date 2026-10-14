@@ -1,0 +1,23 @@
+{
+  "bundle_sha256": "04e4c4d30c18c41024efe331d9f820d947f511420e2fede7a3ae8cb452134359",
+  "files": [
+    "cases.json",
+    "final-cases.json",
+    "fixtures/case-1.json",
+    "fixtures/case-2.json",
+    "fixtures/case-3.json",
+    "fixtures/case-4.json",
+    "fixtures/case-5.json",
+    "fixtures/case-6.json",
+    "fixtures/final-fixed.json",
+    "fixtures/final-old.json",
+    "focused.py",
+    "helpers.py",
+    "main.py"
+  ],
+  "backend": "local",
+  "dispatches": 0,
+  "id": "fdcbd3c5-a745-4275-b9d2-dd7298d95ef8",
+  "state": "INACTIVE",
+  "focused_bundle_sha256": "aae111420ae094a995b4e02ecb4b575419d7bded44396d9e4a8aa1a92c7613de"
+}

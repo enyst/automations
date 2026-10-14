@@ -127,3 +127,11 @@ Credentials stay in the runtime, Cloud secret store, or macOS Keychain. Files ma
 name secret references but must not contain secret values. No credential was
 copied from the Mac into Cloud during this setup. Do not put credentials in Git
 URLs or use plaintext storage to work around the failed Git Sync save.
+
+## Jev English lint experiment
+
+[`jev-lint`](local-automations/jev-lint/) is a paused local script experiment.
+Explicit English policies classify AST candidates and return structured correction
+errors to a coding agent. [Results](local-automations/jev-lint/RESULTS.md) include
+whole-file failures, focused naming/Final successes, and the weaker suppress signal.
+No schedule or agent hook is enabled.
