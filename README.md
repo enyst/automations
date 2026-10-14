@@ -95,7 +95,8 @@ before dispatching again.
 [Cloud sidebar verification](local-automations/cloud-sidebar-verification/)
 keeps the control-plane script local and all verification in an OpenHands Cloud
 worker. Its repository configuration is forwarded to Cloud for automatic cloning.
-It selects one desktop `F02.sidebar-collapse` behavior. The definition is inactive;
+Its worker now follows the maintained daily-pass procedure. The completed sidebar
+trial is historical evidence only. The definition remains inactive;
 installation and a first manual dispatch are separate explicit steps. No local
 verification stack is started.
 

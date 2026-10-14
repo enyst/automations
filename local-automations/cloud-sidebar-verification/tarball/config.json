@@ -4,6 +4,6 @@
   "model": "openhands/deepseek-v4-pro",
   "repository": "OpenHands/OpenHands",
   "branch": "main",
-  "feature_id": "F02.sidebar-collapse",
-  "state_directory": "~/.smolpaws/automation-state/cloud-sidebar-verification"
+  "feature_id": "daily-pass",
+  "state_directory": "~/.smolpaws/automation-state/cloud-daily-verification"
 }
