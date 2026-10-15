@@ -5,7 +5,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-HERE = Path(__file__).resolve().parents[1] / 'local-automations/jev-lint/tarball'
+HERE = Path(__file__).resolve().parents[1] / 'cloud-automations/automation-ad72eec2-5dad-44ff-9c23-92a78a9c003a/tarball'
 sys.path.insert(0, str(HERE))
 spec = importlib.util.spec_from_file_location('jev_file_check', HERE / 'main.py')
 check = importlib.util.module_from_spec(spec)
@@ -264,3 +264,21 @@ class PublishTest(unittest.TestCase):
         gh = self.client(); gh.post.side_effect = check.CheckError('github_network_failure')
         with self.assertRaises(check.CheckError): self.publish(gh)
         gh.post.assert_called_once()
+
+
+class EventEnvelopeTest(unittest.TestCase):
+    def test_cloud_wrapper_and_ignored_events(self):
+        event = {'repository': {'full_name': 'OpenHands/OpenHands'}, 'pull_request': {'number': 7}, 'action': 'synchronize'}
+        self.assertEqual(pr_lint.target(None, None, {'trigger': 'event', 'event': event}), ('OpenHands/OpenHands', 7))
+        self.assertIsNone(pr_lint.target(None, None, {'trigger': 'event'}))
+        event['action'] = 'edited'
+        self.assertIsNone(pr_lint.target(None, None, event))
+
+
+class CloudCallbackTest(unittest.TestCase):
+    def test_cloud_api_key_fallback_for_completion(self):
+        import helpers
+        with patch.dict('os.environ', {'AUTOMATION_CALLBACK_URL': 'https://app.all-hands.dev/api/automation/v1/runs/example/complete', 'OPENHANDS_API_KEY': 'synthetic-cloud-key'}, clear=True), patch('urllib.request.urlopen') as opened:
+            helpers.fire_callback()
+            request = opened.call_args.args[0]
+            self.assertEqual(request.get_header('Authorization'), 'Bearer synthetic-cloud-key')

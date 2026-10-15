@@ -48,7 +48,11 @@ class GitHub:
 
 def target(repository, number, event=None):
     # The event selects a target only; it never authorizes its asserted author.
+    if event and 'trigger' in event:
+        event = event.get('event') or {}
     if event:
+        if event.get('action') not in (None, 'opened', 'synchronize', 'ready_for_review'):
+            return None
         repository = event.get('repository', {}).get('full_name')
         number = event.get('pull_request', {}).get('number')
     if repository is None and number is None:

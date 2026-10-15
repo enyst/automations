@@ -128,10 +128,12 @@ name secret references but must not contain secret values. No credential was
 copied from the Mac into Cloud during this setup. Do not put credentials in Git
 URLs or use plaintext storage to work around the failed Git Sync save.
 
-## Jev English lint experiment
+## Jev English lint
 
-[`jev-lint`](local-automations/jev-lint/) is a paused local script experiment.
-Explicit English policies classify AST candidates and return structured correction
-errors to a coding agent. [Results](local-automations/jev-lint/RESULTS.md) include
-whole-file failures, focused naming/Final successes, and the weaker suppress signal.
-No schedule or agent hook is enabled.
+[Jev-lint](cloud-automations/automation-ad72eec2-5dad-44ff-9c23-92a78a9c003a/)
+runs in Cloud. The local copy is disabled. Explicit English policies check Python
+and feature-map prose on public, open, non-draft PRs authored by `enyst`.
+Warnings post as SmolPaws, beginning with `Jev-lint warning 🐾`, at the reported
+changed line or with a pinned file link when outside the diff. Feature-map gate:
+0.80; existing Python gates: 0.95. See the directory for measured limits and
+current deployment/event details. Git edits alone do not deploy to Cloud.

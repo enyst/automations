@@ -1,0 +1,54 @@
+{
+  "id": "ad72eec2-5dad-44ff-9c23-92a78a9c003a",
+  "name": "jev-lint",
+  "entrypoint": "python3 pr_lint.py",
+  "enabled": true,
+  "state": "ACTIVE",
+  "trigger": {
+    "on": "pull_request.*",
+    "type": "event",
+    "filter": "contains(['opened', 'synchronize', 'ready_for_review'], action) && pull_request.user.login == 'enyst' && pull_request.draft == `false` && pull_request.state == 'open' && contains(['OpenHands/OpenHands', 'OpenHands/software-agent-sdk', 'OpenHands/automation', 'OpenHands/extensions'], repository.full_name)",
+    "source": "github",
+    "wake_agent": true,
+    "destination": "dispatch_run",
+    "turn_text_expr": null,
+    "subject_key_expr": null
+  },
+  "timeout": 600,
+  "keep_alive": false,
+  "setup_script_path": null,
+  "bundle_sha256": "7eb2cf3d8c8a0a997838d1bdc5a5c85af3e37bddcfd609610369fb126e4cdbb6",
+  "files": [
+    "cases.json",
+    "feature_map.py",
+    "final-cases.json",
+    "fixtures/case-1.json",
+    "fixtures/case-2.json",
+    "fixtures/case-3.json",
+    "fixtures/case-4.json",
+    "fixtures/case-5.json",
+    "fixtures/case-6.json",
+    "fixtures/final-fixed.json",
+    "fixtures/final-old.json",
+    "focused.py",
+    "helpers.py",
+    "main.py",
+    "pr_lint.py",
+    "publish.py"
+  ],
+  "dispatches": 0,
+  "trials": [
+    {
+      "run_id": "fedce69b-2861-43e2-940e-bbe49effb0f5",
+      "pr": "OpenHands/software-agent-sdk#5973",
+      "status": "COMPLETED",
+      "note": "Classifier exit0/no warnings; callback initially401, reconciled after inspecting output."
+    },
+    {
+      "run_id": "eba1a4db-9385-4525-b45c-80fa2e50bb51",
+      "pr": "OpenHands/software-agent-sdk#5758",
+      "status": "COMPLETED",
+      "note": "Fixed Cloud callback; no Jev warning comments observed. Output unavailable after sandbox cleanup."
+    }
+  ]
+}
