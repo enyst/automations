@@ -4,8 +4,10 @@
   "enabled": false,
   "state": "INACTIVE",
   "allowed_pr_author": "enyst",
-  "publication": "run_logs_only",
-  "bundle_sha256": "5d47341b5312c61a473bf81f1602d2508c10fbab1ebe3151d5e5028fc392cf6e",
+  "publication": "SmolPaws inline warnings; pinned source-link fallback outside diff",
+  "posting_secret": "SMOLPAWS_TOKEN",
+  "comment_first_line": "Jev-lint warning \ud83d\udc3e",
+  "bundle_sha256": "946b576d4f96d218dd90517f4acf30dbc3645bfc4f639e3a326b84a1b8dfb1a4",
   "files": [
     "cases.json",
     "feature_map.py",
@@ -21,7 +23,8 @@
     "focused.py",
     "helpers.py",
     "main.py",
-    "pr_lint.py"
+    "pr_lint.py",
+    "publish.py"
   ],
   "dispatches": 0
 }

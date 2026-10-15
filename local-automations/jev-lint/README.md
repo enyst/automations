@@ -137,9 +137,23 @@ and closed PRs do not run. Event author claims are never trusted.
 `pr_lint.py --repository OpenHands/OpenHands --pr 18437` checks added/modified
 Python candidates and feature-map prose, reading public source at the exact head.
 Incomplete relevant patches/source fail rather than claiming a clean check.
-Output is currently JSON in run logs; it does not publish GitHub comments. The feature-map CLI
+Output includes JSON in run logs. The deployed publisher posts findings as
+SmolPaws using the existing Cloud `SMOLPAWS_TOKEN`, after checking `/user`
+returns exactly `smolpaws`. `--no-publish` keeps a run read-only. The feature-map CLI
 is included, but needs an explicit repository, base and head; no target is selected
-automatically. It has not been dispatched in Cloud yet. Inline review comments can use changed RIGHT-side diff lines at the checked
-head. Lines outside the PR diff need a normal comment with a pinned file link.
-No inline publisher, automatic target discovery or recurring PR watcher is installed yet. `cloud-deployment.json` records the bundle identity, not a successful
+automatically. It has not been dispatched in Cloud yet. Findings on changed RIGHT-side diff lines become inline review comments at the
+checked commit. Lines outside the diff become normal comments with a pinned
+file/line link. Every comment starts exactly with `Jev-lint warning 🐾` and a
+newline, followed by the rule, suggested correction and uncalibrated score.
+Only public repositories and open, non-draft PRs authored by `enyst` qualify.
+The author/head/state are rechecked before each write. GitHub cannot make that
+check and write atomic; inline comments are pinned to the checked commit.
+
+A marker based on rule, file path and source-snippet hash suppresses repeated
+warnings across runs, even when a line moves. Only markers on SmolPaws comments
+count. An ambiguous failed POST is not retried within a run; the next run reads
+comments before posting. Simultaneous runs are not serialized yet, so concurrent
+runs could still race and duplicate a warning. No approval/request-changes review
+is submitted, and no automatic target discovery or PR-event subscription is
+installed. The Cloud definition remains inactive. No live posting trial has run. `cloud-deployment.json` records the bundle identity, not a successful
 Cloud execution. The existing Cloud TYPESAFE_API_KEY is reused; no secret copied.

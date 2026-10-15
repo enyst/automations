@@ -179,7 +179,7 @@ class PrAuthorGateTest(unittest.TestCase):
     def test_enyst_without_relevant_changes_needs_no_classifier(self):
         from unittest.mock import Mock
         gh = Mock()
-        pr = {'user': {'login': 'enyst'}, 'state': 'open', 'draft': False, 'head': {'sha': 'a'*40}, 'changed_files': 1}
+        pr = {'user': {'login': 'enyst'}, 'state': 'open', 'draft': False, 'head': {'sha': 'a'*40}, 'changed_files': 1, 'base': {'repo': {'private': False}}}
         gh.get.side_effect = [pr, [{'filename': 'README.md', 'status': 'modified'}], pr, pr]
         def forbidden(*args):
             raise AssertionError('No paid call needed')
@@ -189,7 +189,78 @@ class PrAuthorGateTest(unittest.TestCase):
     def test_changed_head_aborts_before_classifier(self):
         from unittest.mock import Mock
         gh = Mock()
-        pr = {'user': {'login': 'enyst'}, 'state': 'open', 'draft': False, 'head': {'sha': 'a'*40}, 'changed_files': 0}
+        pr = {'user': {'login': 'enyst'}, 'state': 'open', 'draft': False, 'head': {'sha': 'a'*40}, 'changed_files': 0, 'base': {'repo': {'private': False}}}
         gh.get.side_effect = [pr, [], dict(pr, head={'sha': 'b'*40})]
         with self.assertRaises(check.CheckError):
             pr_lint.run(gh, 'OpenHands/OpenHands', 1)
+
+publish_spec = importlib.util.spec_from_file_location('jev_publish', HERE / 'publish.py')
+publisher = importlib.util.module_from_spec(publish_spec)
+with patch.dict(sys.modules, {'main': check, 'feature_map': feature_map}):
+    publish_spec.loader.exec_module(publisher)
+
+
+class PublishTest(unittest.TestCase):
+    def setUp(self):
+        self.error = {'code': feature_map.RULE, 'location': 'map.md:3', 'source_sha256': 'c'*64,
+                      'message': feature_map.POLICY['rule'], 'alternative': feature_map.POLICY['alternative'], 'signal_probability': .85}
+        self.report = {'repository': 'OpenHands/OpenHands', 'pr': 7, 'head': 'a'*40, 'errors': [self.error]}
+        self.pr = {'user': {'login': 'enyst'}, 'state': 'open', 'draft': False,
+                   'head': {'sha': 'a'*40}, 'changed_files': 1, 'base': {'repo': {'private': False}}}
+
+    def client(self, comments=None, line=3):
+        from unittest.mock import Mock
+        gh = Mock()
+        def get(path):
+            if path == '/user':
+                return {'login': 'smolpaws'}
+            if '/files?' in path:
+                return [{'filename': 'map.md', 'patch': f'@@ -{line} +{line} @@\n-old\n+new'}]
+            if '/comments?' in path:
+                return comments or []
+            return self.pr
+        gh.get.side_effect = get
+        gh.post.return_value = {'html_url': 'https://github.com/example/comment'}
+        return gh
+
+    def publish(self, gh):
+        with patch.dict(sys.modules, {'pr_lint': pr_lint}):
+            return publisher.publish(gh, self.report)
+
+    def test_exact_first_line_and_inline_commit(self):
+        gh = self.client(); result = self.publish(gh)
+        path, body = gh.post.call_args.args
+        self.assertEqual(path, '/repos/OpenHands/OpenHands/pulls/7/comments')
+        self.assertTrue(body['body'].startswith('Jev-lint warning 🐾\n'))
+        self.assertEqual(body['body'].splitlines()[0], 'Jev-lint warning 🐾')
+        self.assertEqual((body['commit_id'], body['line'], body['side']), ('a'*40, 3, 'RIGHT'))
+        self.assertEqual(result['posted'][0]['kind'], 'inline')
+
+    def test_duplicate_smolpaws_warning_is_skipped(self):
+        gh = self.client([{'user': {'login': 'smolpaws'}, 'body': publisher.marker(self.error)}])
+        self.assertEqual(self.publish(gh)['duplicate_warnings_skipped'], 1)
+        gh.post.assert_not_called()
+
+    def test_other_author_cannot_suppress_warning_by_copying_marker(self):
+        gh = self.client([{'user': {'login': 'someone'}, 'body': publisher.marker(self.error)}])
+        self.publish(gh); gh.post.assert_called_once()
+
+    def test_non_diff_line_uses_pinned_source_link_not_invalid_inline(self):
+        gh = self.client(line=4); result = self.publish(gh)
+        path, body = gh.post.call_args.args
+        self.assertEqual(path, '/repos/OpenHands/OpenHands/issues/7/comments')
+        self.assertIn('/blob/'+'a'*40+'/map.md#L3', body['body'])
+        self.assertEqual(result['posted'][0]['kind'], 'source_link_comment')
+
+    def test_wrong_identity_or_changed_target_never_posts(self):
+        gh = self.client(); gh.get.side_effect = lambda path: {'login': 'enyst'}
+        with self.assertRaises(check.CheckError): self.publish(gh)
+        gh.post.assert_not_called()
+        gh = self.client(); self.pr['head']['sha'] = 'b'*40
+        with self.assertRaises(check.CheckError): self.publish(gh)
+        gh.post.assert_not_called()
+
+    def test_no_retry_after_ambiguous_post_failure(self):
+        gh = self.client(); gh.post.side_effect = check.CheckError('github_network_failure')
+        with self.assertRaises(check.CheckError): self.publish(gh)
+        gh.post.assert_called_once()

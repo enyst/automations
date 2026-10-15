@@ -1,4 +1,4 @@
-"""Read-only PR lint: verify the author before reading source or calling Jev."""
+"""PR lint: author-gated classification and optional SmolPaws publication."""
 import argparse
 import base64
 import json
@@ -22,11 +22,18 @@ class GitHub:
         self.key = key
 
     def get(self, path):
-        if not path.startswith('/repos/'):
+        return self.request('GET', path)
+
+    def post(self, path, body):
+        return self.request('POST', path, body)
+
+    def request(self, method, path, body=None):
+        if path != '/user' and not path.startswith('/repos/'):
             raise checker.CheckError('invalid_github_path')
-        req = urllib.request.Request('https://api.github.com' + path, headers={
+        req = urllib.request.Request('https://api.github.com' + path,
+            data=json.dumps(body).encode() if body is not None else None, method=method, headers={
             'Authorization': 'Bearer ' + self.key, 'Accept': 'application/vnd.github+json',
-            'User-Agent': 'enyst-jev-lint'})
+            'User-Agent': 'enyst-jev-lint', 'Content-Type': 'application/json'})
         try:
             with urllib.request.build_opener(checker.NoRedirect).open(req, timeout=30) as response:
                 raw = response.read(2_000_001)
@@ -73,6 +80,8 @@ def run(gh, repository, number, credential=checker.credential, evaluate=checker.
         return {'status': 'skipped', 'reason': 'author_not_enyst', 'repository': repository, 'pr': number}
     if pr.get('state') != 'open' or pr.get('draft'):
         return {'status': 'skipped', 'reason': 'not_open_ready_pr', 'repository': repository, 'pr': number}
+    if pr.get('base', {}).get('repo', {}).get('private') is not False:
+        return {'status': 'skipped', 'reason': 'public_repository_required', 'repository': repository, 'pr': number}
     head = pr['head']['sha']
     if not re.fullmatch(r'[a-f0-9]{40}', head):
         raise checker.CheckError('invalid_head_sha')
@@ -136,6 +145,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repository')
     parser.add_argument('--pr', type=int)
+    parser.add_argument('--no-publish', action='store_true', help='Classify and log only; never fetch posting credentials.')
     args = parser.parse_args()
     try:
         event = json.loads(os.environ['AUTOMATION_EVENT_PAYLOAD']) if os.environ.get('AUTOMATION_EVENT_PAYLOAD') else None
@@ -143,7 +153,11 @@ def main():
         if selected is None:
             print(json.dumps({'status': 'skipped', 'reason': 'explicit_pr_target_required'}))
         else:
-            print(json.dumps(run(GitHub(os.environ.get('GITHUB_TOKEN') or get_secret('github_token')), *selected)))
+            report = run(GitHub(os.environ.get('GITHUB_TOKEN') or get_secret('github_token')), *selected)
+            if report.get('errors') and not args.no_publish:
+                from publish import publish
+                report['publication'] = publish(GitHub(get_secret('SMOLPAWS_TOKEN')), report)
+            print(json.dumps(report))
         fire_callback('COMPLETED')
     except Exception as error:
         code = str(error) if isinstance(error, checker.CheckError) else type(error).__name__
