@@ -1,0 +1,1468 @@
+{
+  "cleanup_commit": "c28642a83150df106e5efad04d35efaab00253e9",
+  "parent": "fd6dfa5a6af53c5b6a32b4d60b35ec9544688304",
+  "threshold": 0.8,
+  "selection": "Prose changed by the Codex cleanup only; reverse diff for before, forward diff for after. No commit labels sent to Jev.",
+  "results": {
+    "before": {
+      "candidates": 30,
+      "reports": [
+        {
+          "items": [
+            {
+              "id": "0",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F02-app-shell.md:36",
+              "code": "- `F02.checklist-dismiss`: hovering or focusing the card (expanded or minimized) reveals an X (`Dismiss checklist`) in its header; touch devices always show it. Clicking it hides the card for good (it stays hidden after a reload) and turns off the **Show Getting Started checklist** switch in Settings \u2192 Application, which brings the card back in its previous expanded or minimized state (#18185)."
+            },
+            {
+              "id": "1",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F02-app-shell.md:92",
+              "code": "- **Error toast (`F02.error-toasts`).** Run `control-openhands browser goto /conversations/00000000-0000-0000-0000-000000000001` and `control-openhands browser wait-text 'This conversation does not exist'`. The URL becomes `/conversations`, and `control-openhands browser screenshot --feature F02.error-toasts --name missing-conversation` shows a top-right error toast. It is the only toast: `control-openhands browser toasts` lists just the \"This conversation does not exist, or you do not have permission to access it\u2026\" text, and `control-openhands browser toasts --history` has no entry containing `this UI does not understand`. `control-openhands browser wait 'text=This conversation does not exist' --state hidden` passes within 30 s. Light theme: arrange `control-openhands browser eval \"localStorage.setItem('openhands-color-theme','light-plus')\"`, repeat the `goto`, and read `control-openhands browser eval \"(()=>{const t=[...document.querySelectorAll('[role=status]')].find(e=>e.textContent.includes('does not exist'));return getComputedStyle(t).color+' on '+getComputedStyle(t.closest('div[style]')).backgroundColor})()\"`: `rgb(31, 31, 31) on rgb(229, 229, 229)`: every toast uses the theme's high-emphasis ink (`--oh-contrast`) on its surface (#18387, fixed by #18403; the error toast is no longer muted, so the default theme reads `rgb(255, 255, 255) on rgb(49, 49, 49)`). A success toast reads the same: save any change on `/settings/app` (for example `control-openhands browser click 'testid=app-settings-screen >> text=Sound Notifications'`, `control-openhands browser click 'testid=submit-button'`, then toggle it back and save again) and read the `Settings saved` toast the same way: `rgb(31, 31, 31) on rgb(229, 229, 229)`. Solarized Light (`solarized-light`) gives `rgb(0, 43, 54) on rgb(230, 223, 204)` for both toasts. Restore with `browser eval \"localStorage.removeItem('openhands-color-theme')\"`."
+            },
+            {
+              "id": "2",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F03-home.md:96",
+              "code": "- **Code / Automate toggle (`F03.launcher-mode-toggle`).** Run `control-openhands browser goto /`, `control-openhands browser fill 'testid=chat-input' ''` and `control-openhands browser snapshot 'testid=home-launcher-mode-toggle'`: `radiogroup \"Choose launcher mode\"` with `radio \"Code\" [checked]` and `radio \"Automate\"`; `control-openhands browser eval \"document.querySelector('[data-testid=chat-input]').getAttribute('data-placeholder')\"` is `What do you want to build?`. Run `control-openhands browser click 'testid=home-launcher-mode-automate'`: Automate is checked, the placeholder is `What work do you want to automate?`, `control-openhands browser attr 'testid=home-composer-actions' aria-disabled` is `true`, and `control-openhands browser enabled 'testid=open-workspace-button'` and `control-openhands browser enabled 'testid=open-plugin-picker'` are `false` (`browser screenshot --feature F03.launcher-mode-toggle --name automate`). `control-openhands browser reload` brings Code back (`browser attr 'testid=home-launcher-mode-code' aria-checked` is `true`). Light theme: arrange `control-openhands browser eval \"localStorage.setItem('openhands-color-theme','light-plus')\"` and `browser reload`, then `control-openhands browser eval \"getComputedStyle(document.querySelector('[data-testid=home-launcher-mode-code]')).color\"` and `browser screenshot 'testid=home-launcher-mode-toggle' --feature F03.launcher-mode-toggle --name light-plus-code`. The checked label uses the theme's high-emphasis ink (`text-contrast`): `rgb(31, 31, 31)` on the light pill, and a hovered inactive option (`control-openhands browser hover 'testid=home-launcher-mode-automate'`) turns the same dark ink; Solarized Light reads `rgb(0, 43, 54)`, also at phone width (#18386, fixed by #18402). Restore with `browser eval \"localStorage.removeItem('openhands-color-theme')\"` and `browser reload`."
+            },
+            {
+              "id": "3",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F04-conversation-list.md:110",
+              "code": "- **Automation setup tag (`F04.automation-setup-tag`).** Arrange one setup conversation through the setup page (F22): `control-openhands browser goto /automations`, `control-openhands browser click 'testid=automations-add-automation'`, `control-openhands browser click 'testid=automations-add-automation-create' --expect-url '/automations/setup'`, then `control-openhands conversation start --stay --prompt 'Reply with only the word ok. Do not run any tools.' --wait --timeout 180` (one tiny model call; note `<setup-id>`). `control-openhands api GET /api/conversations/<setup-id> --pick tags` has `automationsetup: draft`. In the sidebar, `control-openhands browser text 'testid=conversation-card >> has-text=Reply >> testid=conversation-card-tag-chip'` is `Automation setup: Draft` (the first chip; the internal draft-id keys stay hidden). Run `control-openhands browser click 'testid=conversation-layouts-toggle'`, `control-openhands browser click 'testid=tag-filters-section'`: the facet `testid=tag-facet-row-automationsetup=draft` reads `Automation setup: Draft`; click it, `control-openhands browser press Escape`, and `control-openhands browser text 'testid=conversation-active-tag-filters'` is `Automation setup: Draft` and `Clear all`, with only setup conversations (and pinned rows) left; `control-openhands browser click 'testid=active-tag-filter-automationsetup=draft'` removes it. After `control-openhands browser mouse-click 900 900`, `control-openhands browser tooltip 'testid=conversation-card >> has-text=Reply'` lists `Automation setup` and the raw value `draft` (`browser screenshot --feature F04.automation-setup-tag --name facet`). End with `control-openhands browser goto /`; since #18392 the setup send leaves no Home draft, and since #18385 opening another conversation from the sidebar leaves that conversation's tags alone (see Gotchas)."
+            },
+            {
+              "id": "4",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F04-conversation-list.md:141",
+              "code": "- Opening a conversation from the sidebar never changes its tags, also right after an automation setup conversation (one tagged `automationsetup: draft`): the other conversation keeps its tags and opens as a normal chat (#18378, fixed by #18385; recipe in F07 `F07.open-by-url`). A conversation that did get the tag loses it with Edit tags (`remove-tag-automationsetup`)."
+            },
+            {
+              "id": "5",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F05-composer.md:62",
+              "code": "- **Home draft (`F05.draft-persistence`).** Run `control-openhands browser goto /`, `control-openhands browser type 'testid=chat-input' 'QA home draft'`, `control-openhands browser goto /settings/secrets`, `control-openhands browser goto /`, then the `innerText` eval: `QA home draft`; `control-openhands browser storage --session` lists `oh:home-prompt-draft`. The automation setup page's docked composer (`/automations/setup`, F22) keeps no draft and never touches the Home one (#18379, fixed by #18392). With `QA home draft` still in the Home composer, run `control-openhands browser goto /automations`, `control-openhands browser click 'testid=automations-add-automation'`, `control-openhands browser click 'testid=automations-add-automation-create' --expect-url '/automations/setup'` and `control-openhands browser wait 'testid=chat-input'`: the `innerText` eval is empty. `control-openhands browser type 'testid=chat-input' 'Reply with only the word ok2. Do not run any tools.'`, then `control-openhands browser eval \"new Promise(r=>setTimeout(()=>r(sessionStorage.getItem('oh:home-prompt-draft')),1500))\"` still returns `QA home draft`. `control-openhands browser click 'testid=submit-button' --expect-url '/conversations/'` and `control-openhands browser click 'testid=sidebar-conversations-link' --expect-url '/conversations(\\?|$)'`: the Home composer shows `QA home draft`. Clear it (`fill 'testid=chat-input' ''`, wait a second) and repeat the setup send: New Chat is empty and `browser storage --session --values` has no `oh:home-prompt-draft`. Unsent text in the setup composer is lost when the user leaves that page (by design, #18392)."
+            },
+            {
+              "id": "6",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F06-agent-activity.md:80",
+              "code": "- **Long table cell (`F06.markdown-rendering`).** On the stream conversation write a prompt file whose first line is `Reply with only the word OK. Do not run any tools.`, then a blank line and the table `| Name | Description | Status |`, `|---|---|---|`, `| Alpha | This is a really long sentence in a single cell that goes on and on to explain a very involved aspect of the system, which nobody could read on one line without scrolling forever to the right. | ok |`, `| Beta | brief | fail |`. Run `control-openhands browser fill 'testid=chat-input' x --value-file <file>`, `control-openhands browser click 'testid=submit-button'` and `control-openhands conversation wait <id> --fresh --timeout 120`; the user bubble renders the table. Cells wrap once they reach 28rem (`max-w-md`; #18356, fixed by #18357): `control-openhands browser eval \"getComputedStyle(document.querySelector('[data-testid=markdown-table-scroll] td')).whiteSpace + ' ' + getComputedStyle(document.querySelector('[data-testid=markdown-table-scroll] td')).maxWidth\"` is `normal 448px`. At desktop with the right panel closed, `control-openhands browser bbox 'testid=user-message >> nth=-1 >> testid=markdown-table-scroll'` has `scrollWidth` `582` equal to `clientWidth` and `Status` is visible (`browser screenshot 'testid=chat-interface' --feature F06.markdown-rendering --name long-cell-table`). A table still wider than the conversation keeps the horizontal scroll with its edge fade: with the panel open (`control-openhands browser click 'testid=right-panel-toggle'`) `clientWidth` is `474`, and at phone width `326`, so `Status` is scrolled off there while the long cell stays wrapped. An agent reply with such a table behaves the same."
+            },
+            {
+              "id": "7",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F06-agent-activity.md:93",
+              "code": "- **Confirmation mode on (`F06.confirmation-mode`).** Arrange through the settings UI, in this order (the Security Analyzer field appears only once Confirmation Mode is on): `control-openhands browser goto /settings/verification`, `control-openhands browser click 'testid=verification-settings-screen >> text=Confirmation Mode'`, `control-openhands browser click 'testid=sdk-section-all-toggle'`, `control-openhands browser click 'testid=verification-settings-screen >> role=button[name=\"Show suggestions\"]'`, `control-openhands browser click 'role=listbox >> role=option[name=\"None\"]'`, `control-openhands browser value 'testid=verification-settings-screen >> role=combobox[name=\"Security Analyzer\"]'` (`None`), `control-openhands browser click 'testid=verification-settings-screen >> testid=save-button'`; `control-openhands api GET /api/settings` shows `\"confirmation_mode\": true` and `\"security_analyzer\": \"none\"` (None means every action is confirmed; the default LLM analyzer only stops HIGH-risk actions, so `echo` would run unprompted). Run `control-openhands conversation start --prompt \"Run the terminal command 'echo qa-confirm-ok' and reply with its output.\" --wait --timeout 180`: it returns `\"status\": \"waiting_for_confirmation\"`. `control-openhands browser text 'testid=chat-scroll-container'` ends `Do you want to continue with this action? Cancel Ctrl+\u21e7+\u232b Continue Ctrl+\u21a9` on Linux (`Cancel \u21e7\u2318\u232b Continue \u2318\u21a9` on macOS, #18127), `control-openhands browser tooltip 'testid=action-confirm-button'` is `Confirm the requested action`, and a lock icon sits above the composer (screenshot). The tooltip stays open over the Cancel button, so move the pointer first: `control-openhands browser hover 'testid=chat-input'`. Run `control-openhands browser click 'testid=action-reject-button'`: status `idle`, the buttons are gone, `conversation events <id> --last 6` ends with `UserRejectObservation`, and the action's row reads `Rejected` (`control-openhands browser count 'testid=rejected-indicator'` is `1`) with no spinner. Send `Run the terminal command 'echo qa-confirm-two' and reply with its output.` through `testid=chat-input` / `testid=submit-button`, `control-openhands browser wait 'testid=action-confirm-button' --timeout 20000`, `control-openhands browser click 'testid=action-confirm-button'`; about 15 s later the status is `finished` and the events contain the observation `qa-confirm-two`. A rejection inside a group resolves it too (#17920, fixed by #17995): send `Run the terminal command 'echo qa-g1'. After it finishes, run the terminal command 'echo qa-g2' as a separate tool call. Then reply DONE.`, continue the first action (`browser wait 'testid=action-confirm-button'`, then `control-openhands browser press Control+Enter`, which is also the next bullet's shortcut) and cancel the second (`browser wait 'testid=action-confirm-button' --timeout 60000`, `control-openhands browser press Control+Shift+Backspace`): status `idle`, `control-openhands browser text 'testid=event-group >> nth=-1'` ends `2 actions completed`, `control-openhands browser count 'testid=event-group >> nth=-1 >> .animate-spin'` is `0`, the same after `browser reload`, and the expanded group (`control-openhands browser click 'testid=event-group >> nth=-1 >> button >> nth=0'`) shows `Rejected` on the `qa-g2` row (`browser screenshot 'testid=chat-interface' --feature F06.confirmation-mode --name group-after-reload`). Each button keeps its label and hint on one line (#18395, fixed by #18397): while the prompt is waiting, `control-openhands browser eval \"[...document.querySelectorAll('[data-testid=action-reject-button],[data-testid=action-confirm-button]')].map(b=>b.offsetHeight+'/'+b.scrollHeight).join(' ')\"` is `26/26 26/26` at desktop, also with the side panel open (`testid=right-panel-toggle`). At phone width (`browser viewport phone`) the shortcut hints are hidden (no hardware keyboard), the buttons read `Cancel` and `Continue`, and `browser text 'testid=chat-scroll-container'` ends `Do you want to continue with this action? Cancel Continue` (screenshot the awaiting prompt at phone width)."
+            },
+            {
+              "id": "8",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:62",
+              "code": "- **Leaving an automation setup conversation (`F07.open-by-url`).** A conversation tagged `automationsetup: draft` (started from `/automations/setup`, see `F04.automation-setup-tag`) opens as a setup page (`testid=automation-setup-topbar`, no `chat-pane-header`). Make an empty conversation: `control-openhands browser goto /`, `control-openhands browser click 'testid=conversation-panel-new-thread-picker'`, `control-openhands browser click 'testid=launch-no-workspace' --expect-url '/conversations/'` (note `<plain-id>`; `control-openhands api GET /api/conversations/<plain-id> --pick tags` is only `clientsource`). Open the setup conversation from the sidebar (`control-openhands browser click 'a[href*=\"/conversations/<setup-id>\"] >> nth=0' --expect-url '/conversations/<setup-id>'`), then go back the same way (`'a[href*=\"/conversations/<plain-id>\"] >> nth=0'`). Expected: `<plain-id>` opens as a normal conversation: `control-openhands browser wait 'testid=chat-pane-header'`, `browser count 'testid=chat-pane-header'` is `1`, `browser count 'testid=automation-setup-topbar'` is `0`, and `api GET /api/conversations/<plain-id> --pick tags` is still only `clientsource`, also after `browser reload` and after repeating the round trip; the sidebar row of `<plain-id>` has no `Automation setup: Draft` chip (`browser screenshot --feature F07.open-by-url --name plain-stays-plain`). The setup conversation is in this tab's `openhands-automation-setup-handoffs` sessionStorage entry during the check (`control-openhands browser storage --session --values`), the state that used to re-tag the other conversation (#18378, fixed by #18385). The same holds at phone width through the sidebar drawer (`sidebar-mobile-menu-toggle`, then the rows inside `testid=sidebar-mobile-drawer`)."
+            },
+            {
+              "id": "9",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:76",
+              "code": "- **Agent tools (`F07.agent-tools-modal`).** Open the menu, `control-openhands browser click 'testid=conversation-name-context-menu >> testid=show-agent-tools-button'`; the dialog `testid=system-message-modal` has tabs `System Message` (selected, the system prompt) and `Available Tools`. `control-openhands browser click 'role=dialog >> role=tab[name=\"Available Tools\"]'`, `control-openhands browser count 'testid=system-message-modal >> testid=toggle-button'` (backend-provided count; `10` on Agent Server 1.54.0: terminal, file_editor, task_tracker, canvas_ui_control, launch_child_conversation, request_secret (local backends, #18408, see `F14.agent-request`), finish, think, switch_llm, invoke_skill), `control-openhands browser click 'testid=system-message-modal >> testid=toggle-button >> nth=0'` expands `terminal` with its description. Close with `control-openhands browser click 'testid=close-system-message-modal'`."
+            },
+            {
+              "id": "10",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:108",
+              "code": "- The Overview drawer has no Automations, Skills, MCP or Secrets sections: #18406 removed them (they had no opener). The Overview menu offers Workspace and Git rows only, and its drawer opens only Pull Requests (`F27.overview-drawer`)."
+            },
+            {
+              "id": "11",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:109",
+              "code": "- Dialogs move focus inside when they open and keep Tab inside (#18400): the Skills and Hooks dialogs start on their close button, Stop and Delete on `cancel-button`, Export on `close-transcript-export-modal`, Agent Tools on `close-system-message-modal`. In the Hooks dialog, focusing Refresh with Tab opens its tooltip, which takes the first Escape; a second Escape closes the dialog."
+            }
+          ],
+          "response": {
+            "model": "jev-1.13.0",
+            "answers": {
+              "0": {
+                "type": "noul",
+                "noul": 0.54
+              },
+              "0_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.3,
+                "probabilities": {
+                  "correct": 0.35,
+                  "accept": 0.65
+                }
+              },
+              "1": {
+                "type": "noul",
+                "noul": 0.84
+              },
+              "1_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.76,
+                "probabilities": {
+                  "correct": 0.88,
+                  "accept": 0.12
+                }
+              },
+              "2": {
+                "type": "noul",
+                "noul": 0.8
+              },
+              "2_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.66,
+                "probabilities": {
+                  "correct": 0.83,
+                  "accept": 0.17
+                }
+              },
+              "3": {
+                "type": "noul",
+                "noul": 0.81
+              },
+              "3_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.74,
+                "probabilities": {
+                  "correct": 0.87,
+                  "accept": 0.13
+                }
+              },
+              "4": {
+                "type": "noul",
+                "noul": 0.62
+              },
+              "4_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.32,
+                "probabilities": {
+                  "correct": 0.66,
+                  "accept": 0.34
+                }
+              },
+              "5": {
+                "type": "noul",
+                "noul": 0.85
+              },
+              "5_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.78,
+                "probabilities": {
+                  "correct": 0.89,
+                  "accept": 0.11
+                }
+              },
+              "6": {
+                "type": "noul",
+                "noul": 0.5
+              },
+              "6_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.1,
+                "probabilities": {
+                  "correct": 0.45,
+                  "accept": 0.55
+                }
+              },
+              "7": {
+                "type": "noul",
+                "noul": 0.77
+              },
+              "7_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.62,
+                "probabilities": {
+                  "correct": 0.81,
+                  "accept": 0.19
+                }
+              },
+              "8": {
+                "type": "noul",
+                "noul": 0.82
+              },
+              "8_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.8,
+                "probabilities": {
+                  "correct": 0.9,
+                  "accept": 0.1
+                }
+              },
+              "9": {
+                "type": "noul",
+                "noul": 0.36
+              },
+              "9_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.62,
+                "probabilities": {
+                  "correct": 0.19,
+                  "accept": 0.81
+                }
+              },
+              "10": {
+                "type": "noul",
+                "noul": 0.49
+              },
+              "10_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.12,
+                "probabilities": {
+                  "correct": 0.44,
+                  "accept": 0.56
+                }
+              },
+              "11": {
+                "type": "noul",
+                "noul": 0.41
+              },
+              "11_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.76,
+                "probabilities": {
+                  "correct": 0.12,
+                  "accept": 0.88
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 10762,
+              "output_tokens": 547
+            }
+          },
+          "errors": [
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F02-app-shell.md:92",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.88,
+              "noul_probability": 0.84,
+              "source_sha256": "1c5ad16ddc79ec21090eae1f3e4bb27553bdba7a7f9374299fa2b549c6151575"
+            },
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F03-home.md:96",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.83,
+              "noul_probability": 0.8,
+              "source_sha256": "0b7c83cd2ba6b6bf30b5fa539dd0f4db2e02e484ae52647bc900337606cd97a5"
+            },
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F04-conversation-list.md:110",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.87,
+              "noul_probability": 0.81,
+              "source_sha256": "141b9cbf7f4cc3310f7a189ddb08bfaf85ac864ffe73b8f981f2513291da11ec"
+            },
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F05-composer.md:62",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.89,
+              "noul_probability": 0.85,
+              "source_sha256": "5561c1c3a6cab393ccf659f66f0315f394df1be97959f8a847c5590238f76232"
+            },
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F06-agent-activity.md:93",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.81,
+              "noul_probability": 0.77,
+              "source_sha256": "6620b017603cdae6045a33a7609b3d581dc06b7fc954403a779ceb22539109de"
+            },
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:62",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.9,
+              "noul_probability": 0.82,
+              "source_sha256": "f3bfd0d6f23d357eb87d13a247e9803324b9c0fab4dcb3795378c576f1c25f11"
+            }
+          ]
+        },
+        {
+          "items": [
+            {
+              "id": "12",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F10-llm-profiles.md:78",
+              "code": "- **Name rules (`F10.name-validation`).** In the editor run `control-openhands browser fill 'testid=profile-name-input' 'QA bad'`; `control-openhands browser enabled 'testid=save-profile-btn'` is `false` and `control-openhands browser attr 'testid=profile-name-input' aria-invalid` is `true` (the same for `-QA` and a 65-character name), and the rule text under the field turns to the theme's danger colour: `control-openhands browser eval \"(()=>{const i=document.querySelector('[data-testid=profile-name-input]');return getComputedStyle(document.getElementById(i.getAttribute('aria-describedby'))).color+' '+getComputedStyle(document.body).getPropertyValue('--oh-color-danger')})()\"` reads `rgb(231, 106, 94) #e76a5e` on OpenHands-Neutral and `rgb(209, 52, 56) #D13438` on Light+ (`F16.color-theme`) (#18199); a valid name turns it back to the muted grey. An existing name (`QA_flash`) also gives `enabled` `false` and `aria-invalid` `true`, with a role=alert message under the field in the danger colour while the rule text stays grey. The message reads `An LLM profile with this name already exists. Choose a different name, or edit the existing one.` (#18411; `browser eval \"[...document.querySelectorAll('[role=alert]')].map(a=>a.innerText+' | '+getComputedStyle(a).color)\"`; screenshot `--feature F10.name-validation --name duplicate-neutral`). `QA_flash2` gives `true` and no message."
+            },
+            {
+              "id": "13",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F10-llm-profiles.md:91",
+              "code": "- **New profile prefill (`F10.create-prefill`).** With that Default (temperature `0.3`) run `control-openhands browser click 'testid=add-llm-profile'`. The editor opens on All (`browser eval \"[...document.querySelectorAll('[role=tab]')].map(t=>t.innerText+':'+t.getAttribute('aria-selected')).join(',')\"` is `Basic:false,Advanced:false,All:true`), `browser value 'testid=llm-custom-model-input'` is the backend default `openai/gpt-5.6-sol`, and `control-openhands assert --field value --equals 0.3 -- browser value 'testid=sdk-settings-llm.temperature'` passes: the temperature is inherited from the Default. Run `control-openhands browser fill 'testid=llm-custom-model-input' deepseek/deepseek-flash`, `browser fill 'testid=profile-name-input' QA_inherit`, fill the key as in Create, `control-openhands browser scroll 'testid=sdk-settings-llm.temperature'`, `control-openhands browser screenshot --feature F10.create-prefill --name inherited-before-save`, Save and `wait-text 'Profile \"QA_inherit\" created' --timeout 60000`. The saved profile has the temperature the form showed (#18422): `control-openhands api GET /api/profiles/QA_inherit --pick config.temperature` is `0.3`. After `browser reload`, open `QA_inherit`'s row menu (`'[data-testid=profile-row]:has([title=\"QA_inherit\"]) >> testid=profile-menu-trigger'`), click `testid=profile-actions-menu >> testid=profile-edit` and `testid=sdk-section-all-toggle`, `control-openhands browser scroll 'testid=sdk-settings-llm.temperature'` and `control-openhands assert --field value --equals 0.3 -- browser value 'testid=sdk-settings-llm.temperature'` passes (screenshot `--feature F10.create-prefill --name edit-after-create`); leave with `testid=cancel-profile-btn`. Repeat at `browser viewport phone` after `control-openhands api DELETE /api/profiles/QA_inherit --write` (the desktop pass already took the name); the same holds."
+            },
+            {
+              "id": "14",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F12-model-router.md:90",
+              "code": "- `Run on first message` is an `sr-only` checkbox (keyboard reachable since #18370, which closed #17900): click the label text inside `testid=meta-profile-run-at-conversation-start` and read `.checked`/`.disabled` with `browser eval`. The stored preference (`misc_settings.app_preferences.run_router_at_conversation_start`) is independent of what the disabled switch shows; with no active router it may still be `true`. Turn it off before deleting the last router, or a later \"first router\" will not re-enable it because it is already on."
+            },
+            {
+              "id": "15",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:58",
+              "code": "- **Name rules (`F13.name-validation`).** In the Add editor, fill `testid=agent-profile-name-input` with `''`, `default`, `'bad name!'` and `QA_ok` in turn; after each run `control-openhands browser attr 'testid=agent-profile-name-input' aria-invalid` and `control-openhands browser enabled 'testid=save-agent-profile-btn'`. Results: `''` \u2192 `true`/`false`; `default` (duplicate) \u2192 `true`/`false`; `'bad name!'` \u2192 `true`/`false`; `QA_ok` \u2192 `false`/`true`. The rule under the field is always shown (grey) and turns the theme danger colour (`text-danger`, #18199) while the name is invalid; it reads `Profile name must start with a letter or digit, and contain only letters, digits, dots, underscores, or hyphens (max 64 characters)`. For the duplicate, `control-openhands browser count 'role=alert >> text=already exists'` is `1`: the alert is the field's description, in the danger colour (`rgb(231, 106, 94)` on OpenHands-Neutral, `rgb(209, 52, 56)` on Light+), while the rule text stays grey. It reads `An agent profile with this name already exists. Choose a different name, or edit the existing one.` (#18411). Take `control-openhands browser screenshot --feature F13.name-validation --name duplicate` with `default` filled. In Edit the same message appears for another profile's name and not for the profile's own name (`F13.edit`)."
+            },
+            {
+              "id": "16",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:85",
+              "code": "- A taken name marks the field invalid with an alert since #18144 (closed #17938; verified 2026-10-13). Since #18411 (closed #18383; verified 2026-10-14 on desktop and phone) the alert has its own wording, `An agent profile with this name already exists. \u2026`; before it, it reused the Model Router's `A meta-profile with this name already exists. \u2026`. A checkout without #18144 disables Save silently."
+            },
+            {
+              "id": "17",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:88",
+              "code": "- Switch rows are `sr-only` checkboxes inside labels (keyboard reachable since #18370, which closed #17900): click the label text (`'testid=agent-settings-tool-list >> text=<tool>'`, `'testid=agent-settings-mcp-list >> text=<name>'`) and read `.checked` with `browser eval`. A bare `label` selector segment is parsed as `label=`, not CSS."
+            },
+            {
+              "id": "18",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F14-secrets.md:80",
+              "code": "- `request_secret` is registered on every OpenHands-agent conversation this frontend launches since #18408 (not on ACP agents or older conversations) (it appears in Show Agent Tools & Metadata, see `F07.agent-tools-modal`). The agent learns the outcome from a hidden `[secret-request] ...` user message; read it with `conversation events <id> --kinds MessageEvent`, not from the chat."
+            },
+            {
+              "id": "19",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F15-agent-behavior-settings.md:83",
+              "code": "- Switches are `sr-only` checkboxes (keyboard reachable since #18370, which closed #17900): toggle by clicking the label text scoped to the page, read `.checked` with `browser eval`."
+            },
+            {
+              "id": "20",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F16-application-settings.md:102",
+              "code": "- **Backend switch in place (`F16.backend-switch`).** Needs a second backend with a different Git username: the second stack from F25's Preconditions added as `QA_Second` (F25 Add bullet), arranged with `control-openhands api PATCH /api/settings --run \"$OH_VERIFY_RUN_2\" --write --data '{\"misc_settings_diff\":{\"app_preferences\":{\"git_user_name\":\"QA Second Git\"}}}'`. With Local active, run `control-openhands browser goto /settings/app` and `control-openhands browser reload`; `browser value 'testid=git-user-name-input'` is `openhands`. Switch without leaving the page: `control-openhands browser click 'testid=backend-selector'`, `control-openhands browser click 'testid=backend-selector >> role=option[name=\"Connected QA_Second\"]'`, `control-openhands browser wait 'testid=environment-switch-overlay' --state detached --timeout 10000`, wait a few seconds: the value is `QA Second Git` and `browser text 'testid=backend-synced-settings-badge'` names QA_Second (a first visit to a backend loads fresh). Switch back the same way to `Connected Local`: the value is `openhands` beside `synced from Local backend`, and it keeps following the active backend on further switches (#18401). The form remounts per backend, so an unsaved edit is dropped: on Local run `control-openhands browser fill 'testid=git-user-name-input' 'QA Local Edit'` (`browser enabled 'testid=submit-button'` is `true`), switch to `QA_Second` (`QA Second Git`, Save `false`) and back (`openhands`, Save `false`); `control-openhands api GET /api/settings --pick misc_settings.app_preferences.git_user_name` is unchanged. At `browser viewport phone` the selector is in the drawer (`testid=sidebar-mobile-menu-toggle`, then `'testid=sidebar-mobile-drawer >> testid=backend-selector'` and `role=option[name=\"Connected QA_Second\"]`; close the drawer with `browser mouse-click 370 400`) and the field follows the same way. Switch back to Local and remove `QA_Second` afterwards (F25)."
+            },
+            {
+              "id": "21",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F18-skills.md:94",
+              "code": "- The card toggle and the facet rows are `role=switch`/`role=checkbox` buttons: read `aria-checked`. The modal switch is an `sr-only` checkbox (keyboard reachable since #18370, which closed #17900): click the row text and read `.checked` with `browser eval`."
+            },
+            {
+              "id": "22",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F22-automation-creation.md:115",
+              "code": "- The setup page's docked composer keeps no draft: it opens empty even when the Home composer has an unsent draft (`sessionStorage` `oh:home-prompt-draft`), a prompt sent from it never becomes the Home draft, and leaving it keeps an existing Home draft. Unsent text typed there is lost when the user leaves the page. Fixed by #18392 (closed #18379); verified 2026-10-14 by a pure UI fill + `submit-button` at desktop and the open-empty check at phone width."
+            },
+            {
+              "id": "23",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F23-automation-detail.md:117",
+              "code": "- Since #17688 kebab **Edit** (detail and dashboard) opens `/automations/setup?automationId=<id>`; the old **Edit automation** modal (`edit-automation-*` test ids) was deleted as dead code by #18417, so its Escape (#17563), phone clipping (#17563) and silently-ignored cleared time (#17948) symptoms cannot be reached. The edit page's Save and Test report API failures with the API's message (see `F23.edit-validation`, `F23.edit-save-error`), and its `Automation updated` toast covers Test/Save/Close until the pointer moves away."
+            }
+          ],
+          "response": {
+            "model": "jev-1.13.0",
+            "answers": {
+              "12": {
+                "type": "noul",
+                "noul": 0.34
+              },
+              "12_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.3,
+                "probabilities": {
+                  "correct": 0.35,
+                  "accept": 0.65
+                }
+              },
+              "13": {
+                "type": "noul",
+                "noul": 0.4
+              },
+              "13_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.52,
+                "probabilities": {
+                  "correct": 0.24,
+                  "accept": 0.76
+                }
+              },
+              "14": {
+                "type": "noul",
+                "noul": 0.77
+              },
+              "14_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.6,
+                "probabilities": {
+                  "correct": 0.8,
+                  "accept": 0.2
+                }
+              },
+              "15": {
+                "type": "noul",
+                "noul": 0.61
+              },
+              "15_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.28,
+                "probabilities": {
+                  "correct": 0.64,
+                  "accept": 0.36
+                }
+              },
+              "16": {
+                "type": "noul",
+                "noul": 0.93
+              },
+              "16_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.98,
+                "probabilities": {
+                  "correct": 0.99,
+                  "accept": 0.01
+                }
+              },
+              "17": {
+                "type": "noul",
+                "noul": 0.46
+              },
+              "17_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.28,
+                "probabilities": {
+                  "correct": 0.36,
+                  "accept": 0.64
+                }
+              },
+              "18": {
+                "type": "noul",
+                "noul": 0.53
+              },
+              "18_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.0,
+                "probabilities": {
+                  "correct": 0.5,
+                  "accept": 0.5
+                }
+              },
+              "19": {
+                "type": "noul",
+                "noul": 0.42
+              },
+              "19_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.08,
+                "probabilities": {
+                  "correct": 0.46,
+                  "accept": 0.54
+                }
+              },
+              "20": {
+                "type": "noul",
+                "noul": 0.47
+              },
+              "20_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.28,
+                "probabilities": {
+                  "correct": 0.36,
+                  "accept": 0.64
+                }
+              },
+              "21": {
+                "type": "noul",
+                "noul": 0.56
+              },
+              "21_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.12,
+                "probabilities": {
+                  "correct": 0.44,
+                  "accept": 0.56
+                }
+              },
+              "22": {
+                "type": "noul",
+                "noul": 0.87
+              },
+              "22_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.92,
+                "probabilities": {
+                  "correct": 0.96,
+                  "accept": 0.04
+                }
+              },
+              "23": {
+                "type": "noul",
+                "noul": 0.87
+              },
+              "23_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.86,
+                "probabilities": {
+                  "correct": 0.93,
+                  "accept": 0.07
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 8793,
+              "output_tokens": 567
+            }
+          },
+          "errors": [
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F12-model-router.md:90",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.8,
+              "noul_probability": 0.77,
+              "source_sha256": "9da3bf17dbe25876753853cb1f2c927c069939efd0d4c2cd39797ae202e0a79f"
+            },
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:85",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.99,
+              "noul_probability": 0.93,
+              "source_sha256": "de57936dc15951f2fa937967e9f7394b0d1fbfc8c400656d9cd3d02567071758"
+            },
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F22-automation-creation.md:115",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.96,
+              "noul_probability": 0.87,
+              "source_sha256": "fc7c8d3f0702e39f4a91ececac330e0907be92be9a2a5e814366a5d74fcf7157"
+            },
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F23-automation-detail.md:117",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.93,
+              "noul_probability": 0.87,
+              "source_sha256": "2038131053dbac51b411e03b6f741dac28c4c73500b53314ab338ebf52daf598"
+            }
+          ]
+        },
+        {
+          "items": [
+            {
+              "id": "24",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:3",
+              "code": "One Canvas can drive several agent servers. The backend selector at the bottom\nof the sidebar lists every registered backend with a live status dot and\nswitches between them; its footer opens **Add Backend** (OpenHands Cloud login\nthrough an OAuth device flow, or a local/remote agent server by host and API\nkey) and **Manage Backends** (select, edit, remove, and Cloud \"Log back in\").\nWhen the active backend is unreachable the whole app is replaced by Manage\nbackends in recovery mode. Cloud backends add organization rows, a Cloud\nsettings link and public sharing of conversations (read-only at\n`/shared/conversations/:id`); `/oauth/device/verify` is the device-approval page.\nWhen the page is served with the DigitalOcean Managed Agents bridge (the\ndesktop app's preload, or the web server's own bridge, which the launcher's\ningress mounts by default behind the session key since #18349), Add Backend gains a\n**Providers** tab whose DigitalOcean entry signs in with a personal access\ntoken and turns a Managed Agents session into a backend.\nEverything except the Cloud and DigitalOcean accounts themselves can be driven\nlocally with a second `control-openhands` stack as the extra backend."
+            },
+            {
+              "id": "25",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:52",
+              "code": "- `F25.providers-tab`: only when the page has the Managed Agents bridge (`window.marsBridge`), Add Backend shows a third tab **Providers** (\"Connect through DigitalOcean and more.\") with a **DigitalOcean** card (\"Your team's OpenHands agents\") and `More providers coming soon.`. Since #18349 every launcher-served web page has it (the ingress answers `/mars/health`); without it (`MARS_WEB=0`, or a non-loopback bind with no session key at all) there are only the Cloud and Agent-server tabs and no Managed Agents UI anywhere. A non-loopback bind that has a key (F26 `--host 0.0.0.0` with `LOCAL_BACKEND_API_KEY`) mounts the bridge behind that key and offers the tab too, although the page itself carries no key (see the sign-in bullet's Known failure)."
+            },
+            {
+              "id": "26",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:78",
+              "code": "- The Managed Agents rows need the bridge, which every `control-openhands launch` run has since #18349 (`MARS_WEB=1` is gone): `control-openhands browser eval \"!!window.marsBridge\"` is `true` and `curl -s <baseUrl>/mars/health` answers `{\"ok\":true,\"authRequired\":true}`. `F25.digitalocean-agents` and `F25.digitalocean-backend-removal` stay blocked without a DigitalOcean account."
+            },
+            {
+              "id": "27",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:149",
+              "code": "- Add Backend and Manage Backends take and keep keyboard focus, and Edit backend takes it on open (`ModalBackdrop`, fixed by #18400, closed #18389; verified 2026-10-14 at desktop and phone width; at phone width open the selector with `'testid=sidebar-mobile-drawer >> testid=backend-selector'`, since the bare test id matches two selectors). At desktop width focus returns to the selector input when they close (at phone width Add Backend's X closes the drawer too and focus falls to the page body), so an Escape pressed after closing lands on the selector and can trigger #18233 below."
+            },
+            {
+              "id": "28",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F26-runtime-variants.md:38",
+              "code": "- `F26.mars-web-bridge`: every launcher-served web stack hosts the DigitalOcean Managed Agents bridge on its ingress by default (#18349; `MARS_WEB=1` is gone, `MARS_WEB=0` opts out): `/mars/health` answers `{\"ok\":true,\"authRequired\":true}` on a full, `--backend-only`, `--frontend-only` and `--host 0.0.0.0` launcher, `/mars/rpc/*` answers `401` without the session key and works with it, the static child behind the ingress hosts none, and the Electron stack hosts none either (its preload provides `window.marsBridge`)."
+            },
+            {
+              "id": "29",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F27-workspace-tools.md:108",
+              "code": "- The overview drawer's Automations, Skills, MCP and Secrets sections (and the project-scope toggle they shared) were removed by #18406: they had no opener. The Overview menu opens only Pull Requests (`conversation-overview-menu-open-git-pull_requests`); its testids are `conversation-overview-menu-open-*` and `-pin-*` for `workspace` and the Git rows only (checked 2026-10-14)."
+            }
+          ],
+          "response": {
+            "model": "jev-1.13.0",
+            "answers": {
+              "24": {
+                "type": "noul",
+                "noul": 0.7
+              },
+              "24_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.48,
+                "probabilities": {
+                  "correct": 0.74,
+                  "accept": 0.26
+                }
+              },
+              "25": {
+                "type": "noul",
+                "noul": 0.67
+              },
+              "25_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.42,
+                "probabilities": {
+                  "correct": 0.71,
+                  "accept": 0.29
+                }
+              },
+              "26": {
+                "type": "noul",
+                "noul": 0.59
+              },
+              "26_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.24,
+                "probabilities": {
+                  "correct": 0.62,
+                  "accept": 0.38
+                }
+              },
+              "27": {
+                "type": "noul",
+                "noul": 0.88
+              },
+              "27_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.92,
+                "probabilities": {
+                  "correct": 0.96,
+                  "accept": 0.04
+                }
+              },
+              "28": {
+                "type": "noul",
+                "noul": 0.54
+              },
+              "28_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.02,
+                "probabilities": {
+                  "correct": 0.51,
+                  "accept": 0.49
+                }
+              },
+              "29": {
+                "type": "noul",
+                "noul": 0.73
+              },
+              "29_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.52,
+                "probabilities": {
+                  "correct": 0.76,
+                  "accept": 0.24
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 4195,
+              "output_tokens": 285
+            }
+          },
+          "errors": [
+            {
+              "severity": "error",
+              "code": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:149",
+              "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+              "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+              "signal_probability": 0.96,
+              "noul_probability": 0.88,
+              "source_sha256": "1bd4ad5137979b61ebc269405def3c609e3fb9847d37682a2ec442844b831c3d"
+            }
+          ]
+        }
+      ],
+      "errors": [
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F02-app-shell.md:92",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.88,
+          "noul_probability": 0.84,
+          "source_sha256": "1c5ad16ddc79ec21090eae1f3e4bb27553bdba7a7f9374299fa2b549c6151575"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F03-home.md:96",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.83,
+          "noul_probability": 0.8,
+          "source_sha256": "0b7c83cd2ba6b6bf30b5fa539dd0f4db2e02e484ae52647bc900337606cd97a5"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F04-conversation-list.md:110",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.87,
+          "noul_probability": 0.81,
+          "source_sha256": "141b9cbf7f4cc3310f7a189ddb08bfaf85ac864ffe73b8f981f2513291da11ec"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F05-composer.md:62",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.89,
+          "noul_probability": 0.85,
+          "source_sha256": "5561c1c3a6cab393ccf659f66f0315f394df1be97959f8a847c5590238f76232"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F06-agent-activity.md:93",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.81,
+          "noul_probability": 0.77,
+          "source_sha256": "6620b017603cdae6045a33a7609b3d581dc06b7fc954403a779ceb22539109de"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:62",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.9,
+          "noul_probability": 0.82,
+          "source_sha256": "f3bfd0d6f23d357eb87d13a247e9803324b9c0fab4dcb3795378c576f1c25f11"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F12-model-router.md:90",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.8,
+          "noul_probability": 0.77,
+          "source_sha256": "9da3bf17dbe25876753853cb1f2c927c069939efd0d4c2cd39797ae202e0a79f"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:85",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.99,
+          "noul_probability": 0.93,
+          "source_sha256": "de57936dc15951f2fa937967e9f7394b0d1fbfc8c400656d9cd3d02567071758"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F22-automation-creation.md:115",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.96,
+          "noul_probability": 0.87,
+          "source_sha256": "fc7c8d3f0702e39f4a91ececac330e0907be92be9a2a5e814366a5d74fcf7157"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F23-automation-detail.md:117",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.93,
+          "noul_probability": 0.87,
+          "source_sha256": "2038131053dbac51b411e03b6f741dac28c4c73500b53314ab338ebf52daf598"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:149",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.96,
+          "noul_probability": 0.88,
+          "source_sha256": "1bd4ad5137979b61ebc269405def3c609e3fb9847d37682a2ec442844b831c3d"
+        }
+      ]
+    },
+    "after": {
+      "candidates": 30,
+      "reports": [
+        {
+          "items": [
+            {
+              "id": "0",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F02-app-shell.md:36",
+              "code": "- `F02.checklist-dismiss`: hovering or focusing the card (expanded or minimized) reveals an X (`Dismiss checklist`) in its header; touch devices always show it. Clicking it hides the card for good (it stays hidden after a reload) and turns off the **Show Getting Started checklist** switch in Settings \u2192 Application, which brings the card back in its previous expanded or minimized state."
+            },
+            {
+              "id": "1",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F02-app-shell.md:92",
+              "code": "- **Error toast (`F02.error-toasts`).** Run `control-openhands browser goto /conversations/00000000-0000-0000-0000-000000000001` and `control-openhands browser wait-text 'This conversation does not exist'`. The URL becomes `/conversations`, and `control-openhands browser screenshot --feature F02.error-toasts --name missing-conversation` shows a top-right error toast. It is the only toast: `control-openhands browser toasts` lists just the \"This conversation does not exist, or you do not have permission to access it\u2026\" text, and `control-openhands browser toasts --history` has no entry containing `this UI does not understand`. `control-openhands browser wait 'text=This conversation does not exist' --state hidden` passes within 30 s. Light theme: arrange `control-openhands browser eval \"localStorage.setItem('openhands-color-theme','light-plus')\"`, repeat the `goto`, and read `control-openhands browser eval \"(()=>{const t=[...document.querySelectorAll('[role=status]')].find(e=>e.textContent.includes('does not exist'));return getComputedStyle(t).color+' on '+getComputedStyle(t.closest('div[style]')).backgroundColor})()\"`: `rgb(31, 31, 31) on rgb(229, 229, 229)`: every toast uses the theme's high-emphasis ink (`--oh-contrast`) on its surface (the default theme reads `rgb(255, 255, 255) on rgb(49, 49, 49)`). A success toast reads the same: save any change on `/settings/app` (for example `control-openhands browser click 'testid=app-settings-screen >> text=Sound Notifications'`, `control-openhands browser click 'testid=submit-button'`, then toggle it back and save again) and read the `Settings saved` toast the same way: `rgb(31, 31, 31) on rgb(229, 229, 229)`. Solarized Light (`solarized-light`) gives `rgb(0, 43, 54) on rgb(230, 223, 204)` for both toasts. Restore with `browser eval \"localStorage.removeItem('openhands-color-theme')\"`."
+            },
+            {
+              "id": "2",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F03-home.md:96",
+              "code": "- **Code / Automate toggle (`F03.launcher-mode-toggle`).** Run `control-openhands browser goto /`, `control-openhands browser fill 'testid=chat-input' ''` and `control-openhands browser snapshot 'testid=home-launcher-mode-toggle'`: `radiogroup \"Choose launcher mode\"` with `radio \"Code\" [checked]` and `radio \"Automate\"`; `control-openhands browser eval \"document.querySelector('[data-testid=chat-input]').getAttribute('data-placeholder')\"` is `What do you want to build?`. Run `control-openhands browser click 'testid=home-launcher-mode-automate'`: Automate is checked, the placeholder is `What work do you want to automate?`, `control-openhands browser attr 'testid=home-composer-actions' aria-disabled` is `true`, and `control-openhands browser enabled 'testid=open-workspace-button'` and `control-openhands browser enabled 'testid=open-plugin-picker'` are `false` (`browser screenshot --feature F03.launcher-mode-toggle --name automate`). `control-openhands browser reload` brings Code back (`browser attr 'testid=home-launcher-mode-code' aria-checked` is `true`). Light theme: arrange `control-openhands browser eval \"localStorage.setItem('openhands-color-theme','light-plus')\"` and `browser reload`, then `control-openhands browser eval \"getComputedStyle(document.querySelector('[data-testid=home-launcher-mode-code]')).color\"` and `browser screenshot 'testid=home-launcher-mode-toggle' --feature F03.launcher-mode-toggle --name light-plus-code`. The checked label uses the theme's high-emphasis ink (`text-contrast`): `rgb(31, 31, 31)` on the light pill, and a hovered inactive option (`control-openhands browser hover 'testid=home-launcher-mode-automate'`) turns the same dark ink; Solarized Light reads `rgb(0, 43, 54)`, also at phone width. Restore with `browser eval \"localStorage.removeItem('openhands-color-theme')\"` and `browser reload`."
+            },
+            {
+              "id": "3",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F04-conversation-list.md:110",
+              "code": "- **Automation setup tag (`F04.automation-setup-tag`).** Arrange one setup conversation through the setup page (F22): `control-openhands browser goto /automations`, `control-openhands browser click 'testid=automations-add-automation'`, `control-openhands browser click 'testid=automations-add-automation-create' --expect-url '/automations/setup'`, then `control-openhands conversation start --stay --prompt 'Reply with only the word ok. Do not run any tools.' --wait --timeout 180` (one tiny model call; note `<setup-id>`). `control-openhands api GET /api/conversations/<setup-id> --pick tags` has `automationsetup: draft`. In the sidebar, `control-openhands browser text 'testid=conversation-card >> has-text=Reply >> testid=conversation-card-tag-chip'` is `Automation setup: Draft` (the first chip; the internal draft-id keys stay hidden). Run `control-openhands browser click 'testid=conversation-layouts-toggle'`, `control-openhands browser click 'testid=tag-filters-section'`: the facet `testid=tag-facet-row-automationsetup=draft` reads `Automation setup: Draft`; click it, `control-openhands browser press Escape`, and `control-openhands browser text 'testid=conversation-active-tag-filters'` is `Automation setup: Draft` and `Clear all`, with only setup conversations (and pinned rows) left; `control-openhands browser click 'testid=active-tag-filter-automationsetup=draft'` removes it. After `control-openhands browser mouse-click 900 900`, `control-openhands browser tooltip 'testid=conversation-card >> has-text=Reply'` lists `Automation setup` and the raw value `draft` (`browser screenshot --feature F04.automation-setup-tag --name facet`). End with `control-openhands browser goto /`; the setup send leaves no Home draft, and opening another conversation from the sidebar leaves that conversation's tags alone (see Gotchas)."
+            },
+            {
+              "id": "4",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F04-conversation-list.md:141",
+              "code": "- Opening a conversation from the sidebar never changes its tags, also right after an automation setup conversation (one tagged `automationsetup: draft`): the other conversation keeps its tags and opens as a normal chat (recipe in F07 `F07.open-by-url`). A conversation that did get the tag loses it with Edit tags (`remove-tag-automationsetup`)."
+            },
+            {
+              "id": "5",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F05-composer.md:62",
+              "code": "- **Home draft (`F05.draft-persistence`).** Run `control-openhands browser goto /`, `control-openhands browser type 'testid=chat-input' 'QA home draft'`, `control-openhands browser goto /settings/secrets`, `control-openhands browser goto /`, then the `innerText` eval: `QA home draft`; `control-openhands browser storage --session` lists `oh:home-prompt-draft`. The automation setup page's docked composer (`/automations/setup`, F22) keeps no draft and never touches the Home one. With `QA home draft` still in the Home composer, run `control-openhands browser goto /automations`, `control-openhands browser click 'testid=automations-add-automation'`, `control-openhands browser click 'testid=automations-add-automation-create' --expect-url '/automations/setup'` and `control-openhands browser wait 'testid=chat-input'`: the `innerText` eval is empty. `control-openhands browser type 'testid=chat-input' 'Reply with only the word ok2. Do not run any tools.'`, then `control-openhands browser eval \"new Promise(r=>setTimeout(()=>r(sessionStorage.getItem('oh:home-prompt-draft')),1500))\"` still returns `QA home draft`. `control-openhands browser click 'testid=submit-button' --expect-url '/conversations/'` and `control-openhands browser click 'testid=sidebar-conversations-link' --expect-url '/conversations(\\?|$)'`: the Home composer shows `QA home draft`. Clear it (`fill 'testid=chat-input' ''`, wait a second) and repeat the setup send: New Chat is empty and `browser storage --session --values` has no `oh:home-prompt-draft`. Unsent text in the setup composer is lost when the user leaves that page (by design)."
+            },
+            {
+              "id": "6",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F06-agent-activity.md:80",
+              "code": "- **Long table cell (`F06.markdown-rendering`).** On the stream conversation write a prompt file whose first line is `Reply with only the word OK. Do not run any tools.`, then a blank line and the table `| Name | Description | Status |`, `|---|---|---|`, `| Alpha | This is a really long sentence in a single cell that goes on and on to explain a very involved aspect of the system, which nobody could read on one line without scrolling forever to the right. | ok |`, `| Beta | brief | fail |`. Run `control-openhands browser fill 'testid=chat-input' x --value-file <file>`, `control-openhands browser click 'testid=submit-button'` and `control-openhands conversation wait <id> --fresh --timeout 120`; the user bubble renders the table. Cells wrap once they reach 28rem (`max-w-md`): `control-openhands browser eval \"getComputedStyle(document.querySelector('[data-testid=markdown-table-scroll] td')).whiteSpace + ' ' + getComputedStyle(document.querySelector('[data-testid=markdown-table-scroll] td')).maxWidth\"` is `normal 448px`. At desktop with the right panel closed, `control-openhands browser bbox 'testid=user-message >> nth=-1 >> testid=markdown-table-scroll'` has `scrollWidth` `582` equal to `clientWidth` and `Status` is visible (`browser screenshot 'testid=chat-interface' --feature F06.markdown-rendering --name long-cell-table`). A table still wider than the conversation keeps the horizontal scroll with its edge fade: with the panel open (`control-openhands browser click 'testid=right-panel-toggle'`) `clientWidth` is `474`, and at phone width `326`, so `Status` is scrolled off there while the long cell stays wrapped. An agent reply with such a table behaves the same."
+            },
+            {
+              "id": "7",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F06-agent-activity.md:93",
+              "code": "- **Confirmation mode on (`F06.confirmation-mode`).** Arrange through the settings UI, in this order (the Security Analyzer field appears only once Confirmation Mode is on): `control-openhands browser goto /settings/verification`, `control-openhands browser click 'testid=verification-settings-screen >> text=Confirmation Mode'`, `control-openhands browser click 'testid=sdk-section-all-toggle'`, `control-openhands browser click 'testid=verification-settings-screen >> role=button[name=\"Show suggestions\"]'`, `control-openhands browser click 'role=listbox >> role=option[name=\"None\"]'`, `control-openhands browser value 'testid=verification-settings-screen >> role=combobox[name=\"Security Analyzer\"]'` (`None`), `control-openhands browser click 'testid=verification-settings-screen >> testid=save-button'`; `control-openhands api GET /api/settings` shows `\"confirmation_mode\": true` and `\"security_analyzer\": \"none\"` (None means every action is confirmed; the default LLM analyzer only stops HIGH-risk actions, so `echo` would run unprompted). Run `control-openhands conversation start --prompt \"Run the terminal command 'echo qa-confirm-ok' and reply with its output.\" --wait --timeout 180`: it returns `\"status\": \"waiting_for_confirmation\"`. `control-openhands browser text 'testid=chat-scroll-container'` ends `Do you want to continue with this action? Cancel Ctrl+\u21e7+\u232b Continue Ctrl+\u21a9` on Linux (`Cancel \u21e7\u2318\u232b Continue \u2318\u21a9` on macOS, #18127), `control-openhands browser tooltip 'testid=action-confirm-button'` is `Confirm the requested action`, and a lock icon sits above the composer (screenshot). The tooltip stays open over the Cancel button, so move the pointer first: `control-openhands browser hover 'testid=chat-input'`. Run `control-openhands browser click 'testid=action-reject-button'`: status `idle`, the buttons are gone, `conversation events <id> --last 6` ends with `UserRejectObservation`, and the action's row reads `Rejected` (`control-openhands browser count 'testid=rejected-indicator'` is `1`) with no spinner. Send `Run the terminal command 'echo qa-confirm-two' and reply with its output.` through `testid=chat-input` / `testid=submit-button`, `control-openhands browser wait 'testid=action-confirm-button' --timeout 20000`, `control-openhands browser click 'testid=action-confirm-button'`; about 15 s later the status is `finished` and the events contain the observation `qa-confirm-two`. A rejection inside a group resolves it too (#17920, fixed by #17995): send `Run the terminal command 'echo qa-g1'. After it finishes, run the terminal command 'echo qa-g2' as a separate tool call. Then reply DONE.`, continue the first action (`browser wait 'testid=action-confirm-button'`, then `control-openhands browser press Control+Enter`, which is also the next bullet's shortcut) and cancel the second (`browser wait 'testid=action-confirm-button' --timeout 60000`, `control-openhands browser press Control+Shift+Backspace`): status `idle`, `control-openhands browser text 'testid=event-group >> nth=-1'` ends `2 actions completed`, `control-openhands browser count 'testid=event-group >> nth=-1 >> .animate-spin'` is `0`, the same after `browser reload`, and the expanded group (`control-openhands browser click 'testid=event-group >> nth=-1 >> button >> nth=0'`) shows `Rejected` on the `qa-g2` row (`browser screenshot 'testid=chat-interface' --feature F06.confirmation-mode --name group-after-reload`). Each button keeps its label and hint on one line: while the prompt is waiting, `control-openhands browser eval \"[...document.querySelectorAll('[data-testid=action-reject-button],[data-testid=action-confirm-button]')].map(b=>b.offsetHeight+'/'+b.scrollHeight).join(' ')\"` is `26/26 26/26` at desktop, also with the side panel open (`testid=right-panel-toggle`). At phone width (`browser viewport phone`) the shortcut hints are hidden (no hardware keyboard), the buttons read `Cancel` and `Continue`, and `browser text 'testid=chat-scroll-container'` ends `Do you want to continue with this action? Cancel Continue` (screenshot the awaiting prompt at phone width)."
+            },
+            {
+              "id": "8",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:62",
+              "code": "- **Leaving an automation setup conversation (`F07.open-by-url`).** A conversation tagged `automationsetup: draft` (started from `/automations/setup`, see `F04.automation-setup-tag`) opens as a setup page (`testid=automation-setup-topbar`, no `chat-pane-header`). Make an empty conversation: `control-openhands browser goto /`, `control-openhands browser click 'testid=conversation-panel-new-thread-picker'`, `control-openhands browser click 'testid=launch-no-workspace' --expect-url '/conversations/'` (note `<plain-id>`; `control-openhands api GET /api/conversations/<plain-id> --pick tags` is only `clientsource`). Open the setup conversation from the sidebar (`control-openhands browser click 'a[href*=\"/conversations/<setup-id>\"] >> nth=0' --expect-url '/conversations/<setup-id>'`), then go back the same way (`'a[href*=\"/conversations/<plain-id>\"] >> nth=0'`). Expected: `<plain-id>` opens as a normal conversation: `control-openhands browser wait 'testid=chat-pane-header'`, `browser count 'testid=chat-pane-header'` is `1`, `browser count 'testid=automation-setup-topbar'` is `0`, and `api GET /api/conversations/<plain-id> --pick tags` is still only `clientsource`, also after `browser reload` and after repeating the round trip; the sidebar row of `<plain-id>` has no `Automation setup: Draft` chip (`browser screenshot --feature F07.open-by-url --name plain-stays-plain`). The setup conversation is in this tab's `openhands-automation-setup-handoffs` sessionStorage entry during the check (`control-openhands browser storage --session --values`). The same holds at phone width through the sidebar drawer (`sidebar-mobile-menu-toggle`, then the rows inside `testid=sidebar-mobile-drawer`)."
+            },
+            {
+              "id": "9",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:76",
+              "code": "- **Agent tools (`F07.agent-tools-modal`).** Open the menu, `control-openhands browser click 'testid=conversation-name-context-menu >> testid=show-agent-tools-button'`; the dialog `testid=system-message-modal` has tabs `System Message` (selected, the system prompt) and `Available Tools`. `control-openhands browser click 'role=dialog >> role=tab[name=\"Available Tools\"]'`, `control-openhands browser count 'testid=system-message-modal >> testid=toggle-button'` (backend-provided count; `10` on Agent Server 1.54.0: terminal, file_editor, task_tracker, canvas_ui_control, launch_child_conversation, request_secret (local backends, see `F14.agent-request`), finish, think, switch_llm, invoke_skill), `control-openhands browser click 'testid=system-message-modal >> testid=toggle-button >> nth=0'` expands `terminal` with its description. Close with `control-openhands browser click 'testid=close-system-message-modal'`."
+            },
+            {
+              "id": "10",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:108",
+              "code": "- The Overview drawer has no Automations, Skills, MCP or Secrets sections. The Overview menu offers Workspace and Git rows only, and its drawer opens only Pull Requests (`F27.overview-drawer`)."
+            },
+            {
+              "id": "11",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:109",
+              "code": "- Dialogs move focus inside when they open and keep Tab inside: the Skills and Hooks dialogs start on their close button, Stop and Delete on `cancel-button`, Export on `close-transcript-export-modal`, Agent Tools on `close-system-message-modal`. In the Hooks dialog, focusing Refresh with Tab opens its tooltip, which takes the first Escape; a second Escape closes the dialog."
+            }
+          ],
+          "response": {
+            "model": "jev-1.13.0",
+            "answers": {
+              "0": {
+                "type": "noul",
+                "noul": 0.12
+              },
+              "0_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.96,
+                "probabilities": {
+                  "correct": 0.02,
+                  "accept": 0.98
+                }
+              },
+              "1": {
+                "type": "noul",
+                "noul": 0.32
+              },
+              "1_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.6,
+                "probabilities": {
+                  "correct": 0.2,
+                  "accept": 0.8
+                }
+              },
+              "2": {
+                "type": "noul",
+                "noul": 0.19
+              },
+              "2_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.84,
+                "probabilities": {
+                  "correct": 0.08,
+                  "accept": 0.92
+                }
+              },
+              "3": {
+                "type": "noul",
+                "noul": 0.25
+              },
+              "3_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.76,
+                "probabilities": {
+                  "correct": 0.12,
+                  "accept": 0.88
+                }
+              },
+              "4": {
+                "type": "noul",
+                "noul": 0.18
+              },
+              "4_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.9,
+                "probabilities": {
+                  "correct": 0.05,
+                  "accept": 0.95
+                }
+              },
+              "5": {
+                "type": "noul",
+                "noul": 0.4
+              },
+              "5_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.38,
+                "probabilities": {
+                  "correct": 0.31,
+                  "accept": 0.69
+                }
+              },
+              "6": {
+                "type": "noul",
+                "noul": 0.14
+              },
+              "6_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.92,
+                "probabilities": {
+                  "correct": 0.04,
+                  "accept": 0.96
+                }
+              },
+              "7": {
+                "type": "noul",
+                "noul": 0.59
+              },
+              "7_choice": {
+                "type": "choice",
+                "choice": "correct",
+                "confidence": 0.02,
+                "probabilities": {
+                  "correct": 0.51,
+                  "accept": 0.49
+                }
+              },
+              "8": {
+                "type": "noul",
+                "noul": 0.28
+              },
+              "8_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.64,
+                "probabilities": {
+                  "correct": 0.18,
+                  "accept": 0.82
+                }
+              },
+              "9": {
+                "type": "noul",
+                "noul": 0.16
+              },
+              "9_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.92,
+                "probabilities": {
+                  "correct": 0.04,
+                  "accept": 0.96
+                }
+              },
+              "10": {
+                "type": "noul",
+                "noul": 0.12
+              },
+              "10_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.96,
+                "probabilities": {
+                  "correct": 0.02,
+                  "accept": 0.98
+                }
+              },
+              "11": {
+                "type": "noul",
+                "noul": 0.12
+              },
+              "11_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.94,
+                "probabilities": {
+                  "correct": 0.03,
+                  "accept": 0.97
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 10582,
+              "output_tokens": 547
+            }
+          },
+          "errors": []
+        },
+        {
+          "items": [
+            {
+              "id": "12",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F10-llm-profiles.md:78",
+              "code": "- **Name rules (`F10.name-validation`).** In the editor run `control-openhands browser fill 'testid=profile-name-input' 'QA bad'`; `control-openhands browser enabled 'testid=save-profile-btn'` is `false` and `control-openhands browser attr 'testid=profile-name-input' aria-invalid` is `true` (the same for `-QA` and a 65-character name), and the rule text under the field turns to the theme's danger colour: `control-openhands browser eval \"(()=>{const i=document.querySelector('[data-testid=profile-name-input]');return getComputedStyle(document.getElementById(i.getAttribute('aria-describedby'))).color+' '+getComputedStyle(document.body).getPropertyValue('--oh-color-danger')})()\"` reads `rgb(231, 106, 94) #e76a5e` on OpenHands-Neutral and `rgb(209, 52, 56) #D13438` on Light+ (`F16.color-theme`) (#18199); a valid name turns it back to the muted grey. An existing name (`QA_flash`) also gives `enabled` `false` and `aria-invalid` `true`, with a role=alert message under the field in the danger colour while the rule text stays grey. The message reads `An LLM profile with this name already exists. Choose a different name, or edit the existing one.` (`browser eval \"[...document.querySelectorAll('[role=alert]')].map(a=>a.innerText+' | '+getComputedStyle(a).color)\"`; screenshot `--feature F10.name-validation --name duplicate-neutral`). `QA_flash2` gives `true` and no message."
+            },
+            {
+              "id": "13",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F10-llm-profiles.md:91",
+              "code": "- **New profile prefill (`F10.create-prefill`).** With that Default (temperature `0.3`) run `control-openhands browser click 'testid=add-llm-profile'`. The editor opens on All (`browser eval \"[...document.querySelectorAll('[role=tab]')].map(t=>t.innerText+':'+t.getAttribute('aria-selected')).join(',')\"` is `Basic:false,Advanced:false,All:true`), `browser value 'testid=llm-custom-model-input'` is the backend default `openai/gpt-5.6-sol`, and `control-openhands assert --field value --equals 0.3 -- browser value 'testid=sdk-settings-llm.temperature'` passes: the temperature is inherited from the Default. Run `control-openhands browser fill 'testid=llm-custom-model-input' deepseek/deepseek-flash`, `browser fill 'testid=profile-name-input' QA_inherit`, fill the key as in Create, `control-openhands browser scroll 'testid=sdk-settings-llm.temperature'`, `control-openhands browser screenshot --feature F10.create-prefill --name inherited-before-save`, Save and `wait-text 'Profile \"QA_inherit\" created' --timeout 60000`. The saved profile has the temperature the form showed: `control-openhands api GET /api/profiles/QA_inherit --pick config.temperature` is `0.3`. After `browser reload`, open `QA_inherit`'s row menu (`'[data-testid=profile-row]:has([title=\"QA_inherit\"]) >> testid=profile-menu-trigger'`), click `testid=profile-actions-menu >> testid=profile-edit` and `testid=sdk-section-all-toggle`, `control-openhands browser scroll 'testid=sdk-settings-llm.temperature'` and `control-openhands assert --field value --equals 0.3 -- browser value 'testid=sdk-settings-llm.temperature'` passes (screenshot `--feature F10.create-prefill --name edit-after-create`); leave with `testid=cancel-profile-btn`. Repeat at `browser viewport phone` after `control-openhands api DELETE /api/profiles/QA_inherit --write` (the desktop pass already took the name); the same holds."
+            },
+            {
+              "id": "14",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F12-model-router.md:90",
+              "code": "- `Run on first message` is an `sr-only` checkbox (keyboard reachable): click the label text inside `testid=meta-profile-run-at-conversation-start` and read `.checked`/`.disabled` with `browser eval`. The stored preference (`misc_settings.app_preferences.run_router_at_conversation_start`) is independent of what the disabled switch shows; with no active router it may still be `true`. Turn it off before deleting the last router, or a later \"first router\" will not re-enable it because it is already on."
+            },
+            {
+              "id": "15",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:58",
+              "code": "- **Name rules (`F13.name-validation`).** In the Add editor, fill `testid=agent-profile-name-input` with `''`, `default`, `'bad name!'` and `QA_ok` in turn; after each run `control-openhands browser attr 'testid=agent-profile-name-input' aria-invalid` and `control-openhands browser enabled 'testid=save-agent-profile-btn'`. Results: `''` \u2192 `true`/`false`; `default` (duplicate) \u2192 `true`/`false`; `'bad name!'` \u2192 `true`/`false`; `QA_ok` \u2192 `false`/`true`. The rule under the field is always shown (grey) and turns the theme danger colour (`text-danger`, #18199) while the name is invalid; it reads `Profile name must start with a letter or digit, and contain only letters, digits, dots, underscores, or hyphens (max 64 characters)`. For the duplicate, `control-openhands browser count 'role=alert >> text=already exists'` is `1`: the alert is the field's description, in the danger colour (`rgb(231, 106, 94)` on OpenHands-Neutral, `rgb(209, 52, 56)` on Light+), while the rule text stays grey. It reads `An agent profile with this name already exists. Choose a different name, or edit the existing one.` Take `control-openhands browser screenshot --feature F13.name-validation --name duplicate` with `default` filled. In Edit the same message appears for another profile's name and not for the profile's own name (`F13.edit`)."
+            },
+            {
+              "id": "16",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:85",
+              "code": "- A taken name marks the field invalid with an alert reading `An agent profile with this name already exists. \u2026`."
+            },
+            {
+              "id": "17",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:88",
+              "code": "- Switch rows are `sr-only` checkboxes inside labels (keyboard reachable): click the label text (`'testid=agent-settings-tool-list >> text=<tool>'`, `'testid=agent-settings-mcp-list >> text=<name>'`) and read `.checked` with `browser eval`. A bare `label` selector segment is parsed as `label=`, not CSS."
+            },
+            {
+              "id": "18",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F14-secrets.md:80",
+              "code": "- `request_secret` is registered on every new OpenHands-agent conversation this frontend launches (not on ACP agents or older conversations) and appears in Show Agent Tools & Metadata (see `F07.agent-tools-modal`). The agent learns the outcome from a hidden `[secret-request] ...` user message; read it with `conversation events <id> --kinds MessageEvent`, not from the chat."
+            },
+            {
+              "id": "19",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F15-agent-behavior-settings.md:83",
+              "code": "- Switches are `sr-only` checkboxes (keyboard reachable): toggle by clicking the label text scoped to the page, read `.checked` with `browser eval`."
+            },
+            {
+              "id": "20",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F16-application-settings.md:102",
+              "code": "- **Backend switch in place (`F16.backend-switch`).** Needs a second backend with a different Git username: the second stack from F25's Preconditions added as `QA_Second` (F25 Add bullet), arranged with `control-openhands api PATCH /api/settings --run \"$OH_VERIFY_RUN_2\" --write --data '{\"misc_settings_diff\":{\"app_preferences\":{\"git_user_name\":\"QA Second Git\"}}}'`. With Local active, run `control-openhands browser goto /settings/app` and `control-openhands browser reload`; `browser value 'testid=git-user-name-input'` is `openhands`. Switch without leaving the page: `control-openhands browser click 'testid=backend-selector'`, `control-openhands browser click 'testid=backend-selector >> role=option[name=\"Connected QA_Second\"]'`, `control-openhands browser wait 'testid=environment-switch-overlay' --state detached --timeout 10000`, wait a few seconds: the value is `QA Second Git` and `browser text 'testid=backend-synced-settings-badge'` names QA_Second (a first visit to a backend loads fresh). Switch back the same way to `Connected Local`: the value is `openhands` beside `synced from Local backend`, and it keeps following the active backend on further switches. The form remounts per backend, so an unsaved edit is dropped: on Local run `control-openhands browser fill 'testid=git-user-name-input' 'QA Local Edit'` (`browser enabled 'testid=submit-button'` is `true`), switch to `QA_Second` (`QA Second Git`, Save `false`) and back (`openhands`, Save `false`); `control-openhands api GET /api/settings --pick misc_settings.app_preferences.git_user_name` is unchanged. At `browser viewport phone` the selector is in the drawer (`testid=sidebar-mobile-menu-toggle`, then `'testid=sidebar-mobile-drawer >> testid=backend-selector'` and `role=option[name=\"Connected QA_Second\"]`; close the drawer with `browser mouse-click 370 400`) and the field follows the same way. Switch back to Local and remove `QA_Second` afterwards (F25)."
+            },
+            {
+              "id": "21",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F18-skills.md:94",
+              "code": "- The card toggle and the facet rows are `role=switch`/`role=checkbox` buttons: read `aria-checked`. The modal switch is an `sr-only` checkbox (keyboard reachable): click the row text and read `.checked` with `browser eval`."
+            },
+            {
+              "id": "22",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F22-automation-creation.md:115",
+              "code": "- The setup page's docked composer keeps no draft: it opens empty even when the Home composer has an unsent draft (`sessionStorage` `oh:home-prompt-draft`), a prompt sent from it never becomes the Home draft, and leaving it keeps an existing Home draft. Unsent text typed there is lost when the user leaves the page."
+            },
+            {
+              "id": "23",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F23-automation-detail.md:117",
+              "code": "- Kebab **Edit** (detail and dashboard) opens `/automations/setup?automationId=<id>`. The edit page's Save and Test report API failures with the API's message (see `F23.edit-validation`, `F23.edit-save-error`), and its `Automation updated` toast covers Test/Save/Close until the pointer moves away."
+            }
+          ],
+          "response": {
+            "model": "jev-1.13.0",
+            "answers": {
+              "12": {
+                "type": "noul",
+                "noul": 0.27
+              },
+              "12_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.78,
+                "probabilities": {
+                  "correct": 0.11,
+                  "accept": 0.89
+                }
+              },
+              "13": {
+                "type": "noul",
+                "noul": 0.4
+              },
+              "13_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.36,
+                "probabilities": {
+                  "correct": 0.32,
+                  "accept": 0.68
+                }
+              },
+              "14": {
+                "type": "noul",
+                "noul": 0.4
+              },
+              "14_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.38,
+                "probabilities": {
+                  "correct": 0.31,
+                  "accept": 0.69
+                }
+              },
+              "15": {
+                "type": "noul",
+                "noul": 0.25
+              },
+              "15_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.64,
+                "probabilities": {
+                  "correct": 0.18,
+                  "accept": 0.82
+                }
+              },
+              "16": {
+                "type": "noul",
+                "noul": 0.1
+              },
+              "16_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.96,
+                "probabilities": {
+                  "correct": 0.02,
+                  "accept": 0.98
+                }
+              },
+              "17": {
+                "type": "noul",
+                "noul": 0.12
+              },
+              "17_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.96,
+                "probabilities": {
+                  "correct": 0.02,
+                  "accept": 0.98
+                }
+              },
+              "18": {
+                "type": "noul",
+                "noul": 0.14
+              },
+              "18_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.92,
+                "probabilities": {
+                  "correct": 0.04,
+                  "accept": 0.96
+                }
+              },
+              "19": {
+                "type": "noul",
+                "noul": 0.11
+              },
+              "19_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.96,
+                "probabilities": {
+                  "correct": 0.02,
+                  "accept": 0.98
+                }
+              },
+              "20": {
+                "type": "noul",
+                "noul": 0.37
+              },
+              "20_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.42,
+                "probabilities": {
+                  "correct": 0.29,
+                  "accept": 0.71
+                }
+              },
+              "21": {
+                "type": "noul",
+                "noul": 0.11
+              },
+              "21_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.94,
+                "probabilities": {
+                  "correct": 0.03,
+                  "accept": 0.97
+                }
+              },
+              "22": {
+                "type": "noul",
+                "noul": 0.15
+              },
+              "22_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.94,
+                "probabilities": {
+                  "correct": 0.03,
+                  "accept": 0.97
+                }
+              },
+              "23": {
+                "type": "noul",
+                "noul": 0.17
+              },
+              "23_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.92,
+                "probabilities": {
+                  "correct": 0.04,
+                  "accept": 0.96
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 8469,
+              "output_tokens": 567
+            }
+          },
+          "errors": []
+        },
+        {
+          "items": [
+            {
+              "id": "24",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:3",
+              "code": "One Canvas can drive several agent servers. The backend selector at the bottom\nof the sidebar lists every registered backend with a live status dot and\nswitches between them; its footer opens **Add Backend** (OpenHands Cloud login\nthrough an OAuth device flow, or a local/remote agent server by host and API\nkey) and **Manage Backends** (select, edit, remove, and Cloud \"Log back in\").\nWhen the active backend is unreachable the whole app is replaced by Manage\nbackends in recovery mode. Cloud backends add organization rows, a Cloud\nsettings link and public sharing of conversations (read-only at\n`/shared/conversations/:id`); `/oauth/device/verify` is the device-approval page.\nWhen the page is served with the DigitalOcean Managed Agents bridge (the\ndesktop app's preload, or the web server's own bridge, which the launcher's\ningress mounts by default behind the session key), Add Backend gains a\n**Providers** tab whose DigitalOcean entry signs in with a personal access\ntoken and turns a Managed Agents session into a backend.\nEverything except the Cloud and DigitalOcean accounts themselves can be driven\nlocally with a second `control-openhands` stack as the extra backend."
+            },
+            {
+              "id": "25",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:52",
+              "code": "- `F25.providers-tab`: only when the page has the Managed Agents bridge (`window.marsBridge`), Add Backend shows a third tab **Providers** (\"Connect through DigitalOcean and more.\") with a **DigitalOcean** card (\"Your team's OpenHands agents\") and `More providers coming soon.`. Every launcher-served web page has it (the ingress answers `/mars/health`); without it (`MARS_WEB=0`, or a non-loopback bind with no session key at all) there are only the Cloud and Agent-server tabs and no Managed Agents UI anywhere. A non-loopback bind that has a key (F26 `--host 0.0.0.0` with `LOCAL_BACKEND_API_KEY`) mounts the bridge behind that key and offers the tab too, although the page itself carries no key (see the sign-in bullet's Known failure)."
+            },
+            {
+              "id": "26",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:78",
+              "code": "- The Managed Agents rows need the bridge, which every `control-openhands launch` run has: `control-openhands browser eval \"!!window.marsBridge\"` is `true` and `curl -s <baseUrl>/mars/health` answers `{\"ok\":true,\"authRequired\":true}`. `F25.digitalocean-agents` and `F25.digitalocean-backend-removal` stay blocked without a DigitalOcean account."
+            },
+            {
+              "id": "27",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:149",
+              "code": "- Add Backend and Manage Backends take and keep keyboard focus, and Edit backend takes it on open (`ModalBackdrop`; at phone width open the selector with `'testid=sidebar-mobile-drawer >> testid=backend-selector'`, since the bare test id matches two selectors). At desktop width focus returns to the selector input when they close (at phone width Add Backend's X closes the drawer too and focus falls to the page body), so an Escape pressed after closing lands on the selector and can trigger #18233 below."
+            },
+            {
+              "id": "28",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F26-runtime-variants.md:38",
+              "code": "- `F26.mars-web-bridge`: every launcher-served web stack hosts the DigitalOcean Managed Agents bridge on its ingress by default (`MARS_WEB=0` opts out): `/mars/health` answers `{\"ok\":true,\"authRequired\":true}` on a full, `--backend-only`, `--frontend-only` and `--host 0.0.0.0` launcher, `/mars/rpc/*` answers `401` without the session key and works with it, the static child behind the ingress hosts none, and the Electron stack hosts none either (its preload provides `window.marsBridge`)."
+            },
+            {
+              "id": "29",
+              "rule": "MAP_CURRENT_BEHAVIOR",
+              "location": ".agents/skills/verify-openhands/references/feature-map/F27-workspace-tools.md:108",
+              "code": "- The Overview menu opens only Pull Requests (`conversation-overview-menu-open-git-pull_requests`); its testids are `conversation-overview-menu-open-*` and `-pin-*` for `workspace` and the Git rows only."
+            }
+          ],
+          "response": {
+            "model": "jev-1.13.0",
+            "answers": {
+              "24": {
+                "type": "noul",
+                "noul": 0.18
+              },
+              "24_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.86,
+                "probabilities": {
+                  "correct": 0.07,
+                  "accept": 0.93
+                }
+              },
+              "25": {
+                "type": "noul",
+                "noul": 0.2
+              },
+              "25_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.78,
+                "probabilities": {
+                  "correct": 0.11,
+                  "accept": 0.89
+                }
+              },
+              "26": {
+                "type": "noul",
+                "noul": 0.15
+              },
+              "26_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.9,
+                "probabilities": {
+                  "correct": 0.05,
+                  "accept": 0.95
+                }
+              },
+              "27": {
+                "type": "noul",
+                "noul": 0.25
+              },
+              "27_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.82,
+                "probabilities": {
+                  "correct": 0.09,
+                  "accept": 0.91
+                }
+              },
+              "28": {
+                "type": "noul",
+                "noul": 0.2
+              },
+              "28_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.86,
+                "probabilities": {
+                  "correct": 0.07,
+                  "accept": 0.93
+                }
+              },
+              "29": {
+                "type": "noul",
+                "noul": 0.08
+              },
+              "29_choice": {
+                "type": "choice",
+                "choice": "accept",
+                "confidence": 0.98,
+                "probabilities": {
+                  "correct": 0.01,
+                  "accept": 0.99
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 4062,
+              "output_tokens": 285
+            }
+          },
+          "errors": []
+        }
+      ],
+      "errors": []
+    }
+  }
+}

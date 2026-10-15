@@ -121,3 +121,23 @@ paragraphs still flag, so the full post-edit diff is not clean. The original
 0.95 experiment above remains unchanged as historical test evidence. This score
 is uncalibrated; a lint diagnostic requires inspection, not automatic deletion.
 See feature-map-gate-080-results.json.
+
+
+## Codex cleanup comparison at the 0.80 gate (2026-10-15)
+
+Tested the exact prose changed by Codex cleanup commit
+`c28642a83150df106e5efad04d35efaab00253e9`, relative to its parent
+`fd6dfa5a6af53c5b6a32b4d60b35ec9544688304`. The later README-count commit is not part of this
+cleanup comparison. Reverse diff selected the old paragraphs; forward diff
+selected their cleaned versions. Only feature-map prose was included (not the
+new rule in mapping.md). Each side had 30 paragraphs, sent in three batches:
+six actual Jev API calls in total, using the same policy and 0.80 gate.
+
+Before: 11 paragraphs emitted errors. After: zero paragraphs emitted errors.
+This detects 11 of the 30 edited paragraphs at the error gate, not all of them.
+Some edits only remove a PR reference, which the rule explicitly allows, so
+30 is an edited-paragraph count, not a validated count of violations. Other
+historical prose also remained below the gate. No labels, reviewer opinions or
+expected outcomes were sent as model state. This comparison supports useful
+lint signals but does not establish calibrated recall or general reliability.
+Exact candidates and typed responses: `codex-cleanup-results.json`.
