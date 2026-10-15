@@ -46,14 +46,12 @@ class FileCheckTest(unittest.TestCase):
 
     def test_error_includes_alternative_and_source_identity(self):
         errors = check.feedback(self.files, self.response)
-        self.assertEqual([e['code'] for e in errors], ['PY_SUPPRESS', 'BOOL_SCOPE'])
+        self.assertEqual([e['code'] for e in errors], ['PY_SUPPRESS'])
         self.assertIn('AFTER', errors[0]['alternative'])
-        self.assertIn('deprecation', errors[1]['alternative'])
         self.assertEqual(len(errors[0]['source_sha256']), 64)
 
     def test_uncertain_signals_never_emit_error(self):
         self.response['answers']['PY_SUPPRESS']['noul'] = 0.5
-        self.response['answers']['BOOL_SCOPE_location']['probabilities'] = {'none': 0.2}
         self.assertEqual(check.feedback(self.files, self.response), [])
 
     def test_no_location_never_emit_error(self):
@@ -75,7 +73,7 @@ class FileCheckTest(unittest.TestCase):
         self.assertNotIn('BOOL_SCOPE_location', r['questions'])
 
     def test_unknown_choice_fails(self):
-        self.response['answers']['BOOL_SCOPE_location']['choice'] = 'hallucination:123'
+        self.response['answers']['PY_SUPPRESS_location']['choice'] = 'hallucination:123'
         with self.assertRaises(check.CheckError):
             check.validate(self.response, self.request)
 
@@ -87,10 +85,10 @@ class FocusedTest(unittest.TestCase):
     def test_policies_and_locations(self):
         old = json.loads((HERE / 'fixtures/case-1.json').read_text())['files']
         items = focused.inputs(old)
-        self.assertEqual(len(items), 4)
-        self.assertEqual({i['rule'] for i in items}, {'PY_SUPPRESS', 'BOOL_SCOPE'})
+        self.assertEqual(len(items), 2)
+        self.assertEqual({i['rule'] for i in items}, {'PY_SUPPRESS'})
         request = focused.build(items)
-        self.assertEqual(len(request['questions']), 8)
+        self.assertEqual(len(request['questions']), 4)
         self.assertNotIn('original', json.dumps(request))
 
     def test_final_is_not_type_alias(self):
@@ -282,3 +280,84 @@ class CloudCallbackTest(unittest.TestCase):
             helpers.fire_callback()
             request = opened.call_args.args[0]
             self.assertEqual(request.get_header('Authorization'), 'Bearer synthetic-cloud-key')
+
+
+class RuleRoutingTest(unittest.TestCase):
+    def test_bool_rule_is_removed_from_both_interfaces(self):
+        self.assertNotIn('BOOL_SCOPE', focused.POLICIES)
+        self.assertNotIn('BOOL_SCOPE', check.RULES)
+        items = focused.inputs({'x.py': 'def load(load_user: bool):\n    pass\n'})
+        self.assertEqual(items, [])
+
+    def test_questions_use_this_code_and_final_sentence(self):
+        self.assertEqual(focused.POLICIES['CONST_FINAL']['question'],
+                         'Does this code contain any declaration that violates the Final annotation rule?')
+        request = focused.build(focused.inputs({'x.py': 'FLAG = 1\ntry:\n    f()\nexcept ValueError:\n    pass\n'}))
+        self.assertNotIn('focused', json.dumps(request))
+        self.assertEqual(len(request['questions']), 4)
+
+    def test_feature_map_paths_cover_all_verify_skills_only(self):
+        for name in ('verify-openhands', 'verify-agent-server', 'verify-sdk', 'verify-automation'):
+            self.assertTrue(feature_map.is_map(f'.agents/skills/{name}/references/feature-map/F01.md'))
+        for path in ('README.md', '.agents/skills/review/references/feature-map/F01.md',
+                     'docs/.agents/skills/verify-x/references/feature-map/F01.md'):
+            self.assertFalse(feature_map.is_map(path))
+
+    def test_extensions_skip_without_any_api_or_secret(self):
+        from unittest.mock import Mock
+        gh = Mock()
+        self.assertEqual(pr_lint.run(gh, 'OpenHands/extensions', 1)['reason'], 'repository_not_enabled')
+        gh.get.assert_not_called()
+
+    def run_sources(self, repository, sources):
+        import base64
+        from unittest.mock import Mock
+        gh = Mock()
+        pr = {'user': {'login': 'enyst'}, 'state': 'open', 'draft': False,
+              'head': {'sha': 'a'*40}, 'changed_files': len(sources),
+              'base': {'repo': {'private': False}}}
+        rows = [{'filename': path, 'status': 'modified',
+                 'patch': '@@ -0,0 +1,' + str(len(source.splitlines())) + ' @@\n' +
+                 '\n'.join('+' + line for line in source.splitlines())}
+                for path, source in sources.items()]
+        def get(path):
+            if '/files?' in path:
+                return rows
+            if '/contents/' in path:
+                import urllib.parse
+                filename = urllib.parse.unquote(path.split('/contents/')[1].split('?')[0])
+                source = sources[filename]
+                return {'encoding': 'base64', 'content': base64.b64encode(source.encode()).decode(), 'size': len(source)}
+            return pr
+        gh.get.side_effect = get
+        requests = []
+        def evaluate(request, key):
+            requests.append(request)
+            return {'answers': {k: {'noul': .1} if q['type'] == 'noul' else
+                                {'choice': 'accept', 'probabilities': {'accept': 1, 'correct': 0}}
+                                for k, q in request['questions'].items()}}
+        result = pr_lint.run(gh, repository, 1, lambda: 'test-only-key', evaluate)
+        return result, requests, gh
+
+    def test_canvas_skips_python_but_checks_map(self):
+        result, requests, gh = self.run_sources('OpenHands/OpenHands', {
+            'script.py': 'FLAG = 1\n',
+            '.agents/skills/verify-openhands/references/feature-map/F01.md': '- Current behavior.\n',
+        })
+        self.assertEqual(result['candidates'], 1)
+        self.assertEqual(len(requests), 1)
+        self.assertTrue(all('script.py' not in c.args[0] for c in gh.get.call_args_list))
+        self.assertEqual(result['reports'][0]['items'][0]['rule'], feature_map.RULE)
+
+    def test_python_and_map_are_separate_but_python_questions_share_request(self):
+        for repository in ('OpenHands/software-agent-sdk', 'OpenHands/automation'):
+            result, requests, _ = self.run_sources(repository, {
+                'script.py': 'FLAG = 1\ntry:\n    f()\nexcept ValueError:\n    pass\n',
+                '.agents/skills/verify-agent-server/references/feature-map/F01.md': '- Current behavior.\n',
+            })
+            self.assertEqual(result['candidates'], 3)
+            self.assertEqual(len(requests), 2)
+            self.assertEqual(len(requests[0]['questions']), 4)
+            self.assertEqual(len(requests[1]['questions']), 2)
+            self.assertEqual({i['rule'] for i in result['reports'][0]['items']}, {'CONST_FINAL', 'PY_SUPPRESS'})
+            self.assertEqual({i['rule'] for i in result['reports'][1]['items']}, {feature_map.RULE})

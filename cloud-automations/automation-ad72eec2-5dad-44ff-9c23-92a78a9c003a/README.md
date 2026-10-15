@@ -3,7 +3,7 @@
 A read-only, stdlib Python script sends public source to Jev 1.13.0. English
 policies define corrections; Python extracts AST candidates and supplies exact
 locations. Strong signals emit JSON `error` diagnostics with an alternative for
-the coding agent. No autonomous agent, builds, GitHub writes, or automatic fixes.
+the coding agent. No autonomous coding agent, builds, or automatic fixes. The PR adapter can publish warnings as described below.
 
 The local automation is disabled. This Cloud directory is the sole runtime source.
 
@@ -33,11 +33,10 @@ install a hook into an existing agent conversation.
 
 ## Questions and gates
 
-`tarball/focused.py` contains three explicit English lint policies:
+`tarball/focused.py` contains two explicit Python lint policies:
 
 - `PY_SUPPRESS`: prefer `contextlib.suppress` for ignored exceptions without
   discarding meaningful exception handling; preserve fallback returns.
-- `BOOL_SCOPE`: public loading flags must name the resource they load.
 - `CONST_FINAL`: module constants must carry `typing.Final[value_type]`.
 
 Each AST candidate gets an independent Noul and a binary Choice question. The
@@ -52,8 +51,7 @@ Locations are deterministic AST line numbers. A diagnostic also carries a source
 snippet hash. API compatibility still requires judgment; renaming a released REST
 field needs aliases and deprecation, not a silent breaking change. `Final` is a
 static annotation, not runtime immutability. Type aliases and mutable state are
-outside that policy. Candidate selection limits coverage (e.g. complex boolean
-type annotations and non-Python code are not covered).
+outside that policy. Candidate selection limits coverage: Python checks inspect changed AST candidates, not every line of a full PR diff.
 
 ## Experiment provenance
 
@@ -103,7 +101,7 @@ python3 cloud-automations/automation-ad72eec2-5dad-44ff-9c23-92a78a9c003a/tarbal
 ```
 
 This checks the two-tree diff, not the working tree. It selects added/modified
-prose paragraphs in `verify-openhands/references/feature-map/*.md`. It skips
+prose paragraphs in `.agents/skills/verify-*/references/feature-map/*.md`. It skips
 fenced code, deleted text and unchanged paragraphs, and retains new-file line
 locations. It sends at most eight batches of twelve paragraphs. Each paragraph
 gets the same Noul/Choice pair, with a 0.80 Choice error gate for this rule and
@@ -122,7 +120,7 @@ afterward. This remains an uncalibrated lint score, not a probability guarantee.
 
 Cloud automation `ad72eec2-5dad-44ff-9c23-92a78a9c003a` contains this runtime
 bundle; downloaded read-back verified every file. It subscribes to GitHub PR opened, synchronize and ready_for_review actions
-for the four OpenHands repositories. The trigger filters out drafts and authors
+for Canvas, SDK, and Automation (not Extensions). The trigger filters out drafts and authors
 other than enyst, and the runtime independently checks the live PR again. The local automation
 `fdcbd3c5-a745-4275-b9d2-dd7298d95ef8` is disabled, verified by read-back.
 No new runtime source copy was added; this directory is the source for the
@@ -135,8 +133,7 @@ reading source or classifier credentials. It rechecks author and head before
 classification and head/author after it. Other authors, missing identity, drafts
 and closed PRs do not run. Event author claims are never trusted.
 
-`pr_lint.py --repository OpenHands/OpenHands --pr 18437` checks added/modified
-Python candidates and feature-map prose, reading public source at the exact head.
+`pr_lint.py` reads public source at the exact PR head. Canvas targets check only feature-map prose; SDK and Automation targets also check added/modified Python candidates.
 Incomplete relevant patches/source fail rather than claiming a clean check.
 Output includes JSON in run logs. The deployed publisher posts findings as
 SmolPaws using the existing Cloud `SMOLPAWS_TOKEN`, after checking `/user`
@@ -166,3 +163,13 @@ when no callback-specific key exists. A second trial on SDK #5758 completed
 with the fixed callback. No warning comments were posted in either trial; live
 inline publication is therefore not yet demonstrated. The second sandbox was
 already cleaned up before log retrieval.
+
+
+## Rule routing
+
+- Python `PY_SUPPRESS` and `CONST_FINAL`: only `OpenHands/software-agent-sdk` and `OpenHands/automation`.
+- `MAP_CURRENT_BEHAVIOR`: `OpenHands/OpenHands`, `OpenHands/software-agent-sdk`, and `OpenHands/automation`, for any `.agents/skills/verify-*/references/feature-map/*.md` path.
+- `OpenHands/extensions`: excluded from the event trigger and runtime.
+- `BOOL_SCOPE`: removed; historical experiment responses are retained as provenance, not active rules.
+
+Each question receives its selected AST block/declaration or Markdown paragraph, in batches of up to twelve items. Python rules share each Python request; feature-map paragraphs always use separate requests, never mixed with Python items. The PR adapter reads the changed-file patches and pinned head contents to select those items. It does not submit the entire PR diff to each question. Questions use “this code” and restrict inspection to their item ID.

@@ -17,6 +17,10 @@ POLICY = {
 }
 
 
+def is_map(filename):
+    return re.fullmatch(r'\.agents/skills/verify-[^/]+/references/feature-map/[^/]+\.md', filename) is not None
+
+
 def git(repo, *args):
     return subprocess.check_output(['git', '-C', str(repo), *args], text=True)
 
@@ -73,9 +77,11 @@ def prose(source):
 
 def inputs(repo, base, head):
     diff = git(repo, 'diff', '--no-ext-diff', '--no-renames', '--unified=0', base, head, '--',
-               '.agents/skills/verify-openhands/references/feature-map/*.md')
+               '.agents/skills/verify-*/references/feature-map/*.md')
     items = []
     for filename, changed in changed_lines(diff).items():
+        if not is_map(filename):
+            continue
         source = git(repo, 'show', f'{head}:{filename}')
         for first, last, text in prose(source):
             if changed.intersection(range(first, last + 1)):

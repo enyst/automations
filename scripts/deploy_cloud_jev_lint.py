@@ -11,7 +11,7 @@ IDENTIFIER = 'ad72eec2-5dad-44ff-9c23-92a78a9c003a'
 PACKAGE = ROOT / 'cloud-automations' / ('automation-' + IDENTIFIER)
 TRIGGER = {
     'type': 'event', 'source': 'github', 'on': 'pull_request.*',
-    'filter': "contains(['opened', 'synchronize', 'ready_for_review'], action) && pull_request.user.login == 'enyst' && pull_request.draft == `false` && pull_request.state == 'open' && contains(['OpenHands/OpenHands', 'OpenHands/software-agent-sdk', 'OpenHands/automation', 'OpenHands/extensions'], repository.full_name)",
+    'filter': "contains(['opened', 'synchronize', 'ready_for_review'], action) && pull_request.user.login == 'enyst' && pull_request.draft == `false` && pull_request.state == 'open' && contains(['OpenHands/OpenHands', 'OpenHands/software-agent-sdk', 'OpenHands/automation'], repository.full_name)",
 }
 
 

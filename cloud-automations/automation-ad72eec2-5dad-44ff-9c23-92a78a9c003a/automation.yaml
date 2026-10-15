@@ -6,7 +6,7 @@
   "trigger": {
     "on": "pull_request.*",
     "type": "event",
-    "filter": "contains(['opened', 'synchronize', 'ready_for_review'], action) && pull_request.user.login == 'enyst' && pull_request.draft == `false` && pull_request.state == 'open' && contains(['OpenHands/OpenHands', 'OpenHands/software-agent-sdk', 'OpenHands/automation', 'OpenHands/extensions'], repository.full_name)",
+    "filter": "contains(['opened', 'synchronize', 'ready_for_review'], action) && pull_request.user.login == 'enyst' && pull_request.draft == `false` && pull_request.state == 'open' && contains(['OpenHands/OpenHands', 'OpenHands/software-agent-sdk', 'OpenHands/automation'], repository.full_name)",
     "source": "github",
     "wake_agent": true,
     "destination": "dispatch_run",

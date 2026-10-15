@@ -7,7 +7,7 @@
   "trigger": {
     "on": "pull_request.*",
     "type": "event",
-    "filter": "contains(['opened', 'synchronize', 'ready_for_review'], action) && pull_request.user.login == 'enyst' && pull_request.draft == `false` && pull_request.state == 'open' && contains(['OpenHands/OpenHands', 'OpenHands/software-agent-sdk', 'OpenHands/automation', 'OpenHands/extensions'], repository.full_name)",
+    "filter": "contains(['opened', 'synchronize', 'ready_for_review'], action) && pull_request.user.login == 'enyst' && pull_request.draft == `false` && pull_request.state == 'open' && contains(['OpenHands/OpenHands', 'OpenHands/software-agent-sdk', 'OpenHands/automation'], repository.full_name)",
     "source": "github",
     "wake_agent": true,
     "destination": "dispatch_run",
@@ -17,7 +17,7 @@
   "timeout": 600,
   "keep_alive": false,
   "setup_script_path": null,
-  "bundle_sha256": "7eb2cf3d8c8a0a997838d1bdc5a5c85af3e37bddcfd609610369fb126e4cdbb6",
+  "bundle_sha256": "de13c926c2245745534ca9e038777602da2289b807acfdc4fbcf71dc962b008b",
   "files": [
     "cases.json",
     "feature_map.py",
@@ -37,18 +37,6 @@
     "publish.py"
   ],
   "dispatches": 0,
-  "trials": [
-    {
-      "run_id": "fedce69b-2861-43e2-940e-bbe49effb0f5",
-      "pr": "OpenHands/software-agent-sdk#5973",
-      "status": "COMPLETED",
-      "note": "Classifier exit0/no warnings; callback initially401, reconciled after inspecting output."
-    },
-    {
-      "run_id": "eba1a4db-9385-4525-b45c-80fa2e50bb51",
-      "pr": "OpenHands/software-agent-sdk#5758",
-      "status": "COMPLETED",
-      "note": "Fixed Cloud callback; no Jev warning comments observed. Output unavailable after sandbox cleanup."
-    }
-  ]
+  "download_readback_verified": true,
+  "verified_files": 16
 }

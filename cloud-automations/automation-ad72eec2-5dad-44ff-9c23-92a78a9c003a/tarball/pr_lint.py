@@ -15,6 +15,8 @@ import feature_map
 from helpers import fire_callback, get_secret
 
 ALLOWED_AUTHOR = 'enyst'
+PYTHON_REPOSITORIES = frozenset({'OpenHands/software-agent-sdk', 'OpenHands/automation'})
+MAP_REPOSITORIES = PYTHON_REPOSITORIES | {'OpenHands/OpenHands'}
 
 
 class GitHub:
@@ -77,6 +79,8 @@ def files_for(gh, prefix, expected):
 
 
 def run(gh, repository, number, credential=checker.credential, evaluate=checker.evaluate):
+    if repository not in MAP_REPOSITORIES:
+        return {'status': 'skipped', 'reason': 'repository_not_enabled', 'repository': repository, 'pr': number}
     prefix = f'/repos/{repository}/pulls/{number}'
     pr = gh.get(prefix)
     author = pr.get('user', {}).get('login')
@@ -93,8 +97,8 @@ def run(gh, repository, number, credential=checker.credential, evaluate=checker.
     items, missing = [], []
     for row in rows:
         filename = row['filename']
-        is_map = filename.startswith('.agents/skills/verify-openhands/references/feature-map/') and filename.endswith('.md')
-        if row['status'] == 'removed' or not (is_map or filename.endswith('.py')):
+        is_map = feature_map.is_map(filename)
+        if row['status'] == 'removed' or not (is_map or (repository in PYTHON_REPOSITORIES and filename.endswith('.py'))):
             continue
         patch = row.get('patch')
         if not patch:
@@ -130,11 +134,15 @@ def run(gh, repository, number, credential=checker.credential, evaluate=checker.
         raise checker.CheckError('pr_changed_before_classification')
     key = credential() if items else None
     reports = []
-    for offset in range(0, len(items), 12):
-        batch = items[offset:offset + 12]
-        response = evaluate(focused.build(batch), key)
-        reports.append({'items': [{k: item[k] for k in ['id', 'rule', 'location']} for item in batch],
-                        'response': response, 'errors': focused.result(batch, response)})
+    # Batch many questions per call, keeping feature-map prose separate from Python.
+    groups = ([item for item in items if item['rule'] != feature_map.RULE],
+              [item for item in items if item['rule'] == feature_map.RULE])
+    for group in groups:
+        for offset in range(0, len(group), 12):
+            batch = group[offset:offset + 12]
+            response = evaluate(focused.build(batch), key)
+            reports.append({'items': [{k: item[k] for k in ['id', 'rule', 'location']} for item in batch],
+                            'response': response, 'errors': focused.result(batch, response)})
     current = gh.get(prefix)
     if current.get('user', {}).get('login') != ALLOWED_AUTHOR or current['head']['sha'] != head:
         raise checker.CheckError('pr_changed_during_classification')
