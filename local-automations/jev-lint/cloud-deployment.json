@@ -1,0 +1,25 @@
+{
+  "id": "ad72eec2-5dad-44ff-9c23-92a78a9c003a",
+  "name": "jev-lint",
+  "state": "INACTIVE",
+  "enabled": false,
+  "backend": "cloud",
+  "bundle_sha256": "8bf1a70f2465d29919e7a3eacb91e1d41fbc94f42c63840b1270e24479aea783",
+  "files": [
+    "cases.json",
+    "feature_map.py",
+    "final-cases.json",
+    "fixtures/case-1.json",
+    "fixtures/case-2.json",
+    "fixtures/case-3.json",
+    "fixtures/case-4.json",
+    "fixtures/case-5.json",
+    "fixtures/case-6.json",
+    "fixtures/final-fixed.json",
+    "fixtures/final-old.json",
+    "focused.py",
+    "helpers.py",
+    "main.py"
+  ],
+  "dispatches": 0
+}

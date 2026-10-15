@@ -117,3 +117,20 @@ Measured on PR #18437 before and after Engel's two F10 edits: see `RESULTS.md`
 and the public-source typed responses in `feature-map-results.json`. At the original 0.95 gate, one of the two old-checkout notes was missed.
 Replaying the same responses at 0.80 flags both before correction and neither
 afterward. This remains an uncalibrated lint score, not a probability guarantee.
+
+## Cloud deployment (2026-10-15)
+
+Cloud automation `ad72eec2-5dad-44ff-9c23-92a78a9c003a` contains this runtime
+bundle; downloaded read-back verified every file. It is inactive for manual use
+while the input/notification policy is being decided. The local automation
+`fdcbd3c5-a745-4275-b9d2-dd7298d95ef8` is disabled, verified by read-back.
+No new runtime source copy was added; this branch remains the source for the
+experiment. Cloud Git Sync does not deploy this branch automatically.
+
+Current default entrypoint runs the bounded Python fixture checks and writes JSON
+to run logs. It does not watch PRs or publish GitHub messages. The feature-map CLI
+is included, but needs an explicit repository, base and head; no target is selected
+automatically. It has not been dispatched in Cloud yet. Future output choices
+include a commit-specific PR comment or a coding-agent tool response, but neither
+is installed. `cloud-deployment.json` records the bundle identity, not a successful
+Cloud execution. The existing Cloud TYPESAFE_API_KEY is reused; no secret copied.
