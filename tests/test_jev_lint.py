@@ -131,8 +131,14 @@ class FeatureMapTest(unittest.TestCase):
         errors = focused.result(items, response)
         self.assertEqual(errors[0]['code'], 'MAP_CURRENT_BEHAVIOR')
         self.assertIn('current expected behavior', errors[0]['alternative'])
-        response['answers']['0_choice']['probabilities']['correct'] = .94
+        response['answers']['0_choice']['probabilities']['correct'] = .79
         self.assertEqual(focused.result(items, response), [])
+
+    def test_map_gate_boundary_and_contradiction(self):
+        items = [{'id': '0', 'rule': feature_map.RULE, 'location': 'map.md:7', 'code': 'Historical behavior.'}]
+        for probability, noul, expected in [(.79, .9, 0), (.80, .9, 1), (.85, .8, 1), (.99, .5, 0)]:
+            response = {'answers': {'0': {'noul': noul}, '0_choice': {'choice': 'correct', 'probabilities': {'correct': probability, 'accept': 1-probability}}}}
+            self.assertEqual(len(focused.result(items, response)), expected)
 
     def test_request_has_no_case_labels_or_revision_answer_key(self):
         items = [{'id': '0', 'rule': feature_map.RULE, 'location': 'map.md:7', 'code': '- It saves the shown value.'}]

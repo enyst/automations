@@ -109,3 +109,15 @@ Locations and alternatives come from the script. Responses and exact public
 paragraphs are retained in `feature-map-results.json`. No product map was edited
 by this test, no automation was dispatched or enabled, and no coding-agent hook
 was installed.
+
+
+## Gate changed to 0.80 (Engel, 2026-10-15)
+
+MAP_CURRENT_BEHAVIOR now uses Choice P(correct) >= 0.80, still requiring
+Noul > 0.5. Python-rule gates remain 0.95. Replayed the saved responses without
+new API calls: 13 pre-edit errors, 10 post-edit errors. Both F10 old-checkout
+paragraphs now emit errors before the edits; neither emits one after. Other
+paragraphs still flag, so the full post-edit diff is not clean. The original
+0.95 experiment above remains unchanged as historical test evidence. This score
+is uncalibrated; a lint diagnostic requires inspection, not automatic deletion.
+See feature-map-gate-080-results.json.

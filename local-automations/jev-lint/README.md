@@ -106,13 +106,14 @@ This checks the two-tree diff, not the working tree. It selects added/modified
 prose paragraphs in `verify-openhands/references/feature-map/*.md`. It skips
 fenced code, deleted text and unchanged paragraphs, and retains new-file line
 locations. It sends at most eight batches of twelve paragraphs. Each paragraph
-gets the same Noul/Choice pair and unchanged 0.95 Choice error gate as Python lint.
+gets the same Noul/Choice pair, with a 0.80 Choice error gate for this rule and
+Noul > 0.5 as a contradiction check. Existing Python-rule gates remain 0.95.
 Exit 2 means error diagnostics, 1 means execution failure, 0 means no emitted
 errors (not proof of a clean map). No automatic edits or agent hook is installed.
 The existing paused automation's default Python fixture entrypoint is unchanged;
 this diff check is an explicit CLI mode, not a scheduled GitHub integration.
 
 Measured on PR #18437 before and after Engel's two F10 edits: see `RESULTS.md`
-and the public-source typed responses in `feature-map-results.json`. One of the
-two old-checkout notes was below the error gate before correction. This is an
-important false negative, not a claim that the rule detects every violation.
+and the public-source typed responses in `feature-map-results.json`. At the original 0.95 gate, one of the two old-checkout notes was missed.
+Replaying the same responses at 0.80 flags both before correction and neither
+afterward. This remains an uncalibrated lint score, not a probability guarantee.

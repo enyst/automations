@@ -76,8 +76,9 @@ def result(items, response):
         noul = response['answers'][item['id']]['noul']
         choice = response['answers'][item['id'] + '_choice']
         signal = choice['probabilities'].get('correct', 0)
-        if choice['choice'] == 'correct' and signal >= checker.THRESHOLD and noul > 0.5:
-            policy = POLICIES[item['rule']]
+        policy = POLICIES[item['rule']]
+        threshold = policy.get('threshold', checker.THRESHOLD)
+        if choice['choice'] == 'correct' and signal >= threshold and noul > 0.5:
             errors.append({'severity': 'error', 'code': item['rule'], 'location': item['location'],
                            'message': policy['rule'], 'alternative': policy['alternative'],
                            'signal_probability': signal, 'noul_probability': noul,

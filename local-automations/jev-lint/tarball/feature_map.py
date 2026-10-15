@@ -10,6 +10,7 @@ import focused
 
 RULE = 'MAP_CURRENT_BEHAVIOR'
 POLICY = {
+    'threshold': 0.80,
     'rule': 'A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.',
     'question': 'Does this feature-map paragraph violate the current-behavior policy by retaining fix history, superseded behavior, older-checkout descriptions or a verification diary?',
     'alternative': 'State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.',
