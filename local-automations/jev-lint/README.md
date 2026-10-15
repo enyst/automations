@@ -127,10 +127,19 @@ while the input/notification policy is being decided. The local automation
 No new runtime source copy was added; this branch remains the source for the
 experiment. Cloud Git Sync does not deploy this branch automatically.
 
-Current default entrypoint runs the bounded Python fixture checks and writes JSON
-to run logs. It does not watch PRs or publish GitHub messages. The feature-map CLI
+Cloud entrypoint is now `python3 pr_lint.py`. It requires an explicit PR target
+via arguments or event payload; without one, it skips without classifier calls.
+It fetches the PR from GitHub and requires `user.login == "enyst"` before
+reading source or classifier credentials. It rechecks author and head before
+classification and head/author after it. Other authors, missing identity, drafts
+and closed PRs do not run. Event author claims are never trusted.
+
+`pr_lint.py --repository OpenHands/OpenHands --pr 18437` checks added/modified
+Python candidates and feature-map prose, reading public source at the exact head.
+Incomplete relevant patches/source fail rather than claiming a clean check.
+Output is currently JSON in run logs; it does not publish GitHub comments. The feature-map CLI
 is included, but needs an explicit repository, base and head; no target is selected
-automatically. It has not been dispatched in Cloud yet. Future output choices
-include a commit-specific PR comment or a coding-agent tool response, but neither
-is installed. `cloud-deployment.json` records the bundle identity, not a successful
+automatically. It has not been dispatched in Cloud yet. Inline review comments can use changed RIGHT-side diff lines at the checked
+head. Lines outside the PR diff need a normal comment with a pinned file link.
+No inline publisher, automatic target discovery or recurring PR watcher is installed yet. `cloud-deployment.json` records the bundle identity, not a successful
 Cloud execution. The existing Cloud TYPESAFE_API_KEY is reused; no secret copied.

@@ -144,3 +144,52 @@ class FeatureMapTest(unittest.TestCase):
         items = [{'id': '0', 'rule': feature_map.RULE, 'location': 'map.md:7', 'code': '- It saves the shown value.'}]
         request = focused.build(items)
         self.assertEqual(request['state'], {'items': [{'id': '0', 'code': '- It saves the shown value.'}]})
+
+pr_spec = importlib.util.spec_from_file_location('jev_pr_lint', HERE / 'pr_lint.py')
+pr_lint = importlib.util.module_from_spec(pr_spec)
+with patch.dict(sys.modules, {'main': check, 'focused': focused, 'feature_map': feature_map}):
+    pr_spec.loader.exec_module(pr_lint)
+
+
+class PrAuthorGateTest(unittest.TestCase):
+    def test_other_author_skips_before_files_secrets_and_classifier(self):
+        from unittest.mock import Mock
+        gh = Mock()
+        gh.get.return_value = {'user': {'login': 'someone-else'}}
+        def forbidden(*args):
+            raise AssertionError('Should not classify or get credential')
+        result = pr_lint.run(gh, 'OpenHands/OpenHands', 1, forbidden, forbidden)
+        self.assertEqual(result['reason'], 'author_not_enyst')
+        gh.get.assert_called_once_with('/repos/OpenHands/OpenHands/pulls/1')
+
+    def test_missing_author_and_draft_fail_closed(self):
+        from unittest.mock import Mock
+        for pr in [{}, {'user': {'login': 'enyst'}, 'state': 'open', 'draft': True}]:
+            gh = Mock(); gh.get.return_value = pr
+            self.assertEqual(pr_lint.run(gh, 'OpenHands/OpenHands', 1)['status'], 'skipped')
+            self.assertEqual(gh.get.call_count, 1)
+
+    def test_event_selects_target_not_author_authorization(self):
+        event = {'repository': {'full_name': 'OpenHands/OpenHands'}, 'pull_request': {'number': 7, 'user': {'login': 'enyst'}}}
+        self.assertEqual(pr_lint.target(None, None, event), ('OpenHands/OpenHands', 7))
+        self.assertIsNone(pr_lint.target(None, None))
+        with self.assertRaises(check.CheckError):
+            pr_lint.target('https://example.com', 7)
+
+    def test_enyst_without_relevant_changes_needs_no_classifier(self):
+        from unittest.mock import Mock
+        gh = Mock()
+        pr = {'user': {'login': 'enyst'}, 'state': 'open', 'draft': False, 'head': {'sha': 'a'*40}, 'changed_files': 1}
+        gh.get.side_effect = [pr, [{'filename': 'README.md', 'status': 'modified'}], pr, pr]
+        def forbidden(*args):
+            raise AssertionError('No paid call needed')
+        result = pr_lint.run(gh, 'OpenHands/OpenHands', 1, forbidden, forbidden)
+        self.assertEqual(result['candidates'], 0)
+
+    def test_changed_head_aborts_before_classifier(self):
+        from unittest.mock import Mock
+        gh = Mock()
+        pr = {'user': {'login': 'enyst'}, 'state': 'open', 'draft': False, 'head': {'sha': 'a'*40}, 'changed_files': 0}
+        gh.get.side_effect = [pr, [], dict(pr, head={'sha': 'b'*40})]
+        with self.assertRaises(check.CheckError):
+            pr_lint.run(gh, 'OpenHands/OpenHands', 1)

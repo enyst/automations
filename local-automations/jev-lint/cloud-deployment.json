@@ -1,10 +1,11 @@
 {
   "id": "ad72eec2-5dad-44ff-9c23-92a78a9c003a",
-  "name": "jev-lint",
-  "state": "INACTIVE",
+  "entrypoint": "python3 pr_lint.py",
   "enabled": false,
-  "backend": "cloud",
-  "bundle_sha256": "8bf1a70f2465d29919e7a3eacb91e1d41fbc94f42c63840b1270e24479aea783",
+  "state": "INACTIVE",
+  "allowed_pr_author": "enyst",
+  "publication": "run_logs_only",
+  "bundle_sha256": "5d47341b5312c61a473bf81f1602d2508c10fbab1ebe3151d5e5028fc392cf6e",
   "files": [
     "cases.json",
     "feature_map.py",
@@ -19,7 +20,8 @@
     "fixtures/final-old.json",
     "focused.py",
     "helpers.py",
-    "main.py"
+    "main.py",
+    "pr_lint.py"
   ],
   "dispatches": 0
 }

@@ -6,6 +6,6 @@
     "OpenHands/extensions"
   ],
   "watch_since": "2026-09-18T22:41:32Z",
-  "max_prs_per_run": 6,
+  "max_prs_per_run": 10,
   "force_reaudit": false
 }
