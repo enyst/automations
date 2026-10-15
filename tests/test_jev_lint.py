@@ -105,3 +105,36 @@ class FocusedTest(unittest.TestCase):
             self.assertEqual(len(focused.result(items, response)), n)
         response['answers']['0']['noul'] = 0.1
         self.assertEqual(focused.result(items, response), [])
+
+map_spec = importlib.util.spec_from_file_location('jev_feature_map', HERE / 'feature_map.py')
+feature_map = importlib.util.module_from_spec(map_spec)
+with patch.dict(sys.modules, {'main': check, 'focused': focused}):
+    map_spec.loader.exec_module(feature_map)
+
+
+class FeatureMapTest(unittest.TestCase):
+    def test_changed_new_lines_not_removed_or_context(self):
+        diff = '--- a/map.md\n+++ b/map.md\n@@ -3,2 +3,3 @@\n-old\n+new\n+extra\n context\n'
+        self.assertEqual(feature_map.changed_lines(diff), {'map.md': {3, 4}})
+
+    def test_prose_keeps_locations_and_excludes_code_blocks(self):
+        source = '# Map\n\n- Current behavior.\n  Continuation.\n- Older checkout history.\n\n```sh\necho old checkout\n```\n'
+        paragraphs = list(feature_map.prose(source))
+        self.assertIn((3, 4, '- Current behavior.\n  Continuation.'), paragraphs)
+        self.assertIn((5, 5, '- Older checkout history.'), paragraphs)
+        self.assertNotIn('echo old checkout', str(paragraphs))
+
+    def test_reuses_gate_and_emits_concrete_correction(self):
+        items = [{'id': '0', 'rule': feature_map.RULE, 'location': 'map.md:7',
+                  'code': 'A checkout without the fix saves null.'}]
+        response = {'answers': {'0': {'noul': .99}, '0_choice': {'choice': 'correct', 'probabilities': {'correct': .99, 'accept': .01}}}}
+        errors = focused.result(items, response)
+        self.assertEqual(errors[0]['code'], 'MAP_CURRENT_BEHAVIOR')
+        self.assertIn('current expected behavior', errors[0]['alternative'])
+        response['answers']['0_choice']['probabilities']['correct'] = .94
+        self.assertEqual(focused.result(items, response), [])
+
+    def test_request_has_no_case_labels_or_revision_answer_key(self):
+        items = [{'id': '0', 'rule': feature_map.RULE, 'location': 'map.md:7', 'code': '- It saves the shown value.'}]
+        request = focused.build(items)
+        self.assertEqual(request['state'], {'items': [{'id': '0', 'code': '- It saves the shown value.'}]})

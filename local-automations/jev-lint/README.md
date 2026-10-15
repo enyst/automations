@@ -85,3 +85,34 @@ python3 scripts/deploy_local_jev_lint.py install
 
 Run those commands from the repository root. The deployer only targets the existing
 local backend at port 8000 and verifies its automation service is on port 18001.
+
+## Feature-map current-behavior lint
+
+`tarball/feature_map.py` adds `MAP_CURRENT_BEHAVIOR`: describe current behavior,
+not fix history or older checkouts. Once a fix is established, state its behavior
+directly. Keep the map clean and concise for the next verification pass. Current
+prerequisites, unresolved defects and executable baseline/fix proofs remain valid.
+A PR reference alone is not an error.
+
+```sh
+python3 local-automations/jev-lint/tarball/feature_map.py \
+  --repo /path/to/OpenHands --base <base-sha> --head <head-sha>
+# Offline inspection, without credentials or API calls:
+python3 local-automations/jev-lint/tarball/feature_map.py \
+  --repo /path/to/OpenHands --base <base-sha> --head <head-sha> --dry-run
+```
+
+This checks the two-tree diff, not the working tree. It selects added/modified
+prose paragraphs in `verify-openhands/references/feature-map/*.md`. It skips
+fenced code, deleted text and unchanged paragraphs, and retains new-file line
+locations. It sends at most eight batches of twelve paragraphs. Each paragraph
+gets the same Noul/Choice pair and unchanged 0.95 Choice error gate as Python lint.
+Exit 2 means error diagnostics, 1 means execution failure, 0 means no emitted
+errors (not proof of a clean map). No automatic edits or agent hook is installed.
+The existing paused automation's default Python fixture entrypoint is unchanged;
+this diff check is an explicit CLI mode, not a scheduled GitHub integration.
+
+Measured on PR #18437 before and after Engel's two F10 edits: see `RESULTS.md`
+and the public-source typed responses in `feature-map-results.json`. One of the
+two old-checkout notes was below the error gate before correction. This is an
+important false negative, not a claim that the rule detects every violation.

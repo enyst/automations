@@ -73,3 +73,39 @@ as a mandatory agent-loop gate. No automatic correction/recheck loop was launche
 tests with the existing SDK virtualenv (includes the websockets dependency absent
 from system Python). Initial system-Python full run exposed test-module isolation,
 now fixed, and three unrelated missing-websockets failures. No packages installed.
+
+
+## MAP_CURRENT_BEHAVIOR — PR #18437 (2026-10-15)
+
+Policy: the feature map describes current behavior, not fix history or older
+checkouts. Once a fix is established, document its behavior directly. Keep the
+map clean and concise for the next verification pass. Unresolved known defects
+and current prerequisites remain allowed.
+
+Actual Jev 1.13.0 calls, public source only. Base `8b9823a89ce5844d0808398c2f740d9748da66df`;
+pre-edit head `617126104e422bcc19ab209111fd684b1f43e29f` (the PR head immediately
+before Engel's two commits); post-edit head
+`1a536a9b1b2e6735d431dabfed40a7e1e29d41fd`. Each diff contained 77 changed prose
+paragraphs, evaluated in seven batches. No whole repository source was sent.
+Case labels, revision IDs, reviewer comments and expected answers were not in
+model state. Same rule and threshold for both runs; no threshold lowering.
+
+| F10 paragraph | Before Choice P(correct) / Noul | After Choice P(correct) / Noul | Error before → after |
+|---|---|---|---|
+| Duplicate-name fix history / older checkout (line 113) | .97 / .93 | .07 / .13 | yes → no |
+| Inherited-options fix history / older checkout (line 122) | .85 / .80 | .02 / .08 | no → no |
+
+Thus the test catches the first human correction at the error gate but misses
+the second. Both corrected paragraphs receive much lower violation signals.
+Full pre-edit diff: three errors (F10:113, F13:85, F25:129), exit 2.
+Full post-edit diff: three errors (F13:85, F22:115, F25:129), exit 2.
+The unchanged F22 paragraph crossed the gate only on the second call: this also
+shows classifier variability. Do not interpret the post-edit diff as clean.
+F25 combines an unresolved defect with historical proof prose; review the flagged
+paragraph and retain the unresolved reproduction, rather than deleting it whole.
+
+These are development examples, not a holdout or calibrated reliability study.
+Locations and alternatives come from the script. Responses and exact public
+paragraphs are retained in `feature-map-results.json`. No product map was edited
+by this test, no automation was dispatched or enabled, and no coding-agent hook
+was installed.
