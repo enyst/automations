@@ -1,0 +1,5 @@
+{
+  "files": {
+    "hooks.py": "def load_hooks(load_project_hooks: bool = True):\n    try:\n        return read_hooks()\n    except OSError as error:\n        logger.warning(\"Loading hooks failed: %s\", error)\n        return None\n"
+  }
+}

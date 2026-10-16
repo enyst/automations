@@ -1,6 +1,8 @@
 # Jev Fast Audit
 
-**October 9, 2026:** Jev Fast Audit is disabled in the October 9 Cloud export.
+**October 15, 2026:** Jev Fast Audit is enabled in Cloud, daily at 00:00 UTC,
+with at most 10 PRs per run. Manual run `58552d0f-607d-4a27-99ea-1c6cad91362a`
+completed successfully. The October 9 export remains a historical snapshot.
 
 The canonical [runtime and settings](../cloud-automations/automation-5aee9a93-51e5-4843-ad13-301a31e1397e/)
 come from the deployed Cloud version. These retained implementation notes record

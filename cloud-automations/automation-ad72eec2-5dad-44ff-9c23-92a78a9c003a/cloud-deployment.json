@@ -1,0 +1,42 @@
+{
+  "id": "ad72eec2-5dad-44ff-9c23-92a78a9c003a",
+  "name": "jev-lint",
+  "entrypoint": "python3 pr_lint.py",
+  "enabled": true,
+  "state": "ACTIVE",
+  "trigger": {
+    "on": "pull_request.*",
+    "type": "event",
+    "filter": "contains(['opened', 'synchronize', 'ready_for_review'], action) && pull_request.user.login == 'enyst' && pull_request.draft == `false` && pull_request.state == 'open' && contains(['OpenHands/OpenHands', 'OpenHands/software-agent-sdk', 'OpenHands/automation'], repository.full_name)",
+    "source": "github",
+    "wake_agent": true,
+    "destination": "dispatch_run",
+    "turn_text_expr": null,
+    "subject_key_expr": null
+  },
+  "timeout": 600,
+  "keep_alive": false,
+  "setup_script_path": null,
+  "bundle_sha256": "0427e238633cb2f761518bad23e901e9e6c646e18f8687c60be747770f89daad",
+  "files": [
+    "cases.json",
+    "feature_map.py",
+    "final-cases.json",
+    "fixtures/case-1.json",
+    "fixtures/case-2.json",
+    "fixtures/case-3.json",
+    "fixtures/case-4.json",
+    "fixtures/case-5.json",
+    "fixtures/case-6.json",
+    "fixtures/final-fixed.json",
+    "fixtures/final-old.json",
+    "focused.py",
+    "helpers.py",
+    "main.py",
+    "pr_lint.py",
+    "publish.py"
+  ],
+  "dispatches": 0,
+  "download_readback_verified": true,
+  "verified_files": 16
+}

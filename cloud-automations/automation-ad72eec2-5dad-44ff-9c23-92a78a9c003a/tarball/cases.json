@@ -1,0 +1,26 @@
+[
+  {
+    "id": "original",
+    "fixture": "fixtures/case-1.json"
+  },
+  {
+    "id": "suppress-only",
+    "fixture": "fixtures/case-2.json"
+  },
+  {
+    "id": "names-only",
+    "fixture": "fixtures/case-3.json"
+  },
+  {
+    "id": "fixed",
+    "fixture": "fixtures/case-4.json"
+  },
+  {
+    "id": "clean",
+    "fixture": "fixtures/case-5.json"
+  },
+  {
+    "id": "non-suppressible",
+    "fixture": "fixtures/case-6.json"
+  }
+]

@@ -1,0 +1,244 @@
+{
+  "threshold": 0.8,
+  "source": "Replay of stored Jev responses; no new provider calls",
+  "results": {
+    "before": {
+      "errors": [
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F02-app-shell.md:92",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.93,
+          "noul_probability": 0.88,
+          "source_sha256": "1c5ad16ddc79ec21090eae1f3e4bb27553bdba7a7f9374299fa2b549c6151575"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F04-conversation-list.md:110",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.81,
+          "noul_probability": 0.79,
+          "source_sha256": "141b9cbf7f4cc3310f7a189ddb08bfaf85ac864ffe73b8f981f2513291da11ec"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F05-composer.md:62",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.88,
+          "noul_probability": 0.79,
+          "source_sha256": "5561c1c3a6cab393ccf659f66f0315f394df1be97959f8a847c5590238f76232"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F06-agent-activity.md:93",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.81,
+          "noul_probability": 0.82,
+          "source_sha256": "6620b017603cdae6045a33a7609b3d581dc06b7fc954403a779ceb22539109de"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:62",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.84,
+          "noul_probability": 0.82,
+          "source_sha256": "f3bfd0d6f23d357eb87d13a247e9803324b9c0fab4dcb3795378c576f1c25f11"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F10-llm-profiles.md:113",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.97,
+          "noul_probability": 0.93,
+          "source_sha256": "bf3ee6bdbafaa3a0e9d9fe61c8b7773acf3d3e9118020ffe913ff4d0de0a889a"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F10-llm-profiles.md:122",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.85,
+          "noul_probability": 0.8,
+          "source_sha256": "f3e9ed924b6af78df4cdfdd4ce6a4f913bf55dd841de1ce7993bb8b53bfd0eb6"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:85",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.98,
+          "noul_probability": 0.93,
+          "source_sha256": "de57936dc15951f2fa937967e9f7394b0d1fbfc8c400656d9cd3d02567071758"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F22-automation-creation.md:115",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.94,
+          "noul_probability": 0.91,
+          "source_sha256": "fc7c8d3f0702e39f4a91ececac330e0907be92be9a2a5e814366a5d74fcf7157"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F23-automation-detail.md:106",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.88,
+          "noul_probability": 0.83,
+          "source_sha256": "b982d6709a8252632421b82580882887906eda5ceb3cfb61c78337b76c3d2ac7"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F23-automation-detail.md:117",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.81,
+          "noul_probability": 0.77,
+          "source_sha256": "2038131053dbac51b411e03b6f741dac28c4c73500b53314ab338ebf52daf598"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:129",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.96,
+          "noul_probability": 0.89,
+          "source_sha256": "1208a335a9f32df2f32a72d51c17e6a97ceaa23bd139e1ba3518a8cc0e870fe6"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:149",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.82,
+          "noul_probability": 0.78,
+          "source_sha256": "1bd4ad5137979b61ebc269405def3c609e3fb9847d37682a2ec442844b831c3d"
+        }
+      ]
+    },
+    "after": {
+      "errors": [
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F02-app-shell.md:92",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.94,
+          "noul_probability": 0.87,
+          "source_sha256": "1c5ad16ddc79ec21090eae1f3e4bb27553bdba7a7f9374299fa2b549c6151575"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F04-conversation-list.md:110",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.87,
+          "noul_probability": 0.8,
+          "source_sha256": "141b9cbf7f4cc3310f7a189ddb08bfaf85ac864ffe73b8f981f2513291da11ec"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F05-composer.md:62",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.86,
+          "noul_probability": 0.78,
+          "source_sha256": "5561c1c3a6cab393ccf659f66f0315f394df1be97959f8a847c5590238f76232"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F07-conversation-page.md:62",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.84,
+          "noul_probability": 0.79,
+          "source_sha256": "f3bfd0d6f23d357eb87d13a247e9803324b9c0fab4dcb3795378c576f1c25f11"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F13-agent-profiles.md:85",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.98,
+          "noul_probability": 0.93,
+          "source_sha256": "de57936dc15951f2fa937967e9f7394b0d1fbfc8c400656d9cd3d02567071758"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F22-automation-creation.md:115",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.96,
+          "noul_probability": 0.9,
+          "source_sha256": "fc7c8d3f0702e39f4a91ececac330e0907be92be9a2a5e814366a5d74fcf7157"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F23-automation-detail.md:106",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.88,
+          "noul_probability": 0.81,
+          "source_sha256": "b982d6709a8252632421b82580882887906eda5ceb3cfb61c78337b76c3d2ac7"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F23-automation-detail.md:117",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.82,
+          "noul_probability": 0.77,
+          "source_sha256": "2038131053dbac51b411e03b6f741dac28c4c73500b53314ab338ebf52daf598"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:129",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.96,
+          "noul_probability": 0.9,
+          "source_sha256": "1208a335a9f32df2f32a72d51c17e6a97ceaa23bd139e1ba3518a8cc0e870fe6"
+        },
+        {
+          "severity": "error",
+          "code": "MAP_CURRENT_BEHAVIOR",
+          "location": ".agents/skills/verify-openhands/references/feature-map/F25-backends-and-cloud.md:149",
+          "message": "A feature map describes current behavior for the next verification pass, not fix history or older checkouts. Once a fix is established, document its behavior directly. Do not retain superseded behavior, before/after narratives, fix chronology, or verification diaries in the map. Keep it clean and concise. An unresolved known defect, its reproduction and issue reference are allowed. Current prerequisites, supported backend/version differences, source references and executable baseline/fix proof commands are allowed; a PR number alone is not a violation.",
+          "alternative": "State the current expected behavior directly. Remove fix chronology, old-checkout alternatives and dated verification narration. Keep current prerequisites, actionable recipes and unresolved known defects. Preserve historical evidence in the PR/report or Git history instead.",
+          "signal_probability": 0.81,
+          "noul_probability": 0.77,
+          "source_sha256": "1bd4ad5137979b61ebc269405def3c609e3fb9847d37682a2ec442844b831c3d"
+        }
+      ]
+    }
+  }
+}

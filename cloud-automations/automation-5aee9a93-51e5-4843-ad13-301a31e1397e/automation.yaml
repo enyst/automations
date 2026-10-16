@@ -1,6 +1,6 @@
 {
   "agent_profile_id": null,
-  "enabled": false,
+  "enabled": true,
   "entrypoint": "python3 main.py",
   "keep_alive": false,
   "model": "deepseek-v4.1-flash",
@@ -8,15 +8,15 @@
   "preset_metadata": null,
   "prompt": null,
   "setup_script_path": null,
-  "state": "INACTIVE",
+  "state": "ACTIVE",
   "tarball_source": {
     "type": "internal",
     "url": null
   },
   "timeout": 240,
   "trigger": {
-    "schedule": "0 * * * *",
-    "timezone": "UTC",
-    "type": "cron"
+    "type": "cron",
+    "schedule": "0 0 * * *",
+    "timezone": "UTC"
   }
 }

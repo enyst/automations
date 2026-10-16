@@ -1,0 +1,19 @@
+{
+  "name": "jev-lint",
+  "entrypoint": "python3 pr_lint.py",
+  "enabled": true,
+  "state": "ACTIVE",
+  "trigger": {
+    "on": "pull_request.*",
+    "type": "event",
+    "filter": "contains(['opened', 'synchronize', 'ready_for_review'], action) && pull_request.user.login == 'enyst' && pull_request.draft == `false` && pull_request.state == 'open' && contains(['OpenHands/OpenHands', 'OpenHands/software-agent-sdk', 'OpenHands/automation'], repository.full_name)",
+    "source": "github",
+    "wake_agent": true,
+    "destination": "dispatch_run",
+    "turn_text_expr": null,
+    "subject_key_expr": null
+  },
+  "timeout": 600,
+  "keep_alive": false,
+  "setup_script_path": null
+}

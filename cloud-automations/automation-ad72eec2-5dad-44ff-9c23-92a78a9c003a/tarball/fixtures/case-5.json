@@ -1,0 +1,5 @@
+{
+  "files": {
+    "paths.py": "from pathlib import Path\n\ndef exists(path: Path) -> bool:\n    return path.exists()\n"
+  }
+}

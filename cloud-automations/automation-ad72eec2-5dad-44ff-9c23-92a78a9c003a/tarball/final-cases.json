@@ -1,0 +1,12 @@
+[
+  {
+    "id": "final-old",
+    "fixture": "fixtures/final-old.json",
+    "final_only": true
+  },
+  {
+    "id": "final-fixed",
+    "fixture": "fixtures/final-fixed.json",
+    "final_only": true
+  }
+]
