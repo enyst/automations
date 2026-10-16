@@ -276,7 +276,7 @@ class EventEnvelopeTest(unittest.TestCase):
 class CloudCallbackTest(unittest.TestCase):
     def test_cloud_api_key_fallback_for_completion(self):
         import helpers
-        with patch.dict('os.environ', {'AUTOMATION_CALLBACK_URL': 'https://app.all-hands.dev/api/automation/v1/runs/example/complete', 'OPENHANDS_API_KEY': 'synthetic-cloud-key'}, clear=True), patch('urllib.request.urlopen') as opened:
+        with patch.dict('os.environ', {'AUTOMATION_CALLBACK_URL': 'https://app.all-hands.dev/api/automation/v1/runs/example/complete', 'OPENHANDS_API_KEY': 'synthetic-cloud-key'}, clear=True), patch('helpers.open_request') as opened:
             helpers.fire_callback()
             request = opened.call_args.args[0]
             self.assertEqual(request.get_header('Authorization'), 'Bearer synthetic-cloud-key')
@@ -361,3 +361,61 @@ class RuleRoutingTest(unittest.TestCase):
             self.assertEqual(len(requests[1]['questions']), 2)
             self.assertEqual({i['rule'] for i in result['reports'][0]['items']}, {'CONST_FINAL', 'PY_SUPPRESS'})
             self.assertEqual({i['rule'] for i in result['reports'][1]['items']}, {feature_map.RULE})
+
+
+class ReviewRegressionTest(unittest.TestCase):
+    def test_shorter_or_mismatched_fences_do_not_expose_code(self):
+        for opener, inner, closer in [('````md', '```', '````'),
+                                      ('~~~~~', '~~~~', '~~~~~~'),
+                                      ('````', '~~~~', '````')]:
+            source = f'Before.\n\n{opener}\n{inner}\n- private example code\n{closer}\n\nAfter.\n'
+            paragraphs = list(feature_map.prose(source))
+            self.assertEqual([p[2] for p in paragraphs], ['Before.', 'After.'])
+            self.assertEqual(paragraphs[-1][0], 8)
+
+    def test_closing_fence_with_info_does_not_close(self):
+        source = '```python\nx = 1\n```not-a-close\n- example code\n```   \n\nAfter.\n'
+        self.assertEqual(list(feature_map.prose(source)), [(7, 7, 'After.')])
+
+    def test_unclosed_fence_and_invalid_backtick_opener(self):
+        self.assertEqual(list(feature_map.prose('````\n```\n- example code\n')), [])
+        paragraphs = list(feature_map.prose('```bad`info\n\nOrdinary prose.\n'))
+        self.assertIn('Ordinary prose.', [p[2] for p in paragraphs])
+
+    def test_secret_and_callback_use_finite_timeout_and_close_responses(self):
+        import helpers
+        from unittest.mock import MagicMock
+        opener = MagicMock()
+        opener.open.return_value.__enter__.return_value.read.return_value = b'synthetic-secret'
+        with patch.dict('os.environ', {'AGENT_SERVER_URL': 'http://127.0.0.1:18000',
+                                      'SESSION_API_KEY': 'synthetic-local-key',
+                                      'AUTOMATION_CALLBACK_URL': 'https://app.all-hands.dev/callback',
+                                      'OPENHANDS_API_KEY': 'synthetic-cloud-key'}, clear=True), \
+             patch('urllib.request.build_opener', return_value=opener):
+            self.assertEqual(helpers.get_secret('TEST'), 'synthetic-secret')
+            helpers.fire_callback()
+        self.assertEqual(opener.open.call_count, 2)
+        for call in opener.open.call_args_list:
+            self.assertEqual(call.kwargs['timeout'], 60)
+        self.assertEqual(opener.open.return_value.__exit__.call_count, 2)
+
+    def test_helper_rejects_unsafe_schemes_and_credentials_in_urls(self):
+        import helpers
+        import urllib.request
+        for url in ('file:///tmp/secret', 'ftp://example.com/a', 'https://user:pass@example.com/a'):
+            with self.assertRaises(ValueError), patch('urllib.request.build_opener') as build:
+                helpers.open_request(urllib.request.Request(url))
+            build.assert_not_called()
+
+    def test_secret_timeout_propagates_and_callback_timeout_is_contained(self):
+        import helpers
+        with patch.dict('os.environ', {'AGENT_SERVER_URL': 'http://127.0.0.1:18000',
+                                      'AUTOMATION_CALLBACK_URL': 'https://app.all-hands.dev/callback'}, clear=True), \
+             patch('helpers.open_request', side_effect=TimeoutError):
+            with self.assertRaises(TimeoutError):
+                helpers.get_secret('TEST')
+            helpers.fire_callback()
+
+    def test_helper_refuses_redirects(self):
+        import helpers
+        self.assertIsNone(helpers.NoRedirect().redirect_request(None, None, 302, '', {}, 'https://other.example'))

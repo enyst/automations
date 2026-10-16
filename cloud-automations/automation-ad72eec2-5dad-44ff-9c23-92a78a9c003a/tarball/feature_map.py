@@ -56,8 +56,11 @@ def prose(source):
                 yield start, number - 1, '\n'.join(lines)
                 start, lines = None, []
             if fence is None:
-                fence = marker[1][0]
-            elif marker[1][0] == fence:
+                # A backtick opener cannot contain backticks in its info string.
+                if marker[1][0] != '`' or '`' not in text[marker.end():]:
+                    fence = marker[1]
+            elif (marker[1][0] == fence[0] and len(marker[1]) >= len(fence)
+                  and not text[marker.end():].strip()):
                 fence = None
             continue
         if fence:

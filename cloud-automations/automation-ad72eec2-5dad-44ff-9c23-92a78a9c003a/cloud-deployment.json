@@ -17,7 +17,7 @@
   "timeout": 600,
   "keep_alive": false,
   "setup_script_path": null,
-  "bundle_sha256": "de13c926c2245745534ca9e038777602da2289b807acfdc4fbcf71dc962b008b",
+  "bundle_sha256": "0427e238633cb2f761518bad23e901e9e6c646e18f8687c60be747770f89daad",
   "files": [
     "cases.json",
     "feature_map.py",
