@@ -1,0 +1,15 @@
+{
+  "name": "CI efficiency audit - OpenHands (read-only trial)",
+  "model": "transpile-deepseek-pro-native",
+  "enabled": false,
+  "state": "INACTIVE",
+  "entrypoint": ".venv/bin/python main.py",
+  "setup_script_path": "setup.sh",
+  "timeout": 1500,
+  "keep_alive": false,
+  "trigger": {
+    "type": "cron",
+    "schedule": "0 0 1 1 *",
+    "timezone": "UTC"
+  }
+}
