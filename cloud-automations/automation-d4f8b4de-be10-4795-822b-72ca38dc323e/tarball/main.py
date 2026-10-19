@@ -71,9 +71,10 @@ Runtime-injected secrets (via conversation.update_secrets after Conversation cre
 # --- cheap pre-check: skip the whole run (no clone, no LLM) when there is no work ---
 import os as _os, sys as _sys
 _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
-_os.environ.setdefault("GATE_MODE", "server")
+# This is the Wednesday server runner; inherited modes cannot bypass selection.
+_os.environ["GATE_MODE"] = "server"
 import gate as _gate
-_gate.run()
+_GATE_SELECTION = _gate.run()
 
 import inspect
 import json
@@ -366,6 +367,8 @@ with workspace_ctx as workspace:
 
     # Build prompt with context sections
     context_sections = []
+    if _GATE_SELECTION is not None:
+        context_sections.append(_gate.selection_context(_GATE_SELECTION))
 
     # Add repos context if repos were cloned
     if repos_context:
@@ -403,6 +406,11 @@ More activity arrived on the same subject while this run was queued:
 ## Task
 
 {USER_PROMPT}"""
+
+    # Fail inside the workspace callback boundary if the deterministic source
+    # changed while setup ran. Do not ask a model to guess a replacement.
+    if _GATE_SELECTION is not None:
+        _gate.recheck_server_selection(_GATE_SELECTION)
 
     # Get LLM config via workspace/profile APIs
     print("\n=== GET_LLM ===")

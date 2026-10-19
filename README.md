@@ -15,6 +15,11 @@ automations: 6 enabled and 7 disabled. Every runtime file matches its downloaded
 Cloud bundle. The export includes activation state and agent profile references.
 No automation code, ID, schedule, or enabled state was changed in Cloud.
 
+The [October 19 Wednesday update](docs/weekly-revendor-pr-handoff.md) is a later,
+explicit deployment. Its definition, bundle receipt and manifest row were
+refreshed individually; `partial_refreshes` records that exception to the
+October 9 inventory date.
+
 **Cloud Git Sync is not active yet.** The repository access check passed with
 the existing Cloud `REMOTE_GH` secret, but saving that credential returned HTTP
 503. Configuration writes without a secret succeeded. Sync remains disabled;
@@ -85,6 +90,7 @@ before dispatching again.
 
 ## Implementation notes
 
+- [Monday SDK → Wednesday server handoff](docs/weekly-revendor-pr-handoff.md): selecting an open SDK PR, exact revision checks, and downstream draft dependencies.
 - [Jev Fast Audit](docs/jev-fast-audit.md): classifier inputs, evidence limits, and explicit deployment.
 - [Notebook Field Notes](docs/notebook-field-notes.md): research selection and bounded publication.
 - [SDK lifecycle conformance](docs/sdk-lifecycle-conformance.md): independent verifier and trial evidence.
