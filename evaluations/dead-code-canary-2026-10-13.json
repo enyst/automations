@@ -1,0 +1,36 @@
+{
+  "automation_id": "ad8b24d9-1878-4047-a729-00bd50210c18",
+  "target_sha": "5a4071c764a9323c599e70258211b3f67c2aefad",
+  "state": "INACTIVE",
+  "dispatches": 1,
+  "public_draft_allowed": true,
+  "run_id": "4f9ba06e-6619-4721-86a8-bc52409016f5",
+  "conversation_id": "43d83e37-d5b4-4aa1-9975-ea657e77cb16",
+  "observed_status": "FAILED",
+  "failure_kind": "timeout",
+  "completed_at": "2026-10-13T15:54:53.018174Z",
+  "conversation_status": "paused",
+  "sandbox_status": "PAUSED",
+  "verified_patch": false,
+  "draft_pr": null,
+  "report_checkpoint_written": false,
+  "retained_evidence": [
+    "knip-normal.txt",
+    "knip-production.txt",
+    "tsc-unused-src.txt",
+    "findrefs.mjs",
+    "reference-check-evidence.json"
+  ],
+  "comparison": {
+    "pr18417": {
+      "production_files_deleted": 14,
+      "knip_production_unused_file_matches": 13,
+      "knip_normal_unused_file_matches": 4,
+      "missing_unused_file_match": "src/utils/sanitize-query.ts"
+    },
+    "pr18406": {
+      "four_panels_marked_unused_files": false,
+      "project_scope_helpers_flagged_unused_exports": 7
+    }
+  }
+}

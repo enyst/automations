@@ -88,6 +88,18 @@ verification ran. Its source and explicit deployment helper are retained here.
 It has no daily or weekly schedule enabled. See its README and trial receipt
 before dispatching again.
 
+## Canvas dead-code cleanup
+
+[Canvas dead-code](cloud-automations/automation-e7aac5a4-a5b5-493e-a655-1b4ae02403a6/)
+was created **inactive** on October 13. It uses reference proof and deletion-test
+validation, covering all proven safe removals in one draft PR per run. No run or recurring
+cadence is enabled. Its Cloud-downloaded bundle is the sole runtime source.
+
+An [independent historical canary](cloud-automations/automation-ad8b24d9-1878-4047-a729-00bd50210c18/)
+was manually dispatched October 13 at pinned commit `5a4071c7`. Its automation
+remains inactive. The trial timed out before a patch; the sandbox is paused. See the
+[comparison](evaluations/dead-code-canary-2026-10-13.md).
+
 ## Implementation notes
 
 - [Monday SDK → Wednesday server handoff](docs/weekly-revendor-pr-handoff.md): selecting an open SDK PR, exact revision checks, and downstream draft dependencies.
