@@ -143,3 +143,9 @@ Warnings post as SmolPaws, beginning with `Jev-lint warning 🐾`, at the report
 changed line or with a pinned file link when outside the diff. Feature-map gate:
 0.80; existing Python gates: 0.95. See the directory for measured limits and
 current deployment/event details. Git edits alone do not deploy to Cloud.
+
+## CI-efficiency trial · October 17, 2026
+
+A new [read-only CI-history audit](docs/ci-efficiency-trial.md) is deployed in Cloud.
+Its first run is manual; recurrence and daily verification-log inputs stay disabled.
+It ranks evidence-backed proposals without modifying the target repository or CI.
